@@ -1,0 +1,58 @@
+diff --git a/src/inputdialog.cpp b/src/inputdialog.cpp
+index d405417..c64fe8e 100644
+--- a/src/inputdialog.cpp
++++ b/src/inputdialog.cpp
+@@ -27,6 +27,8 @@
+ #include "iconbutton.h"
+ #include "utilities.h"
+ 
++#include <unistd.h>
++
+ #include <SDL_gfxPrimitives.h>
+ 
+ using namespace std;
+@@ -271,4 +273,4 @@ void InputDialog::drawVirtualKeyboard() {
+ 			KB_TOP + kb->size() * KEY_HEIGHT + KEY_HEIGHT / 2,
+ 			ASFont::HAlignCenter, ASFont::VAlignMiddle);
+ }
+-*/
+\ No newline at end of file
++*/
+diff --git a/src/menu.cpp b/src/menu.cpp
+index c55443a..bebd3f2 100644
+--- a/src/menu.cpp
++++ b/src/menu.cpp
+@@ -25,6 +25,7 @@
+ #include <algorithm>
+ #include <math.h>
+ #include <fstream>
++#include <unistd.h>
+ 
+ #include "gmenu2x.h"
+ #include "linkapp.h"
+diff --git a/src/messagebox.cpp b/src/messagebox.cpp
+index 0c89e84..1ff76db 100644
+--- a/src/messagebox.cpp
++++ b/src/messagebox.cpp
+@@ -23,6 +23,8 @@
+ #include "messagebox.h"
+ #include "gmenu2x.h"
+ 
++#include <unistd.h>
++
+ #include <SDL_gfxPrimitives.h>
+ 
+ using namespace std;
+diff --git a/src/utilities.cpp b/src/utilities.cpp
+index a69f093..69d9259 100644
+--- a/src/utilities.cpp
++++ b/src/utilities.cpp
+@@ -33,6 +33,8 @@
+ #include <iostream>
+ #include <strings.h>
+ 
++#include <unistd.h>
++
+ using namespace std;
+ 
+ bool case_less::operator()(const string &left, const string &right) const {

@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=gmenu2x-zipit
 PKG_VERSION:=34a5603cf1
 PKG_REV:=34a5603cf1a0cdbd401937eed30abddbdbbb816e
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_INSTALL:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz

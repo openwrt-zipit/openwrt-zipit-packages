@@ -1,0 +1,22 @@
+diff --git a/src/gmenu2x.cpp b/src/gmenu2x.cpp
+index de71d7f..edb3729 100644
+--- a/src/gmenu2x.cpp
++++ b/src/gmenu2x.cpp
+@@ -48,7 +48,7 @@
+ #include "textdialog.h"
+ #include "wallpaperdialog.h"
+ #include "utilities.h"
+-#include <locale>
++//#include <locale>
+ 
+ #include <iostream>
+ #include <sstream>
+@@ -222,7 +222,7 @@ int main(int /*argc*/, char * /*argv*/[]) {
+ 		return 1;
+ 	}
+ 
+-	locale::global(locale(""));
++	//locale::global(locale(""));
+ 
+ 	gmenu2x_home = (string)home + (string)"/.gmenu2x";
+ 	if (!fileExists(gmenu2x_home) && mkdir(gmenu2x_home.c_str(), 0770) < 0) {
