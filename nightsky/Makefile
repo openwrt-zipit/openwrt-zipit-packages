@@ -7,7 +7,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nightsky
 PKG_VERSION:=20100829
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SF/$(PKG_NAME)
@@ -49,7 +49,7 @@ define Package/nightsky/install
 		$(1)/usr/share/nightsky/
 
 	$(INSTALL_DATA) \
-		$(PKG_BUILD_DIR)/data/un-fuzzy-6x10-font.png \
+		$(PKG_BUILD_DIR)/data/font.png \
 		$(1)/usr/share/nightsky/font.png
 
 endef

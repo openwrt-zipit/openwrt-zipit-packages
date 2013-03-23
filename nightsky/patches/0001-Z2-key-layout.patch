@@ -1,0 +1,38 @@
+From 08ed3772731c3c6e4d1ea2d998c74075f4f7224c Mon Sep 17 00:00:00 2001
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Date: Sat, 23 Mar 2013 22:00:46 +0300
+Subject: [PATCH] Z2 key layout
+
+---
+ src/main.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/main.c b/src/main.c
+index 451bdb3..535786d 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -256,9 +256,9 @@ int main( int argc, char **argv)
+           case SDLK_SPACE: view.fine_panning ^= true; update_bounds(&view); break;
+           case 'c': view.show_constellations ^= true; break;
+           case SDLK_TAB: view.show_cursor ^= true; break;
+-          case SDLK_F1: should_show_keys ^= true; break;
+-          case SDLK_F11: zoom_view_in( &view); break;
+-          case SDLK_F12: zoom_view_out( &view); break;
++          case SDLK_h: should_show_keys ^= true; break;
++          case SDLK_PAGEUP: zoom_view_in( &view); break;
++          case SDLK_PAGEDOWN: zoom_view_out( &view); break;
+           default:
+             ;
+           }
+@@ -288,7 +288,7 @@ int main( int argc, char **argv)
+ 
+     if ( should_show_keys)
+     {
+-      char *keys = "[F1]    help\n"
++      char *keys = "[H]    help\n"
+                    #ifdef NANONOTE
+                    "[vol \200] zoom in\n"
+                    "[vol \201] zoom out\n"
+-- 
+1.8.2
+
