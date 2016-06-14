@@ -1,7 +1,7 @@
-diff -rupN gmu-0.9.0/src/tools.orig/charset.h gmu-0.9.0/src/tools/charset.h
---- gmu-0.9.0/src/tools.orig/charset.h	1969-12-31 19:00:00.000000000 -0500
-+++ gmu-0.9.0/src/tools/charset.h	2013-02-19 20:48:30.000000000 -0500
-@@ -0,0 +1,40 @@
+diff -rupN gmu-0.9.1.orig/src/tools/charset.h gmu-0.9.1/src/tools/charset.h
+--- gmu-0.9.1.orig/src/tools/charset.h	1969-12-31 19:00:00.000000000 -0500
++++ gmu-0.9.1/src/tools/charset.h	2016-06-14 06:37:37.223404607 -0400
+@@ -0,0 +1,41 @@
 +#ifndef WEJ_CHARSET_H
 +#define WEJ_CHARSET_H
 +
@@ -27,6 +27,7 @@ diff -rupN gmu-0.9.0/src/tools.orig/charset.h gmu-0.9.0/src/tools/charset.h
 +
 +#else /* USE_WIDE_CHAR */
 +
++#define wint_t int
 +#define wchar_t char
 +#define wcstombs(d, s, l) strlen(l)
 +#define wchars_to_utf8_str_realloc(i, wc) wc
@@ -42,9 +43,9 @@ diff -rupN gmu-0.9.0/src/tools.orig/charset.h gmu-0.9.0/src/tools/charset.h
 +#endif /* USE_WIDE_CHAR */
 +
 +#endif
-diff -rupN gmu-0.9.0/src/tools.orig/gmuc.c gmu-0.9.0/src/tools/gmuc.c
---- gmu-0.9.0/src/tools.orig/gmuc.c	2013-02-19 20:56:36.000000000 -0500
-+++ gmu-0.9.0/src/tools/gmuc.c	2013-02-19 19:40:26.000000000 -0500
+diff -rupN gmu-0.9.1.orig/src/tools/gmuc.c gmu-0.9.1/src/tools/gmuc.c
+--- gmu-0.9.1.orig/src/tools/gmuc.c	2013-02-19 09:51:26.000000000 -0500
++++ gmu-0.9.1/src/tools/gmuc.c	2016-06-14 06:36:28.119883613 -0400
 @@ -32,7 +32,7 @@
  #endif
  #include <curses.h>
@@ -78,13 +79,24 @@ diff -rupN gmu-0.9.0/src/tools.orig/gmuc.c gmu-0.9.0/src/tools/gmuc.c
  static State do_websocket_handshake(RingBuffer *rb, State state)
  {
  	int  i, data_available = 1;
-diff -rupN gmu-0.9.0/src/tools.orig/listwidget.c gmu-0.9.0/src/tools/listwidget.c
---- gmu-0.9.0/src/tools.orig/listwidget.c	2013-02-19 20:56:36.000000000 -0500
-+++ gmu-0.9.0/src/tools/listwidget.c	2013-02-19 20:48:52.000000000 -0500
+diff -rupN gmu-0.9.1.orig/src/tools/listwidget.c gmu-0.9.1/src/tools/listwidget.c
+--- gmu-0.9.1.orig/src/tools/listwidget.c	2013-02-19 08:39:05.000000000 -0500
++++ gmu-0.9.1/src/tools/listwidget.c	2016-06-14 06:36:28.123883578 -0400
 @@ -19,6 +19,7 @@
  #define _XOPEN_SOURCE_EXTENDED
  #endif
  #include <curses.h>
++#include "charset.h"
+ #include "window.h"
+ #include "listwidget.h"
+ 
+diff -rupN gmu-0.9.1.orig/src/tools/ui.h gmu-0.9.1/src/tools/ui.h
+--- gmu-0.9.1.orig/src/tools/ui.h	2013-02-19 09:50:01.000000000 -0500
++++ gmu-0.9.1/src/tools/ui.h	2016-06-14 06:41:54.849623492 -0400
+@@ -17,6 +17,7 @@
+ #ifndef WEJ_UI_H
+ #define WEJ_UI_H
+ 
 +#include "charset.h"
  #include "window.h"
  #include "listwidget.h"

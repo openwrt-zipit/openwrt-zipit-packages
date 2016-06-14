@@ -47,10 +47,8 @@ define Package/gmu/install
 		$(1)/usr/bin \
 		$(1)/usr/share/gmu \
 		$(1)/usr/share/gmu/themes/default-modern \
-		$(1)/usr/share/gmu/htdocs
-#		$(1)/etc/gmu \
-#		$(1)/usr/share/gmu/decoders \
-#		$(1)/usr/share/gmu/frontends \
+		$(1)/usr/share/gmu/htdocs \
+		$(1)/usr/share/gmu/zipitz2
 
 	$(INSTALL_BIN) \
 		$(PKG_BUILD_DIR)/gmuc \
@@ -65,17 +63,13 @@ define Package/gmu/install
 		$(1)/usr/bin/
 
 #	$(INSTALL_BIN) \
-#		$(PKG_BUILD_DIR)/decoders/* \
-#		$(1)/usr/share/gmu/decoders/
-
-#	$(INSTALL_BIN) \
 #		$(PKG_BUILD_DIR)/frontends/* \
 #		$(1)/usr/share/gmu/frontends/
 
 
-#	$(INSTALL_DATA) \
-#		$(PKG_BUILD_DIR)/*z2*.conf \
-#		$(1)/etc/gmu/
+	$(INSTALL_DATA) \
+		./files/zipitz2/* \
+		$(1)/usr/share/gmu/zipitz2/
 		
 #	$(INSTALL_DATA) \
 #		$(PKG_BUILD_DIR)/*z2*.keymap \

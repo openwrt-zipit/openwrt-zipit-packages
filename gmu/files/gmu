@@ -1,2 +1,2 @@
 #!/bin/sh
-( cd /usr/share/gmu && /usr/bin/gmu.bin -e -d /etc/gmu -c gmu.zipit-z2.conf )
+( cd /usr/share/gmu && /usr/bin/gmu.bin -e -d /usr/share/gmu/zipitz2 -c gmu.zipit-z2.conf )
