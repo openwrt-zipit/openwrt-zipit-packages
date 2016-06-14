@@ -36,6 +36,7 @@ endef
 define Package/ebindkeys-zipit/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 		$(INSTALL_BIN) $(PKG_BUILD_DIR)/ebindkeys $(1)/usr/sbin/
+		$(INSTALL_BIN) $(PKG_BUILD_DIR)/ebkfork $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/usr/local/sbin
 		$(INSTALL_BIN) ./files/onHome $(1)/usr/local/sbin/onHome
 		$(INSTALL_BIN) ./files/onAltTab $(1)/usr/local/sbin/onAltTab
