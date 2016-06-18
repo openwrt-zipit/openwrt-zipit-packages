@@ -1,0 +1,18 @@
+diff -Naur gmu-0.9.1.orig/src/frontends/sdl/plbrowser.c gmu-0.9.1/src/frontends/sdl/plbrowser.c
+--- gmu-0.9.1.orig/src/frontends/sdl/plbrowser.c	2013-02-19 08:39:04.000000000 -0500
++++ gmu-0.9.1/src/frontends/sdl/plbrowser.c	        2013-02-22 11:16:01.000000000 -0500
+@@ -115,8 +115,13 @@
+ 			break;
+ 	}
+ 
++#if 1 /* ZIPIT_Z2 small screen fix */
++	snprintf(buf, 63, "Playlist (%d %s, %s)", gmu_core_playlist_get_length(),
++	         gmu_core_playlist_get_length() != 1 ? "items" : "item", mode);
++#else
+ 	snprintf(buf, 63, "Playlist (%d %s, mode: %s)", gmu_core_playlist_get_length(),
+ 	         gmu_core_playlist_get_length() != 1 ? "entries" : "entry", mode);
++#endif
+ 	skin_draw_header_text((Skin *)pb->skin, buf, sdl_target);
+ 
+ 	if (pb->first_visible_entry == NULL || pb->offset == 0) {
+
