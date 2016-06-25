@@ -60,36 +60,36 @@ event
 event
 {
 	# right side - far flipper
-	action = "/usr/local/bin/voldn"
-	keys = {0x4a}
-}
-
-event
-{
-	# right side - near flipper
 	action = "/usr/local/bin/volup"
 	keys = {0x4e}
 }
 
 event
 {
+	# right side - near flipper
+	action = "/usr/local/bin/voldn"
+	keys = {0x4a}
+}
+
+event
+{
 	# CTRL-right side - far flipper: Increase LCD Brightness
 	action = "/usr/bin/lcdb +"
-	keys = {0x1d,0x4a}
+	keys = {0x1d,0x4e}
 }
 
 event
 {
 	# CTRL-right side - near flipper: Decrease LCD Brightness
 	action = "/usr/bin/lcdb -"
-	keys = {0x1d,0x4e}
+	keys = {0x1d,0x4a}
 }
 
 event
 {
 	# Shift-right side - far flipper: Increase KEY Brightness
 	action = "/usr/bin/keyb +"
-	keys = {0x2a,0x4a}
+	keys = {0x2a,0x4e}
 }
 
 
@@ -97,7 +97,7 @@ event
 {
 	# Shift-right side - near flipper: Decrease KEY Brightness
 	action = "/usr/bin/keyb -"
-	keys = {0x2a,0x4e}
+	keys = {0x2a,0x4a}
 }
 
 
