@@ -20,7 +20,7 @@ define Package/scummvm
     TITLE:=free implementation of LucasArts SCUMM interpreter
     SECTION:=games
     CATEGORY:=Games
-    DEPENDS:=$(ICONV_DEPENDS) +libsdl +libsdl_sound +libsdl_mixer +libmad +libflac +libfaad2 +libogg +libpng +libpthread +libstdcpp +libtheora
+    DEPENDS:=$(ICONV_DEPENDS) +libsdl +libsdl-mixer +libmad +libflac +libfaad2 +libogg +libpng +libpthread +libstdcpp +libtheora
     DEPENDS+=+libvorbis +alsa-lib +zlib
     URL:=http://www.scummvm.org/
 endef
