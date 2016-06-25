@@ -1,17 +1,7 @@
 #EXTM3U
-#EXTINF:0,KQRC The Rock: Rock music from KC
-http://208.80.54.49:80/KQRCFMCMP3
-#EXTINF:0,181_FM_The_Buzz_128K
-http://sc-rly.181.fm:80/stream/1022
-#EXTINF:0,3WK_Underground_128K
-http://sc2.3wk.com/3wk-u-mp3-hi
+#EXTINF:0,BBC Worldservice
+http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk
 #EXTINF:0,Groove_Salad
 http://ice.somafm.com/groovesalad
-#EXTINF:0,Radio_Paradise_64K
-http://64.5.58.148:80/
-#EXTINF:0,DI_Ambient
-http://205.188.215.228:8006
 #EXTINF:0,Pan African Allstars Radio
 http://tess.fast-serv.com:8580
-#EXTINF:0,BBC_6_Music
-/mnt/ffs/gmu/rtsp://rm.bbc.co.uk/support/redirect.ra?BBC-UID=a4cf25d686e7e163e25380fe3143cc54ffb8a436b0e01164f41fa9571c520ab1_n&SSO2-UID=

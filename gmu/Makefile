@@ -48,7 +48,7 @@ define Package/gmu/install
 		$(1)/usr/share/gmu \
 		$(1)/usr/share/gmu/themes/default-modern \
 		$(1)/usr/share/gmu/htdocs \
-		$(1)/usr/share/gmu/zipitz2
+		$(1)/root/.config/gmu
 
 	$(INSTALL_BIN) \
 		$(PKG_BUILD_DIR)/gmuc \
@@ -69,7 +69,7 @@ define Package/gmu/install
 
 	$(INSTALL_DATA) \
 		./files/zipitz2/* \
-		$(1)/usr/share/gmu/zipitz2/
+		$(1)/root/.config/gmu/
 		
 #	$(INSTALL_DATA) \
 #		$(PKG_BUILD_DIR)/*z2*.keymap \
