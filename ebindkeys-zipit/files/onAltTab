@@ -1,9 +1,10 @@
 #!/bin/sh
+# Switch VT onAltTab
 
-currVT=fgconsole
+currVT=`/usr/bin/fgconsole`
 
-if [$currVT -eq 1]; then
-	chvt 2
+if [ $currVT -eq 1 ]; then
+	/usr/bin/chvt 2
 else
-	chvt 1
+	/usr/bin/chvt 1
 fi
