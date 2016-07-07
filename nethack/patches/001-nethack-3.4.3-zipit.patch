@@ -53,53 +53,6 @@ Index: nethack-3.4.3/sys/share/unixtty.c
  # endif
  # define kill_sym	c_cc[VKILL]
  # define erase_sym	c_cc[VERASE]
-Index: nethack-3.4.3/sys/unix/Makefile.src
-===================================================================
---- nethack-3.4.3.orig/sys/unix/Makefile.src	2003-12-08 10:39:13.000000000 +1100
-+++ nethack-3.4.3/sys/unix/Makefile.src	2012-06-04 17:35:01.000000000 +1000
-@@ -76,6 +76,8 @@
- #
- #	For cross-compiling, eg. with gcc on Linux (see also CXX further down):
- # CC = arm-linux-gcc
-+CC = arm-openwrt-linux-gcc
-+LD = arm-openwrt-linux-ld
- #
- #
- # if you're debugging and want gcc to check as much as possible, use:
-@@ -151,18 +153,18 @@
- # flags for debugging:
- # CFLAGS = -g -I../include
- 
--CFLAGS = -O -I../include
--LFLAGS = 
-+CFLAGS += -O2 -I../include
-+LFLAGS += ${LDFLAGS}
- 
- # The Qt and Be window systems are written in C++, while the rest of
- # NetHack is standard C.  If using Qt, uncomment the LINK line here to get
- # the C++ libraries linked in.
- CXXFLAGS = $(CFLAGS) -I. -I$(QTDIR)/include
--CXX=g++
-+CXX=arm-openwrt-linux-g++
- #LINK=g++
- #	For cross-compiling, eg. with gcc on Linux (see also CC further up):
- #CXX=arm-linux-g++
--#LINK=arm-linux-gcc
-+LINK=arm-openwrt-linux-g++
- 
- # Set the WINSRC, WINOBJ, and WINLIB lines to correspond to your desired
- # combination of windowing systems.  Also set windowing systems in config.h.
-@@ -230,8 +232,8 @@
- # WINTTYLIB = -ltermcap
- # WINTTYLIB = -lcurses
- # WINTTYLIB = -lcurses16
--# WINTTYLIB = -lncurses
--WINTTYLIB = -ltermlib
-+WINTTYLIB = -lncurses
-+# WINTTYLIB = -ltermlib
- #
- # libraries for X11
- # If USE_XPM is defined in config.h, you will also need -lXpm here.
 Index: nethack-3.4.3/sys/unix/Makefile.top
 ===================================================================
 --- nethack-3.4.3.orig/sys/unix/Makefile.top	2003-12-08 10:39:13.000000000 +1100
@@ -153,55 +106,6 @@ Index: nethack-3.4.3/sys/unix/Makefile.top
  	chmod $(DIRPERM) $(GAMEDIR) $(VARDIR) $(VARDIR)/save
  # set up the game files
  	( $(MAKE) dofiles )
-Index: nethack-3.4.3/sys/unix/Makefile.utl
-===================================================================
---- nethack-3.4.3.orig/sys/unix/Makefile.utl	2003-12-08 10:39:13.000000000 +1100
-+++ nethack-3.4.3/sys/unix/Makefile.utl	2012-06-04 17:35:01.000000000 +1000
-@@ -27,6 +27,8 @@
- #
- #	For HP/UX 10.20 with GCC:
- # CC = gcc -D_POSIX_SOURCE
-+CC = arm-openwrt-linux-gcc
-+CXX = arm-openwrt-linux-g++
- #
- # if your make doesn't define a default SHELL properly, you may need
- #    the line below (Atari users will need a bourne work-alike)
-@@ -95,7 +97,7 @@
- LIBS =
-  
- # If you are cross-compiling, you must use this:
--#OBJDIR = .
-+OBJDIR = .
- # otherwise, you can save a little bit of disk space with this:
- OBJDIR = ../src
- 
-@@ -175,7 +177,7 @@
- #	dependencies for makedefs
- #
- makedefs:	$(MAKEOBJS)
--	$(CC) $(LFLAGS) -o makedefs $(MAKEOBJS)
-+	gcc $(LFLAGS) -o makedefs -I../include makedefs.c ../src/monst.c ../src/objects.c
- 
- makedefs.o: makedefs.c $(CONFIG_H) ../include/permonst.h \
- 		../include/objclass.h ../include/monsym.h \
-@@ -210,7 +212,7 @@
- #	dependencies for lev_comp
- #
- lev_comp:  $(SPLEVOBJS)
--	$(CC) $(LFLAGS) -o lev_comp $(SPLEVOBJS) $(LIBS)
-+	gcc -o lev_comp lev_yacc.c lev_lex.c lev_main.c $(CALLOC) $(CNAMING) -I../include
- 
- lev_yacc.o:  lev_yacc.c $(HACK_H) ../include/sp_lev.h
- lev_main.o:  lev_main.c $(HACK_H) ../include/sp_lev.h ../include/tcap.h \
-@@ -243,7 +245,7 @@
- #	dependencies for dgn_comp
- #
- dgn_comp:  $(DGNCOMPOBJS)
--	$(CC) $(LFLAGS) -o dgn_comp $(DGNCOMPOBJS) $(LIBS)
-+	gcc $(LFLAGS) -o dgn_comp dgn_yacc.c dgn_lex.c dgn_main.c $(CALLOC) -I../include $(LIBS)
- 
- dgn_yacc.o:  dgn_yacc.c $(CONFIG_H) ../include/dgn_file.h ../include/date.h
- dgn_main.o:  dgn_main.c $(CONFIG_H) ../include/dlb.h
 Index: nethack-3.4.3/sys/unix/nethack.sh
 ===================================================================
 --- nethack-3.4.3.orig/sys/unix/nethack.sh	2003-12-08 10:39:13.000000000 +1100

@@ -15,6 +15,8 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-src.tgz
 PKG_SOURCE_URL:=http://downloads.sourceforge.net/project/nethack/nethack/3.4.3/
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-3.4.3
 
+PKG_BUILD_DEPENDS:=+qemu-host/host
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/nethack
@@ -43,9 +45,11 @@ define Build/Compile
 	export CFLAGS="${TARGET_CFLAGS}";\
 	export LDFLAGS="${TARGET_LDFLAGS}";\
 	export PREFIX="${PKG_INSTALL_DIR}";\
+	export QEMU_HOST="${STAGING_DIR_HOST}/bin/qemu-arm -L ${TARGET_DIR}";\
 	make;\
 	)
-	$(MAKE) -C $(PKG_BUILD_DIR) PREFIX="$(PKG_INSTALL_DIR)" install
+	QEMU_HOST="${STAGING_DIR_HOST}/bin/qemu-arm -L ${TARGET_DIR}" \
+		$(MAKE) -C $(PKG_BUILD_DIR) PREFIX="$(PKG_INSTALL_DIR)" install
 endef
 
 define Package/nethack/install

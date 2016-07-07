@@ -1,0 +1,65 @@
+--- a/sys/unix/Makefile.utl.orig	2016-07-07 06:59:49.496499769 -0500
++++ b/sys/unix/Makefile.utl	2016-07-07 07:09:01.936510903 -0500
+@@ -27,6 +27,8 @@
+ #
+ #	For HP/UX 10.20 with GCC:
+ # CC = gcc -D_POSIX_SOURCE
++CC = arm-openwrt-linux-gcc
++CXX = arm-openwrt-linux-g++
+ #
+ # if your make doesn't define a default SHELL properly, you may need
+ #    the line below (Atari users will need a bourne work-alike)
+@@ -95,7 +97,7 @@
+ LIBS =
+  
+ # If you are cross-compiling, you must use this:
+-#OBJDIR = .
++OBJDIR = .
+ # otherwise, you can save a little bit of disk space with this:
+ OBJDIR = ../src
+ 
+@@ -175,7 +177,7 @@
+ #	dependencies for makedefs
+ #
+ makedefs:	$(MAKEOBJS)
+-	$(CC) $(LFLAGS) -o makedefs $(MAKEOBJS)
++	$(CC) $(LFLAGS) -o makedefs -I../include makedefs.c ../src/monst.c ../src/objects.c
+ 
+ makedefs.o: makedefs.c $(CONFIG_H) ../include/permonst.h \
+ 		../include/objclass.h ../include/monsym.h \
+@@ -184,13 +186,13 @@
+ 		../include/dlb.h ../include/patchlevel.h ../include/qtext.h
+ 
+ ../include/onames.h: makedefs
+-	./makedefs -o
++	$(QEMU_HOST) ./makedefs -o
+ ../include/pm.h: makedefs
+-	./makedefs -p
++	$(QEMU_HOST) ./makedefs -p
+ ../src/monstr.c: makedefs
+-	./makedefs -m
++	$(QEMU_HOST) ./makedefs -m
+ ../include/vis_tab.h: makedefs
+-	./makedefs -z
++	$(QEMU_HOST) ./makedefs -z
+ # makedefs -z makes both vis_tab.h and vis_tab.c, but writes the .h first
+ ../src/vis_tab.c: ../include/vis_tab.h
+ 
+@@ -210,7 +212,7 @@
+ #	dependencies for lev_comp
+ #
+ lev_comp:  $(SPLEVOBJS)
+-	$(CC) $(LFLAGS) -o lev_comp $(SPLEVOBJS) $(LIBS)
++	$(CC) -o lev_comp lev_yacc.c lev_lex.c lev_main.c $(CALLOC) $(CNAMING) -I../include
+ 
+ lev_yacc.o:  lev_yacc.c $(HACK_H) ../include/sp_lev.h
+ lev_main.o:  lev_main.c $(HACK_H) ../include/sp_lev.h ../include/tcap.h \
+@@ -243,7 +245,7 @@
+ #	dependencies for dgn_comp
+ #
+ dgn_comp:  $(DGNCOMPOBJS)
+-	$(CC) $(LFLAGS) -o dgn_comp $(DGNCOMPOBJS) $(LIBS)
++	$(CC) $(LFLAGS) -o dgn_comp dgn_yacc.c dgn_lex.c dgn_main.c $(CALLOC) -I../include $(LIBS)
+ 
+ dgn_yacc.o:  dgn_yacc.c $(CONFIG_H) ../include/dgn_file.h ../include/date.h
+ dgn_main.o:  dgn_main.c $(CONFIG_H) ../include/dlb.h

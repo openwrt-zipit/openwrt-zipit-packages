@@ -1,0 +1,54 @@
+--- a/sys/unix/Makefile.src.orig	2016-07-07 07:25:01.480530242 -0500
++++ b/sys/unix/Makefile.src	2016-07-07 07:31:22.460537920 -0500
+@@ -76,6 +76,8 @@
+ #
+ #	For cross-compiling, eg. with gcc on Linux (see also CXX further down):
+ # CC = arm-linux-gcc
++CC = arm-openwrt-linux-gcc
++LD = arm-openwrt-linux-ld
+ #
+ #
+ # if you're debugging and want gcc to check as much as possible, use:
+@@ -151,18 +153,18 @@
+ # flags for debugging:
+ # CFLAGS = -g -I../include
+ 
+-CFLAGS = -O -I../include
+-LFLAGS = 
++CFLAGS += -O2 -I../include
++LFLAGS += ${LDFLAGS}
+ 
+ # The Qt and Be window systems are written in C++, while the rest of
+ # NetHack is standard C.  If using Qt, uncomment the LINK line here to get
+ # the C++ libraries linked in.
+ CXXFLAGS = $(CFLAGS) -I. -I$(QTDIR)/include
+-CXX=g++
++CXX=arm-openwrt-linux-g++
+ #LINK=g++
+ #	For cross-compiling, eg. with gcc on Linux (see also CC further up):
+ #CXX=arm-linux-g++
+-#LINK=arm-linux-gcc
++LINK=arm-openwrt-linux-g++
+ 
+ # Set the WINSRC, WINOBJ, and WINLIB lines to correspond to your desired
+ # combination of windowing systems.  Also set windowing systems in config.h.
+@@ -230,8 +232,8 @@
+ # WINTTYLIB = -ltermcap
+ # WINTTYLIB = -lcurses
+ # WINTTYLIB = -lcurses16
+-# WINTTYLIB = -lncurses
+-WINTTYLIB = -ltermlib
++WINTTYLIB = -lncurses
++# WINTTYLIB = -ltermlib
+ #
+ # libraries for X11
+ # If USE_XPM is defined in config.h, you will also need -lXpm here.
+@@ -501,7 +503,7 @@
+ #	hack.h depends on makedefs' output, so we know makedefs will be
+ #	up to date before being executed
+ ../include/date.h:	$(VERSOURCES) $(HACK_H)
+-	../util/makedefs -v
++	$(QEMU_HOST) ../util/makedefs -v
+ 
+ 
+ lint:
