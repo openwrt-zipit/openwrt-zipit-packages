@@ -22,7 +22,7 @@ define Package/prboom
   CATEGORY:=Games
   TITLE:=Port of Doom
   URL:=http://prboom.sourceforge.net/
-  DEPENDS:=+libsdl +libpng +libpthread
+  DEPENDS:=+libsdl +libsdl-mixer +libpng +libpthread
   MENU:=1
 endef
 
