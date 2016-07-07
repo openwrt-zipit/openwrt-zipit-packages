@@ -11,11 +11,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=qemu-host
-PKG_VERSION:=0.14.1
-PKG_RELEASE:=1
-PKG_SOURCE:=qemu-$(PKG_VERSION).tar.gz
-PKG_MD5SUM:=b6c713a8db638e173af53a62d5178640
-PKG_SOURCE_URL:=http://download.savannah.gnu.org/releases/qemu/
+PKG_VERSION:=2.6.0
+PKG_RELEASE:=2
+PKG_SOURCE:=qemu-$(PKG_VERSION).tar.bz2
+PKG_MD5SUM:=ca3f70b43f093e33e9e014f144067f13
+PKG_SOURCE_URL:=http://wiki.qemu-project.org/download/
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/qemu-$(PKG_VERSION)
 PKG_BUILD_DIR:=$(BUILD_DIR)/qemu-$(PKG_VERSION)
 HOST_BUILD_PARALLEL := 1
@@ -57,7 +57,7 @@ HOST_CONFIGURE_ARGS =						\
 	--disable-werror					\
 	--audio-drv-list=					\
 	--disable-curses					\
-	--disable-check-utests					\
+	--disable-docs						\
 	--disable-bluez						\
 	--disable-kvm						\
 	--disable-system					\
