@@ -37,6 +37,11 @@ define Package/gmenu2x-tmux/install
 	$(CP) \
 		./files/tmux/tmux.conf \
 		$(1)/etc/tmux.conf
+
+	$(INSTALL_DIR) $(1)/etc/profile.d
+	$(CP) \
+		./files/tmux/tmux.sh \
+		$(1)/etc/profile.d/tmux.sh
 endef
 
 $(eval $(call BuildPackage,gmenu2x-tmux))
@@ -221,3 +226,20 @@ endef
 
 $(eval $(call BuildPackage,gmenu2x-alsamixer))
 
+define Package/gmenu2x-nethack
+  CATEGORY:=GMenu2X
+  TITLE:=nethack launcher for gmenu2x
+  DEPENDS:=+gmenu2x +nethack
+  VARIANT:=gmenu2x-nethack
+endef
+
+define Package/gmenu2x-nethack/install
+	$(INSTALL_DIR) \
+		$(1)/usr/share/gmenu2x/ \
+
+	$(CP) \
+		./files/nethack/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-nethack))
