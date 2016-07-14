@@ -1,0 +1,20 @@
+--- links-2.12/https.c
++++ links-2.12/https.c
+@@ -95,12 +95,14 @@
+ 		mem_free(os_pool);
+ #endif
+ 
+-		SSLeay_add_ssl_algorithms();
++		SSL_library_init();
+ 		m = SSLv23_client_method();
+ 		if (!m) return NULL;
+ 		context = SSL_CTX_new((void *)m);
+ 		if (!context) return NULL;
+-		SSL_CTX_set_options(context, SSL_OP_ALL);
++		//SSL_OP_LEGACY_SERVER_CONNECT -- clear this flag -- do not connect to unpatched servers
++		SSL_CTX_clear_options(context, SSL_OP_LEGACY_SERVER_CONNECT);
++		SSL_CTX_set_options(context, SSL_OP_NO_SSLv2  | SSL_OP_SINGLE_DH_USE );
+ 		if (ssl_set_private_paths())
+ 			SSL_CTX_set_default_verify_paths(context);
+ 		SSL_CTX_set_default_passwd_cb(context, ssl_password_callback);
+

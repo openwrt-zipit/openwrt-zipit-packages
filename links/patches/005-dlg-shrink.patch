@@ -1,0 +1,239 @@
+--- links-2.12/bfu.c
++++ links-2.12/bfu.c
+@@ -2035,7 +2035,7 @@
+ 			} else f = 0;
+ 		} else if (nx && nx + wx > w) {
+ 			nx = 0;
+-			(*y) += gf_val(2, G_BFU_FONT_SIZE * 2);
++			(*y) += gf_val(2, G_BFU_FONT_SIZE * 3/2);
+ 		}
+ 		if (term) {
+ 			if (!F) print_text(term, x + nx + 4 * (item->item->type == D_CHECKBOX), *y, ttxtlen(term, _(texts[0], dlg->win->term)), _(texts[0], dlg->win->term), COLOR_DIALOG_TEXT);
+@@ -2104,7 +2104,7 @@
+ 	min_group_width(term, dlg->dlg->udata, dlg->items, dlg->n - 2, &min);
+ 	max_buttons_width(term, dlg->items + dlg->n - 2, 2, &max);
+ 	min_buttons_width(term, dlg->items + dlg->n - 2, 2, &min);
+-	w = term->x * 9 / 10 - 2 * DIALOG_LB;
++	w = term->x - 2 * DIALOG_LB;
+ 	if (w > max) w = max;
+ 	if (w < min) w = min;
+ 	if (w > term->x - 2 * DIALOG_LB) w = term->x - 2 * DIALOG_LB;
+--- links-2.12/menu.c
++++ links-2.12/menu.c
+@@ -1518,7 +1518,7 @@
+ 
+ #ifdef G
+ 
+-#define VO_GAMMA_LEN 9
++#define VO_GAMMA_LEN 5
+ static unsigned char disp_red_g[VO_GAMMA_LEN];
+ static unsigned char disp_green_g[VO_GAMMA_LEN];
+ static unsigned char disp_blue_g[VO_GAMMA_LEN];
+@@ -1576,14 +1576,25 @@
+ 
+ static void videoopt_fn(struct dialog_data *dlg)
+ {
++	unsigned char *video_msg_3[] = {
++		TEXT_(T_USER_GAMMA),
++		TEXT_(T_ASPECT_RATIO),
++	};
++
++	unsigned char *video_msg_4 = "Display Gamma";
++
+ 	struct terminal *term = dlg->win->term;
+ 	int max = 0, min = 0;
+-	int w, rw;
++	int w, rw, gw;
+ 	int y = gf_val(-1, -G_BFU_FONT_SIZE);
+ 	max_text_width(term, video_msg_0, &max, AL_LEFT);
+ 	min_text_width(term, video_msg_0, &min, AL_LEFT);
+-	max_group_width(term, video_msg_1, dlg->items, 5, &max);
+-	min_group_width(term, video_msg_1, dlg->items, 5, &min);
++	max_text_width(term, video_msg_4, &max, AL_CENTER);
++	min_text_width(term, video_msg_4, &min, AL_CENTER);
++	max_group_width(term, video_msg_1, dlg->items, 3, &max);
++	min_group_width(term, video_msg_1, dlg->items, 3, &min);
++	max_group_width(term, video_msg_3, dlg->items+3, 2, &max);
++	min_group_width(term, video_msg_3, dlg->items+3, 2, &min);
+ 	checkboxes_width(term, video_msg_2, dlg->n-2-5, &max, max_text_width);
+ 	checkboxes_width(term, video_msg_2, dlg->n-2-5, &min, min_text_width);
+ 	max_buttons_width(term, dlg->items + dlg->n-2, 2, &max);
+@@ -1593,13 +1604,17 @@
+ 	if (w < min) w = min;
+ 	if (w > dlg->win->term->x - 2 * DIALOG_LB) w = dlg->win->term->x - 2 * DIALOG_LB;
+ 	if (w < 1) w = 1;
+-	rw = 0;
++	rw = 0; gw = 0;
+ 	dlg_format_text(dlg, NULL, video_msg_0, 0, &y, w, &rw, COLOR_DIALOG_TEXT, AL_LEFT);
+-	y += gf_val(1, G_BFU_FONT_SIZE);
+-	dlg_format_group(dlg, NULL, video_msg_1, dlg->items, 5, 0, &y, w, &rw);
+-	y += gf_val(1, G_BFU_FONT_SIZE);
++	y += gf_val(1, G_BFU_FONT_SIZE/2);
++	dlg_format_text(dlg, NULL,video_msg_4, 0, &y, w, &rw, COLOR_DIALOG_TEXT, AL_CENTER);
++	y += gf_val(1, G_BFU_FONT_SIZE/3);
++	dlg_format_group(dlg, NULL, video_msg_1, dlg->items, 3, 0, &y, w, &gw);
++	y += gf_val(1, G_BFU_FONT_SIZE/3);
++	dlg_format_group(dlg, NULL, video_msg_3, dlg->items+3, 2, 0, &y, w, &gw);
++	y += gf_val(1, G_BFU_FONT_SIZE/2);
+ 	dlg_format_checkboxes(dlg, NULL, dlg->items+5, dlg->n-2-5, dlg->x + DIALOG_LB, &y, w, &rw, video_msg_2);
+-	y += gf_val(1, G_BFU_FONT_SIZE);
++	y += gf_val(1, G_BFU_FONT_SIZE/2);
+ 	dlg_format_buttons(dlg, NULL, dlg->items+dlg->n-2, 2, 0, &y, w, &rw, AL_CENTER);
+ 	w = rw;
+ 	dlg->xw = w + 2 * DIALOG_LB;
+@@ -1608,11 +1623,15 @@
+ 	draw_dlg(dlg);
+ 	y = dlg->y + DIALOG_TB;
+ 	dlg_format_text(dlg, term, video_msg_0, dlg->x + DIALOG_LB, &y, w, NULL, COLOR_DIALOG_TEXT, AL_LEFT);
+-	y += gf_val(2, G_BFU_FONT_SIZE);
+-	dlg_format_group(dlg, term, video_msg_1, dlg->items, 5, dlg->x + DIALOG_LB, &y, w, NULL);
+-	y += gf_val(1, G_BFU_FONT_SIZE);
++	y += gf_val(1, G_BFU_FONT_SIZE/2);
++	dlg_format_text(dlg, term,video_msg_4, dlg->x + DIALOG_LB, &y, w, NULL, COLOR_DIALOG_TEXT, AL_CENTER);
++	y += gf_val(2, G_BFU_FONT_SIZE/3);
++	dlg_format_group(dlg, term, video_msg_1, dlg->items, 3, dlg->x + DIALOG_LB+(w-gw)/2, &y, w, NULL);
++	y += gf_val(2, G_BFU_FONT_SIZE/3);
++	dlg_format_group(dlg, term, video_msg_3, dlg->items+3, 2, dlg->x + DIALOG_LB+(w-gw)/2, &y, w, NULL);
++	y += gf_val(1, G_BFU_FONT_SIZE/2);
+ 	dlg_format_checkboxes(dlg, term, dlg->items+5, dlg->n-2-5, dlg->x + DIALOG_LB, &y, w, NULL, video_msg_2);
+-	y += gf_val(1, G_BFU_FONT_SIZE);
++	y += gf_val(1, G_BFU_FONT_SIZE/2);
+ 	dlg_format_buttons(dlg, term, dlg->items+dlg->n-2, 2, dlg->x + DIALOG_LB, &y, w, NULL, AL_CENTER);
+ }
+ 
+@@ -2695,23 +2714,17 @@
+ 	if (F)
+ 	{
+ 		dlg_format_group(dlg, NULL, labels, dlg->items,1,dlg->x + DIALOG_LB, &y, w, &rw);
+-		y += gf_val(1, G_BFU_FONT_SIZE);
++		y += gf_val(1, G_BFU_FONT_SIZE/2);
+ 		dlg_format_text(dlg, NULL, labels[1], dlg->x + DIALOG_LB, &y, w, &rw, COLOR_DIALOG_TEXT, AL_LEFT);
+-		y += gf_val(1, G_BFU_FONT_SIZE);
++		y += gf_val(1, G_BFU_FONT_SIZE/2);
+ 		dlg_format_group(dlg, NULL, labels+2, dlg->items+1,5,dlg->x + DIALOG_LB, &y, w, &rw);
+-		y += gf_val(1, G_BFU_FONT_SIZE);
++		y += gf_val(1, G_BFU_FONT_SIZE/2);
+ 	}
+ #endif
+ 	if (bmk)
+-	{
+ 		dlg_format_text_and_field(dlg, NULL, labels[F?7:0], dlg->items + dlg->n - 4 - a - bmk, 0, &y, w, &rw, COLOR_DIALOG_TEXT, AL_LEFT);
+-		y += gf_val(1, G_BFU_FONT_SIZE);
+-	}
+-	if (bmk) {
+-		y += gf_val(1, G_BFU_FONT_SIZE);
+-		dlg_format_buttons(dlg, NULL, dlg->items + dlg->n - 3 - a - bmk, 1, 0, &y, w, &rw, AL_LEFT);
+-	}
+-	if (a) dlg_format_buttons(dlg, NULL, dlg->items + dlg->n - 3 - bmk, 1, 0, &y, w, &rw, AL_LEFT);
++	y += gf_val(1, G_BFU_FONT_SIZE/2);
++	dlg_format_buttons(dlg, NULL, dlg->items + dlg->n - 3 - a - bmk, (bmk&&a)?2:1, 0, &y, w, &rw, AL_LEFT);
+ 	if (bmk) dlg_format_checkboxes(dlg, NULL, dlg->items + dlg->n - 3, 1, 0, &y, w, &rw, miscopt_checkbox_labels);
+ 	dlg_format_buttons(dlg, NULL, dlg->items + dlg->n - 2, 2, 0, &y, w, &rw, AL_CENTER);
+ 	w = rw;
+@@ -2723,30 +2736,30 @@
+ #ifdef G
+ 	if (F)
+ 	{
+-		y += gf_val(1, G_BFU_FONT_SIZE);
++		y += gf_val(1, G_BFU_FONT_SIZE/2);
+ 		dlg_format_group(dlg, term, labels, dlg->items,1,dlg->x + DIALOG_LB, &y, w, NULL);
+-		y += gf_val(1, G_BFU_FONT_SIZE);
++		y += gf_val(1, G_BFU_FONT_SIZE/2);
+ 		dlg_format_text(dlg, term, labels[1], dlg->x + DIALOG_LB, &y, w, NULL, COLOR_DIALOG_TEXT, AL_LEFT);
+-		y += gf_val(1, G_BFU_FONT_SIZE);
++		y += gf_val(1, G_BFU_FONT_SIZE/2);
+ 		dlg_format_group(dlg, term, labels+2, dlg->items+1,5,dlg->x + DIALOG_LB, &y, w, NULL);
+-		y += gf_val(1, G_BFU_FONT_SIZE);
++		y += gf_val(1, G_BFU_FONT_SIZE/2);
+ 	} else
+ #endif
+ 	{
+-		y += gf_val(1, G_BFU_FONT_SIZE);
++		y += gf_val(1, G_BFU_FONT_SIZE/2);
+ 	}
+ 	if (bmk)
+-	{
+ 		dlg_format_text_and_field(dlg, term, labels[F?7:0], dlg->items + dlg->n - 4 - a - bmk, dlg->x + DIALOG_LB, &y, w, NULL, COLOR_DIALOG_TEXT, AL_LEFT);
+-		y += gf_val(1, G_BFU_FONT_SIZE);
+-		dlg_format_buttons(dlg, term, dlg->items + dlg->n - 3 - a - bmk, 1, dlg->x + DIALOG_LB, &y, w, NULL, AL_CENTER);
+-	}
+-	if (a) dlg_format_buttons(dlg, term, dlg->items + dlg->n - 3 - bmk, 1, dlg->x + DIALOG_LB, &y, w, NULL, AL_CENTER);
++
++	y += gf_val(1, G_BFU_FONT_SIZE/2);
++	dlg_format_buttons(dlg, term, dlg->items + dlg->n - 3 - a - bmk, (bmk&&a)?2:1, dlg->x + DIALOG_LB, &y, w, NULL, AL_CENTER);
++
+ 	if (bmk) {
+ 		dlg_format_checkboxes(dlg, term, dlg->items + dlg->n - 3, 1, dlg->x + DIALOG_LB, &y, w, NULL, miscopt_checkbox_labels);
+-		y += gf_val(1, G_BFU_FONT_SIZE);
++		y += gf_val(1, G_BFU_FONT_SIZE/2);
+ 	}
+ 	dlg_format_buttons(dlg, term, dlg->items+dlg->n-2, 2, dlg->x + DIALOG_LB, &y, w, NULL, AL_CENTER);
++
+ }
+ 
+ 
+--- links-2.12/setup.h
++++ links-2.12/setup.h
+@@ -116,22 +116,22 @@
+ #define G_MENU_LEFT_INNER_BORDER	8
+ #define G_MENU_TOP_BORDER		16
+ #define G_MENU_HOTKEY_SPACE		16
+-#define G_MAINMENU_LEFT_BORDER		16
+-#define G_MAINMENU_BORDER		16
++#define G_MAINMENU_LEFT_BORDER		8
++#define G_MAINMENU_BORDER		8
+ 
+ #define G_DIALOG_TITLE_BORDER		8
+-#define G_DIALOG_LEFT_BORDER		24
+-#define G_DIALOG_TOP_BORDER		16
+-#define G_DIALOG_HLINE_SPACE		3
+-#define G_DIALOG_VLINE_SPACE		4
+-#define G_DIALOG_LEFT_INNER_BORDER	16
+-#define G_DIALOG_TOP_INNER_BORDER	(G_BFU_FONT_SIZE < 20 ? 8 : G_BFU_FONT_SIZE - 12)
+-
+-#define G_DIALOG_BUTTON_SPACE		16
+-#define G_DIALOG_CHECKBOX_SPACE		8
+-
+-#define G_DIALOG_GROUP_SPACE		16
+-#define G_DIALOG_GROUP_TEXT_SPACE	8
++#define G_DIALOG_LEFT_BORDER		2
++#define G_DIALOG_TOP_BORDER		2
++#define G_DIALOG_HLINE_SPACE		2
++#define G_DIALOG_VLINE_SPACE		2
++#define G_DIALOG_LEFT_INNER_BORDER	 4
++#define G_DIALOG_TOP_INNER_BORDER	6
++
++#define G_DIALOG_BUTTON_SPACE		4
++#define G_DIALOG_CHECKBOX_SPACE		4
++
++#define G_DIALOG_GROUP_SPACE		5
++#define G_DIALOG_GROUP_TEXT_SPACE	5
+ 
+ #define G_DIALOG_CHECKBOX_L		"["
+ #define G_DIALOG_CHECKBOX_R		"]"
+@@ -157,7 +157,7 @@
+ 
+ #define G_HTML_TABLE_FRAME_COLOR	0xe0
+ 
+-#define G_HTML_MARGIN			8
++#define G_HTML_MARGIN			4
+ 
+ #define G_IMG_REFRESH			1	/* Karle, nedavej sem 0 */
+ 
+@@ -176,13 +176,13 @@
+ #define STAT_UPDATE_MIN			100
+ #define STAT_UPDATE_MAX			1000
+ 
+-#define HTML_LEFT_MARGIN		3
++#define HTML_LEFT_MARGIN		1
+ #define HTML_MAX_TABLE_LEVEL		10
+ #define HTML_MAX_FRAME_DEPTH		7
+ #define HTML_CHAR_WIDTH			7
+ #define HTML_CHAR_HEIGHT		12
+ #define HTML_FRAME_CHAR_WIDTH		10
+-#define HTML_FRAME_CHAR_HEIGHT		16
++#define HTML_FRAME_CHAR_HEIGHT		12
+ #define HTML_TABLE_2ND_PASS
+ #define HTML_DEFAULT_INPUT_SIZE		20
+ #define HTML_MINIMAL_TEXTAREA_WIDTH	6
+

@@ -1,0 +1,14 @@
+--- links-2.12/view.c
++++ links-2.12/view.c
+@@ -3585,6 +3585,10 @@
+ 			reload(ses, -1);
+ 			goto x;
+ 		}
++		if (upcase(ev->x) == 'S' && ev->y & KBD_CTRL) {
++			abort_all_connections();
++			goto x;
++		}
+ 		if (ev->x == 'g' && !(ev->y & (KBD_CTRL | KBD_ALT))) {
+ 			quak:
+ 			dialog_goto_url(ses, cast_uchar "");
+

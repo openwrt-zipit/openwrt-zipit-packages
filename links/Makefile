@@ -9,14 +9,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=links
-PKG_VERSION:=2.3pre1
-PKG_RELEASE:=2
+PKG_VERSION:=2.12
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://links.twibright.com/download/
-PKG_FIXUP:=autoreconf
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_FIXUP:=libtool
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -28,7 +27,7 @@ define Package/links
     SECTION:=net
     CATEGORY:=Network
     URL:=http://links.twibright.com/
-    DEPENDS:=+libpng +libtiff +libopenssl +libsdl +libjpeg +libbz2
+    DEPENDS:=+libpng +libevent2 +libtiff +libopenssl +libsdl +libjpeg +libbz2
 endef
 
 define Package/links/description
@@ -45,7 +44,13 @@ CONFIGURE_ARGS += --enable-graphics \
   --without-svgalib \
   --without-fb \
   --without-directfb \
-  --without-x
+  --without-bzip2 \
+  --without-x \
+  --without-ipv6 \
+  --without-windows \
+  --without-grx \
+  --without-lzma \
+  --without-libtiff \
 
 #TARGET_CFLAGS += -I$(STAGING_DIR)/usr/include/directfb
 TARGET_CFLAGS += -I$(STAGING_DIR)/usr/include/SDL
@@ -62,6 +67,13 @@ CONFIGURE_VARS += \
 	SDL_CONFIG="$(STAGING_DIR)/usr/bin/sdl-config"
 #CONFIGURE_VARS += \
 #	SDL_CONFIG="$(STAGING_DIR)/target-arm_v5te_uClibc-0.9.33_eabi/usr/bin/sdl-config"
+define Build/Prepare
+	$(call Build/Prepare/Default)
+	$(CP) $(FILES_DIR)/english-only/* $(PKG_BUILD_DIR)
+endef
+
+
+LDFLAGS = -Wl, -L$(STAGING_DIR)/usr/lib -L$(STAGING_DIR)/lib
 
 define Package/links/install
 	$(INSTALL_DIR) $(1)/usr/bin

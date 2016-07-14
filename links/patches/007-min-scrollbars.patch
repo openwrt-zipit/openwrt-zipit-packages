@@ -1,0 +1,87 @@
+--- links-2.12/setup.h
++++ links-2.12/setup.h
+@@ -147,7 +147,12 @@
+ #define G_LEFT_ARROW			" \342\206\220 "
+ #define MENU_SUBMENU			(!F ? cast_uchar ">" : cast_uchar "\342\206\222")
+ 
++#if 1 /* ZIPIT_Z2 */
++/* Shave a few pixels off the big fat scroll bar. */
++#define G_SCROLL_BAR_WIDTH		3
++#else
+ #define G_SCROLL_BAR_WIDTH		12
++#endif
+ #define G_SCROLL_BAR_MIN_SIZE		20
+ #define G_DEFAULT_SCROLL_BAR_FRAME_COLOR	0x000000
+ #define G_DEFAULT_SCROLL_BAR_AREA_COLOR		0xc0c0c0
+--- links-2.12/view_gr.c
++++ links-2.12/view_gr.c
+@@ -470,31 +470,31 @@
+ void draw_vscroll_bar(struct graphics_device *dev, int x, int y, int yw, int total, int view, int pos)
+ {
+ 	int spos, epos;
+-	drv->draw_hline(dev, x, y, x + G_SCROLL_BAR_WIDTH, scroll_bar_frame_color);
+-	drv->draw_vline(dev, x, y, y + yw, scroll_bar_frame_color);
+-	drv->draw_vline(dev, x + G_SCROLL_BAR_WIDTH - 1, y, y + yw, scroll_bar_frame_color);
+-	drv->draw_hline(dev, x, y + yw - 1, x + G_SCROLL_BAR_WIDTH, scroll_bar_frame_color);
+-	drv->draw_vline(dev, x + 1, y + 1, y + yw - 1, scroll_bar_area_color);
+-	drv->draw_vline(dev, x + G_SCROLL_BAR_WIDTH - 2, y + 1, y + yw - 1, scroll_bar_area_color);
++//	drv->draw_hline(dev, x, y, x + G_SCROLL_BAR_WIDTH, scroll_bar_frame_color);
++//	drv->draw_vline(dev, x, y, y + yw, scroll_bar_frame_color);
++//	drv->draw_vline(dev, x + G_SCROLL_BAR_WIDTH - 1, y, y + yw, scroll_bar_frame_color);
++//	drv->draw_hline(dev, x, y + yw - 1, x + G_SCROLL_BAR_WIDTH, scroll_bar_frame_color);
++	drv->draw_vline(dev, x, y, y + yw, scroll_bar_area_color);
++	drv->draw_vline(dev, x + G_SCROLL_BAR_WIDTH, y, y + yw, scroll_bar_area_color);
+ 	get_scrollbar_pos(yw - 4, total, view, pos, &spos, &epos);
+-	drv->fill_area(dev, x + 2, y + 1, x + G_SCROLL_BAR_WIDTH - 2, y + 2 + spos, scroll_bar_area_color);
+-	drv->fill_area(dev, x + 2, y + 2 + spos, x + G_SCROLL_BAR_WIDTH - 2, y + 2 + epos, scroll_bar_bar_color);
+-	drv->fill_area(dev, x + 2, y + 2 + epos, x + G_SCROLL_BAR_WIDTH - 2, y + yw - 1, scroll_bar_area_color);
++	drv->fill_area(dev, x, y, x + G_SCROLL_BAR_WIDTH, y + spos, scroll_bar_area_color);
++	drv->fill_area(dev, x, y + spos, x + G_SCROLL_BAR_WIDTH, y + epos, scroll_bar_bar_color);
++	drv->fill_area(dev, x, y  + epos, x + G_SCROLL_BAR_WIDTH, y + yw, scroll_bar_area_color);
+ }
+ 
+ void draw_hscroll_bar(struct graphics_device *dev, int x, int y, int xw, int total, int view, int pos)
+ {
+ 	int spos, epos;
+-	drv->draw_vline(dev, x, y, y + G_SCROLL_BAR_WIDTH, scroll_bar_frame_color);
+-	drv->draw_hline(dev, x, y, x + xw, scroll_bar_frame_color);
+-	drv->draw_hline(dev, x, y + G_SCROLL_BAR_WIDTH - 1, x + xw, scroll_bar_frame_color);
+-	drv->draw_vline(dev, x + xw - 1, y, y + G_SCROLL_BAR_WIDTH, scroll_bar_frame_color);
+-	drv->draw_hline(dev, x + 1, y + 1, x + xw - 1, scroll_bar_area_color);
+-	drv->draw_hline(dev, x + 1, y + G_SCROLL_BAR_WIDTH - 2, x + xw - 1, scroll_bar_area_color);
+-	get_scrollbar_pos(xw - 4, total, view, pos, &spos, &epos);
+-	drv->fill_area(dev, x + 1, y + 2, x + 2 + spos, y + G_SCROLL_BAR_WIDTH - 2, scroll_bar_area_color);
+-	drv->fill_area(dev, x + 2 + spos, y + 2, x + 2 + epos, y + G_SCROLL_BAR_WIDTH - 2, scroll_bar_bar_color);
+-	drv->fill_area(dev, x + 2 + epos, y + 2, x + xw - 1, y + G_SCROLL_BAR_WIDTH - 2, scroll_bar_area_color);
++//	drv->draw_vline(dev, x, y, y + G_SCROLL_BAR_WIDTH, scroll_bar_frame_color);
++//	drv->draw_hline(dev, x, y, x + xw, scroll_bar_frame_color);
++//	drv->draw_hline(dev, x, y + G_SCROLL_BAR_WIDTH - 1, x + xw, scroll_bar_frame_color);
++//	drv->draw_vline(dev, x + xw - 1, y, y + G_SCROLL_BAR_WIDTH, scroll_bar_frame_color);
++	drv->draw_hline(dev, x, y, x + xw, scroll_bar_area_color);
++	drv->draw_hline(dev, x, y + G_SCROLL_BAR_WIDTH, x + xw, scroll_bar_area_color);
++	get_scrollbar_pos(xw, total, view, pos, &spos, &epos);
++	drv->fill_area(dev, x, y, x + spos, y + G_SCROLL_BAR_WIDTH, scroll_bar_area_color);
++	drv->fill_area(dev, x + spos, y, x + epos, y + G_SCROLL_BAR_WIDTH, scroll_bar_bar_color);
++	drv->fill_area(dev, x + epos, y, x + xw, y + G_SCROLL_BAR_WIDTH, scroll_bar_area_color);
+ }
+ 
+ static void g_get_search(struct f_data *f, unsigned char *s)
+@@ -563,7 +563,7 @@
+ 	restrict_clip_area(t->dev, &old, scr->xp, scr->yp, scr->xp + xw, scr->yp + yw);
+ 	if (scr->vsb) draw_vscroll_bar(t->dev, scr->xp + xw - G_SCROLL_BAR_WIDTH, scr->yp, yw - scr->hsb * G_SCROLL_BAR_WIDTH, scr->f_data->y, yw - scr->hsb * G_SCROLL_BAR_WIDTH, vs->view_pos);
+ 	if (scr->hsb) draw_hscroll_bar(t->dev, scr->xp, scr->yp + yw - G_SCROLL_BAR_WIDTH, xw - scr->vsb * G_SCROLL_BAR_WIDTH, scr->f_data->x, xw - scr->vsb * G_SCROLL_BAR_WIDTH, vs->view_posx);
+-	if (scr->vsb && scr->hsb) drv->fill_area(t->dev, scr->xp + xw - G_SCROLL_BAR_WIDTH, scr->yp + yw - G_SCROLL_BAR_WIDTH, scr->xp + xw, scr->yp + yw, scroll_bar_frame_color);
++	if (scr->vsb && scr->hsb) drv->fill_area(t->dev, scr->xp + xw - G_SCROLL_BAR_WIDTH, scr->yp + yw - G_SCROLL_BAR_WIDTH, scr->xp + xw, scr->yp + yw, scroll_bar_area_color);
+ 	restrict_clip_area(t->dev, NULL, scr->xp, scr->yp, scr->xp + xw - scr->vsb * G_SCROLL_BAR_WIDTH, scr->yp + yw - scr->hsb * G_SCROLL_BAR_WIDTH);
+ 	/*debug("buu: %d %d %d, %d %d %d", scr->xl, vx, xw, scr->yl, vy, yw);*/
+ 	if (drv->flags & GD_DONT_USE_SCROLL && overwrite_instead_of_scroll) goto rrr;
+@@ -913,7 +913,7 @@
+ 	*(h ? &fd->vs->view_posx : &fd->vs->view_pos) = new_val;
+ 	fd->vs->orig_view_pos = fd->vs->view_pos;
+ 	fd->vs->orig_view_posx = fd->vs->view_posx;
+-	draw_graphical_doc(fd->ses->term, fd, 1);
++//	draw_graphical_doc(fd->ses->term, fd, 1);
+ }
+ 
+ static inline int ev_in_rect(struct links_event *ev, int x1, int y1, int x2, int y2)
+

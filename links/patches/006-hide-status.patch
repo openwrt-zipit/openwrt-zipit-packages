@@ -1,0 +1,181 @@
+--- links-2.12/links.h
++++ links-2.12/links.h
+@@ -1203,6 +1203,7 @@
+ #define S_SMB_NOT_ALLOWED	(-2000000017)
+ #define S_FILE_NOT_ALLOWED	(-2000000018)
+ #define S_NO_PROXY		(-2000000019)
++#define S_HIDE_STATUS			(-2000000020)
+ 
+ #define S_HTTP_ERROR		(-2000000100)
+ #define S_HTTP_100		(-2000000101)
+--- links-2.12/session.c
++++ links-2.12/session.c
+@@ -157,6 +157,7 @@
+ 	 */
+ 	ses->st = NULL;
+ 	if (stat) {
++		if (stat->state == S_HIDE_STATUS) return;
+ 		if (stat->state == S__OK) ses->st = print_current_link(ses);
+ 		if (!ses->st) ses->st = ses->default_status ? stracpy(ses->default_status) : get_stat_msg(stat, ses->term);
+ 	} else {
+@@ -181,10 +182,10 @@
+ 			mem_free(m);
+ 		}
+ #ifdef G
+-	} else {
++	} else  if (ses->st && strcmp(cast_const_char ses->st, cast_const_char _(TEXT_(T_OK), term) )){
+ 		int l = 0;
+-		if (ses->st) g_print_text(term->dev, 0, term->y - G_BFU_FONT_SIZE, bfu_style_wb_mono, ses->st, &l);
+-		drv->fill_area(term->dev, l, term->y - G_BFU_FONT_SIZE, term->x, term->y, bfu_bg_color);
++		g_print_text(term->dev, 0, term->y - G_BFU_FONT_SIZE, bfu_style_wb_mono, ses->st, &l);
++		drv->fill_area(term->dev, l, term->y - G_BFU_FONT_SIZE, term->x, term->y, bfu_fg_color);
+ #endif
+ 	}
+ }
+@@ -209,14 +210,16 @@
+ #ifdef G
+ 	skip_status:
+ #endif
++	if (!F){
+ 	m = stracpy(cast_uchar "Links");
+ 	if (ses->screen && ses->screen->f_data && ses->screen->f_data->title && ses->screen->f_data->title[0]) add_to_strn(&m, cast_uchar " - "), add_to_strn(&m, ses->screen->f_data->title);
+ 	set_terminal_title(ses->term, m);
+ 	/*mem_free(m); -- set_terminal_title frees it */
+ 
+-	if (!F && ses->brl_cursor_mode) {
++		if (ses->brl_cursor_mode) {
+ 		if (ses->brl_cursor_mode == 1) set_cursor(ses->term, 0, 0, 0, 0);
+ 		if (ses->brl_cursor_mode == 2) set_cursor(ses->term, 0, ses->term->y - 1, 0, ses->term->y - 1);
++		}
+ 	}
+ }
+ 
+@@ -1840,7 +1843,8 @@
+ 	fd->refresh_timer = NULL;
+ 	if (fd->f_data && fd->f_data->refresh) {
+ 		fd->refresh_timer = install_timer(fd->f_data->refresh_seconds * 1000, (void (*)(void *))refresh_timer, fd);
+-		goto_url_f(fd->ses, NULL, fd->f_data->refresh, cast_uchar "_self", fd, -1, 0, 0, 1);
++		reload(fd->ses, -1);
++//		goto_url_f(fd->ses, NULL, fd->f_data->refresh, cast_uchar "_self", fd, -1, 0, 0, 1);
+ 	}
+ }
+ 
+@@ -2353,9 +2357,7 @@
+ 	ml = getml(d, a, ct, text_array, NULL);
+ 
+ 	for (i = 0; i < n; i++) {
+-		unsigned char *bla = stracpy(_(TEXT_(T_OPEN_WITH),ses->term));
+-		add_to_strn(&bla, cast_uchar " ");
+-		add_to_strn(&bla, a[i].label);
++		unsigned char *bla=stracpy(_(a[i].label,ses->term));
+ 
+ 		d->items[i].type = D_BUTTON;
+ 		d->items[i].fn = prog_sel_open;
+@@ -2696,10 +2698,10 @@
+ static void set_doc_view(struct session *ses)
+ {
+ 	ses->screen->xp = 0;
+-	ses->screen->yp = gf_val(1, G_BFU_FONT_SIZE);
++	ses->screen->yp = 0;
+ 	ses->screen->xw = ses->term->x;
+-	if (ses->term->y < gf_val(2, 2 * G_BFU_FONT_SIZE)) ses->screen->yw = 0;
+-	else ses->screen->yw = ses->term->y - gf_val(2, 2 * G_BFU_FONT_SIZE);
++	if (ses->term->y < 0) ses->screen->yw = 0;
++	else ses->screen->yw = ses->term->y;
+ }
+ 
+ static struct session *create_session(struct window *win)
+--- links-2.12/view.c
++++ links-2.12/view.c
+@@ -1221,7 +1221,7 @@
+ {
+ 	clr_xl(scr);
+ #ifdef G
+-	if (F) if (scr == scr->ses->screen) draw_title(scr);
++	//if (F) if (scr == scr->ses->screen) draw_title(scr);
+ #endif
+ 	draw_doc(t, scr);
+ }
+--- links-2.12/view_gr.c
++++ links-2.12/view_gr.c
+@@ -1006,6 +1006,7 @@
+ 		if ((fd->f_data->locked_on = fd->f_data->links[fd->vs->current_link].obj)) fd->ses->locked_link = 1;
+ 	}
+ 	set_textarea(fd->ses, fd, dir < 0 ? KBD_DOWN : KBD_UP);
++	fd->rq->stat.state = S__OK;
+ 	change_screen_status(fd->ses);
+ 	print_screen_status(fd->ses);
+ 	if (lr_link(fd, fd->vs->current_link)) r = 1;
+@@ -1020,6 +1021,22 @@
+ 	fd->vs->g_display_link = 0;
+ 	fd->ses->locked_link = 0;
+ 	if (n >= 0 && n < fd->f_data->nlinks) {
++		redraw_link(fd, n);
++	}
++
++}
++
++static void clear_link_status(struct f_data_c *fd)
++{
++	int n = fd->vs->current_link;
++	if (n >= 0 && n < fd->f_data->nlinks) {
++		fd->vs->g_display_link = 0;
++		redraw_link(fd, n);
++	
++		change_screen_status(fd->ses);
++		print_screen_status(fd->ses);
++
++		fd->vs->g_display_link = 1;
+ 		redraw_link(fd, n);
+ 	}
+ }
+@@ -1040,11 +1057,13 @@
+ 
+ static int scroll_v(struct f_data_c *fd, int y)
+ {
++	fd->rq->stat.state = S_HIDE_STATUS;
+ 	return scroll_vh(&fd->vs->view_pos, &fd->vs->orig_view_pos, fd->ses->scrolling == 2 ? &fd->ses->scrolloff : NULL, y, fd->f_data->y - fd->yw + fd->hsb * G_SCROLL_BAR_WIDTH);
+ }
+ 
+ static int scroll_h(struct f_data_c *fd, int x)
+ {
++	fd->rq->stat.state = S_HIDE_STATUS;
+ 	return scroll_vh(&fd->vs->view_posx, &fd->vs->orig_view_posx, fd->ses->scrolling == 2 ? &fd->ses->scrolltype : NULL, x, fd->f_data->x - fd->xw + fd->vsb * G_SCROLL_BAR_WIDTH);
+ }
+ 
+@@ -1303,6 +1322,7 @@
+ 			    || (ev->x == KBD_DOWN && !(ev->y & (KBD_CTRL | KBD_ALT))) // added down arrow
+ 			    || (ev->x == ' ' && !(ev->y & KBD_ALT) && !(ev->y & KBD_SHIFT))) {
+ 
++				clear_link_status(fd); 
+ #else
+ 			if (ev->x == KBD_DEL || (upcase(ev->x) == 'N' && ev->y & KBD_CTRL)) {
+ #endif
+@@ -1313,6 +1333,8 @@
+ 			if (ev->x == KBD_INS || (upcase(ev->x) == 'P' && ev->y & KBD_CTRL) 
+ 			    || (ev->x == KBD_UP && !(ev->y & (KBD_CTRL | KBD_ALT))) // added up arrow
+ 			    || (ev->x == ' ' && !(ev->y & KBD_ALT) && (ev->y & KBD_SHIFT))) {
++
++				clear_link_status(fd); 
+ #else
+ 			if (ev->x == KBD_INS || (upcase(ev->x) == 'P' && ev->y & KBD_CTRL)) {
+ #endif
+@@ -1377,7 +1399,7 @@
+ 			if (ev->x == '[') {
+ #endif
+ 				left:
+- 
++				clear_link_status(fd); 
+ 				return scroll_h(fd, -64);
+ 			}
+ #if 1 /* ZIPIT_Z2 */
+@@ -1389,7 +1411,7 @@
+ 			if (ev->x == ']') {
+ #endif
+ 				right:
+-
++				clear_link_status(fd); 
+ 				return scroll_h(fd, 64);
+ 			}
+ 			if (/*ev->x == KBD_LEFT*/ 0) {
+

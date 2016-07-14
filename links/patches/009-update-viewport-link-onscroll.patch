@@ -1,0 +1,17 @@
+--- links-2.12/view_gr.c
++++ links-2.12/view_gr.c
+@@ -960,9 +960,10 @@
+ 	int orig_link = -1;
+ 	int r = 2;
+ 	int n, pn;
+-	if (fd->vs->current_link >= 0 && fd->vs->current_link < fd->f_data->nlinks) {
+-		orig_link = fd->vs->current_link;
+-		n = (pn = fd->vs->current_link) + dir;
++	int currLink = fd->vs->current_link;
++	if (currLink >= 0 && currLink < fd->f_data->nlinks && is_link_in_view(fd, currLink) ) {
++		orig_link = currLink;
++		n = (pn = currLink) + dir;
+ 	} else retry: n = dir > 0 ? 0 : fd->f_data->nlinks - 1, pn = -1;
+ 	again:
+ 	if (n < 0 || n >= fd->f_data->nlinks) {
+
