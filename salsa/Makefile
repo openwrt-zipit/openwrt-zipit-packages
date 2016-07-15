@@ -48,7 +48,9 @@ CONFIGURE_ARGS += \
 	--enable-rawmidi \
 	--enable-hwdep \
 	--enable-tlv \
-#	--disable-4bit \
+	--enable-ctlasciiparser \
+	--enable-abicheck \
+	--disable-4bit \
 
 define Package/salsa-lib/install
 	$(INSTALL_DIR) $(1)/usr/lib

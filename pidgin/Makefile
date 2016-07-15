@@ -6,20 +6,21 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pidgin
-PKG_VERSION:=2.7.11
+PKG_VERSION:=2.11.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=@SF/$(PKG_NAME)
-PKG_MD5SUM:=07c2a2535b4d7436b5ec7685fe063fec
+PKG_MD5SUM:=7b167474db669aab2f71fa46835fb83f
 
 PKG_INSTALL:=1
+PKG_FIXUP:=libtool autoreconf
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
 
 define Package/libpurple/Default
-  DEPENDS:=+libxml2 +libgnutls +libncurses +glib2 $(ICONV_DEPENDS) $(INTL_DEPENDS)
+  DEPENDS:=+libxml2 +libgnutls +libopenssl +libncursesw +glib2 $(ICONV_DEPENDS) $(INTL_DEPENDS)
   URL:=http://developer.pidgin.im
 endef
 
@@ -33,7 +34,7 @@ endef
 # Not sure yet why finch wants the WIDE char versions of ncurses (and panel).
 define Package/finch
 #  $(call Package/libpurple/Default)
-  DEPENDS:=+libxml2 +libgnutls +libncursesw +libpurple +glib2 $(ICONV_DEPENDS) $(INTL_DEPENDS)
+  DEPENDS:=+libxml2  +libgnutls +libopenssl +libncursesw +libpurple +glib2 $(ICONV_DEPENDS) $(INTL_DEPENDS) 
   URL:=http://developer.pidgin.im
 
   SECTION:=net
@@ -57,6 +58,8 @@ define Build/Configure
 		--disable-screensaver \
 		--disable-sm \
 		--disable-gtkspell \
+		--disable-gevolution \
+		--disable-nls \
 		--without-x \
 		--disable-gstreamer \
 		--disable-vv \
@@ -67,6 +70,8 @@ define Build/Configure
 		--disable-perl \
 		--with-gnutls-libs=$(STAGING_DIR)/usr/lib \
 		--with-gnutls-includes=$(STAGING_DIR)/usr/include \
+		--with-openssl-libs=$(STAGING_DIR)/usr/lib \
+		--with-openssl-includes=$(STAGING_DIR)/usr/include/openssl \
 		--with-ncurses-headers=$(STAGING_DIR)/usr/include/ncursesw \
 		--disable-gtkui \
 		--disable-pixmaps-install \
@@ -74,6 +79,15 @@ define Build/Configure
 		--disable-dot \
 		--disable-tcl \
 		--disable-tk \
+		--disable-largefile \
+		--disable-rpath \
+		--disable-farstream \
+		--disable-fortify \
+		--without-python \
+		--without-zephyr \
+		--enable-gnutls=yes \
+		--enable-nss=no \
+		--enable-openssl=yes \
 	)
 endef
 
@@ -114,13 +128,26 @@ endef
 
 define Package/finch/install
 	$(INSTALL_DIR) \
-		$(1)/usr/bin $(1)/usr/lib $(1)/usr/lib/gnt
+		$(1)/usr/bin \
+		$(1)/usr/lib \
+		$(1)/usr/lib/gnt \
+		$(1)/usr/lib/finch \
+		$(1)/usr/share/sounds/purple
 	$(CP) \
 		$(PKG_INSTALL_DIR)/usr/lib/libgnt.so* \
 		$(1)/usr/lib
 	$(CP) \
 		$(PKG_INSTALL_DIR)/usr/lib/gnt/*.so* \
 		$(1)/usr/lib/gnt
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/lib/gnt/*.so* \
+		$(1)/usr/lib/gnt
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/lib/finch/*.so* \
+		$(1)/usr/lib/finch
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/share/sounds/purple/*.wav \
+		$(1)/usr/share/sounds/purple
 	$(INSTALL_BIN) \
 		$(PKG_INSTALL_DIR)/usr/bin/finch \
 		$(1)/usr/bin
