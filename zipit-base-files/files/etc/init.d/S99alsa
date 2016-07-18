@@ -5,7 +5,18 @@
 
 case "$1" in
   start)
-	/usr/sbin/alsactl restore -f /etc/alsa/asound.state
+	amixer sset "Headphones Playback ZC" on
+	amixer sset "Speaker Playback ZC" on
+	amixer sset "Right Speaker Playback Invert" on
+	amixer sset "Playback 6dB Attenuate" on
+	amixer sset "Right Mixer" on
+	amixer sset "Left Mixer" on
+	amixer sset "PCM" 237
+	amixer sset "Headphone" 100
+	amixer sset "Speaker" 115
+	amixer sset "Treble" 14
+	amixer sset "Bass" 13
+	amixer sset "3D" 4
 	;;
   stop)
 	;;
