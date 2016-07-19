@@ -47,7 +47,7 @@ CONFIGURE_ARGS+= \
 	--enable-loadso \
 	--enable-cpuinfo \
 	--enable-assembly \
-	--disable-oss \
+	--enable-oss \
 	--disable-alsatest \
 	--enable-alsa-shared \
 	--disable-esd \
