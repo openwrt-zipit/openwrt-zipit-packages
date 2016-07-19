@@ -47,8 +47,6 @@ define Package/ebindkeys-zipit/install
 		$(INSTALL_DATA) $(PKG_BUILD_DIR)/README $(1)/usr/share/ebindkeys/
 	$(INSTALL_DIR) $(1)/etc
 		$(INSTALL_DATA) ./files/ebindkeysrc $(1)/etc/ebindkeysrc
-	$(INSTALL_DIR) $(1)/etc/init.d
-		$(INSTALL_BIN) ./files/S10ebkdaemon $(1)/etc/init.d/S10ebkdaemon
 endef
 
 $(eval $(call BuildPackage,ebindkeys-zipit))

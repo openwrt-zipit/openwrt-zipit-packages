@@ -33,6 +33,14 @@ dimkeyb = 1		# keyboard brightness on Battery
 lcdtimeout = 6000       # screen off timeout on Battery
 keytimeout = 500        # keyboard off timeout on Battery
 
+# Notification led to use. Heartbeat trigger on the LED is activated
+# by sending SIGUSR2 to ebindkeys: kill -12 `pidof ebindkeys`
+# LED is turned off when a key is pressed or lid state is changed
+# 1 = z2:green:charged
+# 2 = z2:amber:charging
+# 3 = z2:green:wifi
+notifyled = 2
+
 # Keyboard events
 event
 {
