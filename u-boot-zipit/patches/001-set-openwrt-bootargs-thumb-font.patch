@@ -1,0 +1,23 @@
+diff --git a/include/configs/zipitz2.h b/include/configs/zipitz2.h
+index 8e76a6e..834b552 100644
+--- a/include/configs/zipitz2.h
++++ b/include/configs/zipitz2.h
+@@ -38,7 +38,9 @@
+ 		"bootm 0x50000; "					\
+ 	"fi; "
+ #define	CONFIG_BOOTARGS							\
+-	"console=tty0 console=ttyS2,115200 fbcon=rotate:3"
++	"console=tty0 console=ttyS2,115200 fbcon=rotate:3" \
++	" pxa2xx-cpufreq.pxa27x_maxfreq=520 pxamci.ignore_crc_errors=1" \
++	" root=/dev/mtdblock3 rootfstype=squashfs init=/etc/preinit"
+ #define	CONFIG_TIMESTAMP
+ #define	CONFIG_BOOTDELAY		2	/* Autoboot delay */
+ #define	CONFIG_CMDLINE_TAG
+@@ -95,6 +97,7 @@
+ #define	CONFIG_LCD_ROTATION
+ #define	CONFIG_PXA_LCD
+ #define	CONFIG_LMS283GF05
++#define	CONFIG_VIDEO_FONT_THUMB_4X6
+ 
+ #define	SPI_DELAY	udelay(10)
+ #define	SPI_SDA(val)	zipitz2_spi_sda(val)
