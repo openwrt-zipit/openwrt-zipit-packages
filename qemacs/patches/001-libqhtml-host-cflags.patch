@@ -1,0 +1,11 @@
+--- qemacs-3.2/libqhtml/Makefile~	2016-08-02 21:01:40.000000000 -0400
++++ qemacs-3.2/libqhtml/Makefile	2016-08-02 22:35:35.518305267 -0400
+@@ -31,7 +31,7 @@
+ # build default style sheet file
+ #
+ csstoqe: csstoqe.c
+-	$(HOST_CC) $(CFLAGS) -o $@ $<
++	$(HOST_CC) -o $@ $<
+ 
+ html_style.c: html.css csstoqe
+ 	./csstoqe html_style < $< > $@

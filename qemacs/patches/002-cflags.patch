@@ -1,0 +1,11 @@
+--- qemacs-3.2/Makefile~	2016-08-02 21:01:40.000000000 -0400
++++ qemacs-3.2/Makefile	2016-08-02 22:44:08.760180149 -0400
+@@ -12,7 +12,7 @@
+ #CONFIG_UNICODE_JOIN=y
+ #CONFIG_ALL_KMAPS=y
+ 
+-CFLAGS:=-fno-strict-aliasing -Wall -Werror -g $(CFLAGS)
++CFLAGS:=-fno-strict-aliasing -Wall -g $(CFLAGS)
+ ifdef TARGET_GPROF
+ CFLAGS+= -p
+ LDFLAGS+= -p
