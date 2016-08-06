@@ -1,0 +1,22 @@
+#!/bin/sh /etc/rc.common
+#
+# Load Zipit Z2 Alsa settings
+#
+
+START=97
+
+start() {
+	#/usr/sbin/alsactl restore -f /etc/alsa/asound.state
+	/usr/bin/amixer sset "Headphones Playback ZC" on
+	/usr/bin/amixer sset "Speaker Playback ZC" on
+	/usr/bin/amixer sset "Right Speaker Playback Invert" on
+	/usr/bin/amixer sset "Playback 6dB Attenuate" off
+	/usr/bin/amixer sset "Right Mixer" on
+	/usr/bin/amixer sset "Left Mixer" on
+	/usr/bin/amixer sset "PCM" 237
+	/usr/bin/amixer sset "Headphone" 100
+	/usr/bin/amixer sset "Speaker" 127
+	/usr/bin/amixer sset "Treble" 14
+	/usr/bin/amixer sset "Bass" 13
+	/usr/bin/amixer sset "3D" 4
+}

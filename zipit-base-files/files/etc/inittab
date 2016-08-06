@@ -1,14 +1,7 @@
-# Startup the system
-#::sysinit:/bin/mount -t proc proc /proc
-#::sysinit:/bin/mount -t sysfs none /sys
-#::sysinit:/bin/mount -t tmpfs -o size=64k,mode=0755 none /dev
-#::sysinit:/bin/mount -o remount,rw /
-#::sysinit:/bin/mkdir -p /dev/pts
-#::sysinit:/bin/mount -t devpts devpts /dev/pts
-#::sysinit:/bin/mkdir -p /dev/shm
-::sysinit:/bin/echo /sbin/mdev > /proc/sys/kernel/hotplug
+# Rescan devices
 ::sysinit:/sbin/mdev -s
-#::sysinit:/bin/mount -a
+
+# Set the hostname
 ::sysinit:/bin/hostname -F /etc/hostname
 
 # Set Zipit Z2 Console keymap and font
@@ -16,16 +9,18 @@
 ::sysinit:/sbin/loadkmap < /etc/z2.kmap
 
 # Run any rc scripts
-::sysinit:/etc/rc.d/rcS
+::sysinit:/etc/init.d/rcS S boot
 
 # Reduce kernel messages on the console
 ::sysinit:/bin/echo "4 1 1 7" > /proc/sys/kernel/printk
 
 # Stuff to do before rebooting
-::shutdown:/etc/rc.d/rcK
+::shutdown:/etc/init.d/rcS K shutdown
 ::shutdown:/sbin/swapoff -a
+::shutdown:/bin/sync
 ::shutdown:/bin/umount -a -r
 
+# Start the tty's
 ttyS2::askfirst:/bin/ash --login
 tty1::respawn:/usr/bin/z2-shell
 tty2::respawn:/usr/sbin/ebindkeys -d -f /etc/ebindkeysrc

@@ -1,7 +1,10 @@
-#!/bin/sh
+#!/bin/sh /etc/rc.common
 #
 # Load kernel modules
 #
+
+START=03
+STOP=97
 
 # Define the module directory
 moddir="/lib/modules/$(uname -r)"
@@ -13,8 +16,7 @@ if [ ! -s "$moddir/modules.dep" ]; then
 	echo "done"
 fi
 
-case "$1" in
-  start)
+start() {
 	echo "Loading modules..."
 	[ -d /etc/modules.d ] && {
 		for file in /etc/modules.d/* ; do
@@ -23,8 +25,9 @@ case "$1" in
 			done < "$file"
 		done
 	}
-	;;
-  stop)
+}
+
+stop() {
 	echo "Unloading modules..."
 	[ -d /etc/modules.d ] && {
 		for file in /etc/modules.d/* ; do
@@ -33,12 +36,4 @@ case "$1" in
 			done < "$file"
 		done
 	}
-	;;
-  restart|reload)
-	;;
-  *)
-	echo "Usage: $0 {start|stop|restart}"
-	exit 1
-esac
-
-exit $?
+}

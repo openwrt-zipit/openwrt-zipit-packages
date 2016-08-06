@@ -1,0 +1,12 @@
+#!/bin/sh /etc/rc.common
+#
+# Setup and enable zram
+#
+
+START=30
+
+start() {
+	echo "16000000" > /sys/block/zram0/disksize
+	/sbin/mkswap /dev/zram0
+	/sbin/swapon /dev/zram0
+}

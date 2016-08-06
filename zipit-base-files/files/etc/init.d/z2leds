@@ -1,10 +1,12 @@
-#!/bin/sh
+#!/bin/sh /etc/rc.common
 #
 # Setup Zipit Z2 LED's
 #
 
-case "$1" in
-  start)
+START=11
+
+start() {
+	echo "Setting up Zipit LED's"
 	echo "mmc0" > /sys/class/leds/z2\:green\:wifi/trigger
 	echo "Z2-charging-blink-full-solid" > /sys/class/leds/z2\:green\:charged/trigger
 	echo "none" > /sys/class/leds/z2\:amber\:charging/trigger
@@ -12,14 +14,4 @@ case "$1" in
 	if [ "$STAT" == "Full" ]; then
 		echo "255" > /sys/class/leds/z2\:green\:charged/brightness
 	fi
-	;;
-  stop)
-	;;
-  restart|reload)
-	;;
-  *)
-	echo "Usage: $0 {start|stop|restart}"
-	exit 1
-esac
-
-exit $?
+}

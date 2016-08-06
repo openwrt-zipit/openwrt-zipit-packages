@@ -1,10 +1,10 @@
-#!/bin/sh
-#
-# Do some basic setup
-#
+#!/bin/sh /etc/rc.common
+# basic setup at boot time
 
-case "$1" in
-  start)
+START=01
+STOP=99
+
+start() {
 	mkdir -p /var/run
 	mkdir -p /var/log
 	mkdir -p /var/lock
@@ -13,14 +13,4 @@ case "$1" in
 	for CONF in /etc/sysctl.conf /etc/sysctl.d/*.conf; do
 		[ -f "$CONF" ] && sysctl -p "$CONF" -e >&-
 	done
-	;;
-  stop)
-	;;
-  restart|reload)
-	;;
-  *)
-	echo "Usage: $0 {start|stop|restart}"
-	exit 1
-esac
-
-exit $?
+}
