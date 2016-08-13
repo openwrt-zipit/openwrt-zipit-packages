@@ -2,6 +2,7 @@
 # Suspend script
 
 ###### Pre-suspend ######
+ifconfig wlan0 down 2>/dev/null
 wpa_pid=`pidof wpa_supplicant`
 wpa_stat=$?
 
@@ -9,18 +10,17 @@ if [ $wpa_stat -eq 0 ]; then
 	kill -s SIGQUIT $wpa_pid
 fi
 
-ifconfig wlan0 down 2>/dev/null
-rmmod libertas_spi 2>/dev/null
+#rmmod libertas_spi 2>/dev/null
 
 # disable conservative cpufreq or zipit wont wake up
-/etc/init.d/S02cpufreq stop
+/etc/init.d/cpufreq stop
 
 ###### Suspend #######
 echo "mem" > /sys/power/state
 
 ###### Resume ######
-/etc/init.d/S02cpufreq start
-insmod /lib/modules/$(uname -r)/libertas_spi.ko 2>/dev/null
+/etc/init.d/cpufreq start
+#insmod /lib/modules/$(uname -r)/libertas_spi.ko 2>/dev/null
 
 # If wpa_supplicant was running try to reconnect
 if [ $wpa_stat -eq 0 ]; then
