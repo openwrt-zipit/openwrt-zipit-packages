@@ -1,0 +1,49 @@
+--- a/src/log.c.orig	2016-08-24 23:58:24.837315656 -0500
++++ b/src/log.c	2016-08-25 00:00:56.985318723 -0500
+@@ -30,7 +30,9 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <syslog.h>
++#ifdef __GLIBC__
+ #include <execinfo.h>
++#endif
+ #include <dlfcn.h>
+ 
+ #include "ofono.h"
+@@ -113,6 +115,7 @@
+ 	va_end(ap);
+ }
+ 
++#ifdef __GLIBC__
+ static void print_backtrace(unsigned int offset)
+ {
+ 	void *frames[99];
+@@ -214,6 +217,7 @@
+ 	close(outfd[1]);
+ 	close(infd[0]);
+ }
++#endif
+ 
+ static void signal_handler(int signo)
+ {
+@@ -304,8 +308,9 @@
+ 
+ 	if (detach == FALSE)
+ 		option |= LOG_PERROR;
+-
++#ifdef __GLIBC__
+ 	signal_setup(signal_handler);
++#endif
+ 
+ 	openlog(basename(program), option, LOG_DAEMON);
+ 
+@@ -320,7 +325,9 @@
+ 
+ 	closelog();
+ 
++#ifdef __GLIBC__
+ 	signal_setup(SIG_DFL);
++#endif
+ 
+ 	g_strfreev(enabled);
+ }
