@@ -1,0 +1,26 @@
+--- a/apps/CMakeLists.txt.orig	2016-09-02 19:29:54.012662981 -0500
++++ b/apps/CMakeLists.txt	2016-09-02 19:33:08.472666900 -0500
+@@ -5,20 +5,20 @@
+ add_definitions ( -DHAVE_USB )
+ 
+ add_executable ( obexftp_app obexftp.c )
+-target_link_libraries ( obexftp_app obexftp )
++target_link_libraries ( obexftp_app obexftp multicobex bfb )
+ set_target_properties ( obexftp_app PROPERTIES
+   OUTPUT_NAME obexftp
+ )
+ 
+ 
+ add_executable ( obexftpd_app obexftpd.c )
+-target_link_libraries ( obexftpd_app obexftp openobex )
++target_link_libraries ( obexftpd_app obexftp openobex multicobex bfb )
+ set_target_properties ( obexftpd_app PROPERTIES
+   OUTPUT_NAME obexftpd
+ )
+ 
+ add_executable ( discovery_app discovery.c )
+-target_link_libraries ( discovery_app obexftp )
++target_link_libraries ( discovery_app obexftp multicobex bfb )
+ set_target_properties ( discovery_app PROPERTIES
+   OUTPUT_NAME obexftp-discovery
+ )

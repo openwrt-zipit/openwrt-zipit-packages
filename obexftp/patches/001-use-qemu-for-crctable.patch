@@ -1,0 +1,12 @@
+--- a/bfb/CMakeLists.txt.orig	2016-09-02 19:18:25.160649097 -0500
++++ b/bfb/CMakeLists.txt	2016-09-02 19:18:56.060649720 -0500
+@@ -23,7 +23,8 @@
+ )
+ 
+ add_custom_command ( OUTPUT irda_fcs_table.c
+-  COMMAND crctable
++  COMMAND ${QEMU_HOST} -L ${QEMU_LIBS} crctable
++  DEPENDS crctable
+ )
+ 
+ add_library ( bfb

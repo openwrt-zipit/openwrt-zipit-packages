@@ -1,0 +1,20 @@
+--- a/fuse/CMakeLists.txt.orig	2016-09-02 19:34:09.200668124 -0500
++++ b/fuse/CMakeLists.txt	2016-09-02 19:36:47.776671320 -0500
+@@ -13,7 +13,7 @@
+   )
+ 
+   target_link_libraries ( obexfs
+-    obexftp
++    obexftp multicobex bfb
+     ${Fuse_LIBRARIES}
+     ${EXPAT_LIBRARIES}
+   )
+@@ -23,7 +23,7 @@
+   )
+ 
+   target_link_libraries ( obexautofs
+-    obexftp
++    obexftp multicobex bfb
+     ${Fuse_LIBRARIES}
+   )
+ 
