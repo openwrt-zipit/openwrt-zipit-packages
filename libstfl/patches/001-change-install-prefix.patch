@@ -1,0 +1,11 @@
+--- a/Makefile.cfg.orig	2016-07-26 13:36:49.670065241 -0500
++++ b/Makefile.cfg	2016-07-26 13:37:02.550065500 -0500
+@@ -19,7 +19,7 @@
+ #
+ 
+ export libdir ?= lib
+-export prefix ?= /usr/local
++export prefix ?= /usr
+ export DESTDIR ?= /
+ 
+ ifneq ($(shell spl-config --cflags 2>/dev/null),)
