@@ -20,8 +20,8 @@ define Package/netsurf-all
 	CATEGORY:=Network
 	TITLE:=netsurf-all
 	URL:=http://www.netsurf-browser.org/
-	DEPENDS:=@BUILD_NLS +libjpeg +libpng +libsdl +libxml2 +libcurl +libfreetype +liberation-fonts-ttf \
-		+libopenssl $(ICONV_DEPENDS) +libexpat
+	DEPENDS:=+@BUILD_NLS +libjpeg +libpng +libsdl +libxml2 +libcurl +@LIBCURL_ZLIB \
+		+libfreetype +liberation-fonts-ttf +libopenssl $(ICONV_DEPENDS) +libexpat
 endef
 
 define Package/netsurf-all/description

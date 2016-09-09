@@ -1,0 +1,22 @@
+--- a/netsurf/framebuffer/gui.c	2016-09-08 18:22:21.527029324 -0500
++++ b/netsurf/framebuffer/gui.c	2016-09-08 18:39:00.051049449 -0500
+@@ -934,9 +934,17 @@
+ 				browser_window_key_press(gw->bw, NS_KEY_REDO);
+ 				break;
+ 			}
+-			/* Z or Y pressed but not undo or redo;
+-			 * Fall through to default handling */
++			/* Z or Y pressed but not undo or redo; */
++		case NSFB_KEY_q:
++			if (cbi->event->value.keycode == NSFB_KEY_q &&
++					(modifier & FBTK_MOD_RCTRL ||
++					 modifier & FBTK_MOD_LCTRL)) {
++				/* Q pressed with CTRL held, quit */
++				fb_complete = true;
++				break;
++			}
+ 
++		/* Fall through to default handling */
+ 		default:
+ 			ucs4 = fbtk_keycode_to_ucs4(cbi->event->value.keycode,
+ 						    modifier);
