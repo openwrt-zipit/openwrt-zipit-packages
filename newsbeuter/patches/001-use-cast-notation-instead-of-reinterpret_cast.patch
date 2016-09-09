@@ -1,0 +1,11 @@
+--- a/src/utils.cpp.orig	2016-07-27 10:13:30.903560719 -0500
++++ b/src/utils.cpp	2016-07-27 10:13:45.151561006 -0500
+@@ -264,7 +264,7 @@
+ 
+ 	iconv_t cd = ::iconv_open((tocode + "//TRANSLIT").c_str(), fromcode.c_str());
+ 
+-	if (cd == reinterpret_cast<iconv_t>(-1))
++	if (cd == (iconv_t)(-1))
+ 		return result;
+ 
+ 	size_t inbytesleft;
