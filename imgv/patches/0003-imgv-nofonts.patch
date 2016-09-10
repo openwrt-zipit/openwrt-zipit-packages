@@ -1,15 +1,27 @@
---- original/sdl-imageviewer.c	2014-02-06 12:56:11.030667000 -0800
-+++ new/sdl-imageviewer.c	2014-02-06 12:37:30.766073000 -0800
-@@ -8,7 +8,7 @@
+diff -Naur imgv-0.3.0.orig/Makefile imgv-0.3.0/Makefile
+--- imgv-0.3.0.orig/Makefile	2016-09-10 10:41:14.015609236 -0500
++++ imgv-0.3.0/Makefile	2016-09-10 11:13:45.866522210 -0500
+@@ -9,7 +9,7 @@
+ STRIP         = mipsel-openwrt-linux-strip
+ CFLAGS        := $(CFLAGS)
+ INCPATH       = -I$(TARGETPATH)/usr/include/ -I$(TARGETPATH)/usr/include/SDL -I.
+-LIBS          = -L$(TARGETPATH)/usr/lib/ -lSDL -lSDL_image -lSDL_gfx -lSDL_ttf -lfreetype -lz -lpthread
++LIBS          = -L$(TARGETPATH)/usr/lib/ -lSDL -lSDL_image -lSDL_gfx -lz -lpthread
+ 
+ SOURCE1       = sdl-imageviewer.c
+ TARGET1       = imgv
+diff -Naur imgv-0.3.0.orig/sdl-imageviewer.c imgv-0.3.0/sdl-imageviewer.c
+--- imgv-0.3.0.orig/sdl-imageviewer.c	2016-09-10 10:41:20.072361794 -0500
++++ imgv-0.3.0/sdl-imageviewer.c	2016-09-10 11:00:35.955399295 -0500
+@@ -8,7 +8,6 @@
  #include <SDL/SDL.h>
  #include <SDL/SDL_image.h>
  #include <SDL/SDL_rotozoom.h>
 -#include <SDL/SDL_ttf.h>
-+
  
  #define TRUE 1
  #define FALSE 0
-@@ -24,14 +24,68 @@
+@@ -24,14 +23,68 @@
  
  void quit()
  {
@@ -79,7 +91,7 @@
      // Initialize the SDL library 
      if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) 
      {
-@@ -51,8 +105,6 @@
+@@ -51,8 +104,6 @@
      // Can't stand the useless arrow... Ben has no pointing device
      SDL_ShowCursor(SDL_DISABLE);	
  
@@ -88,7 +100,7 @@
      return screen;
  }
  
-@@ -201,19 +253,10 @@
+@@ -201,19 +252,10 @@
      return result;
  }
  
@@ -110,7 +122,7 @@
      return NULL;
  }
  
-@@ -295,7 +338,6 @@
+@@ -295,7 +337,6 @@
      TTF_Font    *font = NULL;
      double       scale = 1.0;
      int          currentImageNumber = 0,
@@ -118,15 +130,15 @@
                   runSlideShow = FALSE,
                   isRunning = TRUE;
      SDL_TimerID  slideShowTimer = 0;
-@@ -325,7 +367,6 @@
+@@ -325,7 +366,6 @@
  	  break;
  
  	case 'd': /* -d do not show file name */
--	  showFileName = 1 - showFileName;
+-	  showFileName = FALSE;
  	  break;
  
  	case 'h': /* -h display help text and exit */
-@@ -379,14 +420,6 @@
+@@ -379,14 +419,6 @@
  
      screen = initScreen();
  
@@ -141,7 +153,16 @@
      picturePortion.w = SCREENWIDTH;
      picturePortion.h = SCREENHEIGHT;
  
-@@ -528,7 +561,6 @@
+@@ -411,7 +443,7 @@
+         scaledImage = zoomFit(image, &picturePortion, &scale);
+     }
+     name = drawFileName(argv[currentImageNumber], font, runSlideShow);
+-    drawImage(scaledImage, &picturePortion, screen, showFileName ? name : 0);
++    drawImage(scaledImage, &picturePortion, screen, 0);
+ 
+     do {
+         SDL_Event event;
+@@ -528,7 +560,6 @@
                      }
                      break;
                  case SDLK_d: // SHOW / HIDE FILENAME
@@ -149,7 +170,7 @@
                      break;
                  case SDLK_ESCAPE: // QUIT
                  case SDLK_q:
-@@ -538,16 +570,13 @@
+@@ -538,16 +569,13 @@
                      break;
               } // end of switch (event.key.keysym.sym)
          } // end of if(SDL_WaitEvent())
