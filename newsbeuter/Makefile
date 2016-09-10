@@ -20,7 +20,7 @@ include $(INCLUDE_DIR)/nls.mk
 define Package/newsbeuter
 	SECTION:=network
 	CATEGORY:=Network
-	TITLE:=newsbeuter
+	TITLE:=RSS Feed Reader
 	URL:=http://newsbeuter.org/index.html
 	DEPENDS:=+@BUILD_NLS +libncursesw +libstfl +libsqlite3 +libcurl +libjson-c +libstdcpp \
 		+libxml2 $(ICONV_DEPENDS) $(INTL_DEPENDS)
@@ -28,7 +28,18 @@ endef
 
 define Package/newsbeuter/description
 	Newsbeuter is an open-source RSS/Atom feed reader for text terminals.
-	Podbeuter (included) is for downloading podcasts queued by newsbeuter.
+endef
+
+define Package/podbeuter
+  $(call Package/newsbeuter/Default)
+  DEPENDS:=+newsbeuter
+  SECTION:=network
+  CATEGORY:=Network
+  TITLE:=Podcatcher
+endef
+
+define Package/podbeuter/description
+	Podbeuter is for downloading podcasts queued by newsbeuter
 endef
 
 TARGET_CFLAGS+= $(ICONV_CFLAGS) \
@@ -42,11 +53,16 @@ define Package/newsbeuter/install
 	$(call Build/Install/Default)
 	$(INSTALL_DIR) $(1)/usr/bin/
 		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/local/bin/newsbeuter $(1)/usr/bin/
-		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/local/bin/podbeuter $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/root/.newsbeuter
 		$(INSTALL_DATA) ./files/config $(1)/root/.newsbeuter
 		$(INSTALL_DATA) ./files/urls $(1)/root/.newsbeuter
 endef
 
+define Package/podbeuter/install
+	$(INSTALL_DIR) $(1)/usr/bin/
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/local/bin/podbeuter $(1)/usr/bin/
+endef
+
 $(eval $(call BuildPackage,newsbeuter))
+$(eval $(call BuildPackage,podbeuter))
