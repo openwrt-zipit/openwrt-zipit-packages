@@ -14,6 +14,8 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=$(PKG_REV)
 
+PKG_BUILD_DEPENDS:=gpsd
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/pspmaps
