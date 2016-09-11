@@ -5,8 +5,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=PSP-Maps
-PKG_VERSION:=6308041433
-PKG_REV:=630804143321b56a5caf258f7818ce7dff4780c0
+PKG_VERSION:=337334a711
+PKG_REV:=337334a7119ca01a67576593a6b4c85a8bb4a8ca
 PKG_RELEASE:=2
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=git://github.com/deeice/PSP-Maps.git
@@ -21,7 +21,7 @@ define Package/pspmaps
   SECTION:=utils
   CATEGORY:=Utilities
   URL:=https://github.com/deeice/PSP-Maps/
-  DEPENDS:=+libsdl +libsdl-image +libsdl-gfx +libsdl-ttf +libcurl
+  DEPENDS:=+libxml2 +libsdl +libsdl-image +libsdl-gfx +libsdl-ttf +libsdl-rtf +libcurl
 endef
 
 define Package/pspmaps/description
@@ -29,6 +29,7 @@ define Package/pspmaps/description
 endef
 
 MAKE_VARS += \
+	XML2CONFIG=$(STAGING_DIR)/host/bin/xml2-config \
 	CURLCONFIG=$(STAGING_DIR)/host/bin/curl-config \
 	SDLCONFIG=$(STAGING_DIR)/host/bin/sdl-config
 

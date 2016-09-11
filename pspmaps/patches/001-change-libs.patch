@@ -1,12 +1,22 @@
---- a/Makefile.zipit	2016-07-30 09:57:15.000000000 -0400
-+++ b/Makefile.zipit	2016-07-30 10:50:23.131243171 -0400
-@@ -3,7 +3,8 @@
- SDLCONFIG ?= sdl-config
- CURLCONFIG ?= curl-config
+--- PSP-Maps-337334a711/Makefile.zipit~	2016-09-11 08:54:31.000000000 -0400
++++ PSP-Maps-337334a711/Makefile.zipit	2016-09-11 19:00:55.743599299 -0400
+@@ -6,16 +6,16 @@
+ XML2CONFIG ?= pkg-config
  LDFLAGS ?=
--LIBS = -lSDL_image -lSDL_gfx -lSDL_ttf -lpng -ljpeg -lcurl -lfreetype -lm
-+#LIBS = -lSDL_image -lSDL_gfx -lSDL_ttf -lpng -ljpeg -lcurl -lfreetype -lm
-+LIBS = -lSDL_image -lSDL_gfx -lSDL_ttf -lcurl -lfreetype -lm
+ #LIBS = -lSDL_image -lSDL_gfx -lSDL_ttf -lSDL_rtf -lpng -ljpeg -lcurl -lfreetype -lm
+-LIBS = ./libSDL_rtf.a -lSDL_image -lSDL_gfx -lSDL_ttf -lpng -ljpeg -lcurl -lfreetype -lm
++LIBS = -lSDL_rtf -lSDL_image -lSDL_gfx -lSDL_ttf -lcurl -lfreetype -lm
  
- pspmaps: pspmaps.c $(ICON) global.o kml.o tile.c io.c cJSON.o
- 	$(CC) $(CFLAGS) -o pspmaps$(EXT) pspmaps.c $(ICON) global.o kml.o cJSON.o $(LIBS) `$(CURLCONFIG) --cflags --libs` `$(SDLCONFIG) --cflags --libs` $(LDFLAGS)
+ pspmaps: pspmaps.c $(ICON) global.o kml.o tile.c io.c gmapjson.o cJSON.o showrtf.o gpsplugin.o minmea.o
+-	$(CC) $(CFLAGS) -o pspmaps$(EXT) pspmaps.c $(ICON) global.o kml.o gmapjson.o showrtf.o cJSON.o gpsplugin.o minmea.o $(LIBS) `$(CURLCONFIG) --cflags --libs` `$(SDLCONFIG) --cflags --libs` `$(XML2CONFIG) --libs libxml-2` $(LDFLAGS) 
++	$(CC) $(CFLAGS) -o pspmaps$(EXT) pspmaps.c $(ICON) global.o kml.o gmapjson.o showrtf.o cJSON.o gpsplugin.o minmea.o $(LIBS) `$(CURLCONFIG) --cflags --libs` `$(SDLCONFIG) --cflags --libs` `$(XML2CONFIG) --libs` $(LDFLAGS) 
+ 
+ global.o: global.c global.h
+ 	$(CC) $(CFLAGS) -c global.c
+ 
+ kml.o: kml.c kml.h
+-	$(CC) $(CFLAGS) -c kml.c `$(SDLCONFIG) --cflags` `$(XML2CONFIG) --cflags libxml-2`
++	$(CC) $(CFLAGS) -c kml.c `$(SDLCONFIG) --cflags` `$(XML2CONFIG) --cflags`
+ 
+ gmapjson.o: gmapjson.c gmapjson.h
+ 	$(CC) $(CFLAGS) -c gmapjson.c `$(SDLCONFIG) --cflags`
