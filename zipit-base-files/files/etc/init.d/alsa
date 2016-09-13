@@ -19,4 +19,6 @@ start() {
 	/usr/bin/amixer sset "Treble" 14
 	/usr/bin/amixer sset "Bass" 13
 	/usr/bin/amixer sset "3D" 4
+	/usr/bin/amixer sset "ALC Capture Function" "Left"
+	/usr/bin/amixer sset "Left PGA Mux" "Line 2"
 }
