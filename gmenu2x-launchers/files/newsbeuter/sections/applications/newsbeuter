@@ -1,0 +1,4 @@
+title=newsbeuter
+icon=skin:icons/newsbeuter.png
+exec=/usr/bin/newsbeuter
+clock=312

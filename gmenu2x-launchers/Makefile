@@ -139,7 +139,7 @@ $(eval $(call BuildPackage,gmenu2x-supertux))
 define Package/gmenu2x-netsurf
   CATEGORY:=GMenu2X
   TITLE:=Netsurf launcher for gmenu2x
-  DEPENDS:=+gmenu2x +netsurf
+  DEPENDS:=+gmenu2x +netsurf-all
   VARIANT:=gmenu2x-netsurf
 endef
 
@@ -243,3 +243,57 @@ define Package/gmenu2x-nethack/install
 endef
 
 $(eval $(call BuildPackage,gmenu2x-nethack))
+
+define Package/gmenu2x-newsbeuter
+	CATEGORY:=GMenu2X
+	TITLE:=newsbeuter/podbeuter launcher for gmenu2x
+	DEPENDS:=+gmenu2x +newsbeuter
+	VARIANT:=gmenu2x-newsbeuter
+endef
+
+define Package/gmenu2x-newsbeuter/install
+	$(INSTALL_DIR) \
+	$(1)/usr/share/gmenu2x/ \
+
+	$(CP) \
+		./files/newsbeuter/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-newsbeuter))
+
+define Package/gmenu2x-imgv
+	CATEGORY:=GMenu2X
+	TITLE:=imgv launcher for gmenu2x
+	DEPENDS:=+gmenu2x +imgv
+	VARIANT:=gmenu2x-imgv
+endef
+
+define Package/gmenu2x-imgv/install
+	$(INSTALL_DIR) \
+	$(1)/usr/share/gmenu2x/ \
+
+	$(CP) \
+		./files/imgv/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-imgv))
+
+define Package/gmenu2x-nupdf
+	CATEGORY:=GMenu2X
+	TITLE:=nupdf launcher for gmenu2x
+	DEPENDS:=+gmenu2x +nupdf
+	VARIANT:=gmenu2x-nupdf
+endef
+
+define Package/gmenu2x-nupdf/install
+	$(INSTALL_DIR) \
+	$(1)/usr/share/gmenu2x/ \
+
+	$(CP) \
+		./files/nupdf/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-nupdf))
