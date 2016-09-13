@@ -8,6 +8,11 @@ export SDL_NOMOUSE=1
 export SDL_VIDEO_FBCON_ROTATION=CCW
 export SDL_AUDIODRIVER=alsa
 
+# Set TERM var if regular shell
+if [ -z "${TMUX+1}" ] && [ -z "${SSH_CLIENT+1}" ]; then
+	export TERM=linux
+fi
+
 [ -f /etc/banner ] && cat /etc/banner
 [ -e /tmp/.failsafe ] && cat /etc/banner.failsafe
 fgrep -sq '/ overlay ro,' /proc/mounts && {
