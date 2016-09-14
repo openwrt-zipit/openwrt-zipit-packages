@@ -1,0 +1,38 @@
+--- SDL-1.2.14.old/src/events/SDL_keyboard.c	2016-01-16 10:10:45.000000000 -0500
++++ SDL-1.2.14/src/events/SDL_keyboard.c	2016-01-16 10:10:56.000000000 -0500
+@@ -447,8 +447,10 @@
+ 				modstate |= KMOD_RSHIFT;
+ 				break;
+ 			case SDLK_LALT:
++#if 0 /* ZIPIT_Z2 */ /* only one alt key on zipit */
+ 				modstate |= KMOD_LALT;
+ 				break;
++#endif
+ 			case SDLK_RALT:
+ 				modstate |= KMOD_RALT;
+ 				break;
+@@ -492,8 +494,10 @@
+ 				modstate &= ~KMOD_RSHIFT;
+ 				break;
+ 			case SDLK_LALT:
++#if 0 /* ZIPIT_Z2 */ /* only one alt key on zipit */
+ 				modstate &= ~KMOD_LALT;
+ 				break;
++#endif
+ 			case SDLK_RALT:
+ 				modstate &= ~KMOD_RALT;
+ 				break;
+--- SDL-1.2.14.old/src/video/fbcon/SDL_fbevents.c	2016-01-16 10:09:24.000000000 -0500
++++ SDL-1.2.14/src/video/fbcon/SDL_fbevents.c	2016-01-16 10:09:57.000000000 -0500
+@@ -1277,7 +1277,11 @@
+ 			map |= (1<<KG_CTRL);
+ 		}
+ 		if ( modstate & KMOD_LALT ) {
++#if 1 /* ZIPIT_Z2 */ /* only one alt key on zipit */
++			map |= (1<<KG_ALTGR);
++#else
+ 			map |= (1<<KG_ALT);
++#endif
+ 		}
+ 		if ( modstate & KMOD_RALT ) {
+ 			map |= (1<<KG_ALTGR);

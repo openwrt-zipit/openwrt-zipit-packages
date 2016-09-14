@@ -68,11 +68,11 @@ CONFIGURE_ARGS+= \
 	--disable-nanox \
 	--disable-video-x11 \
 	--enable-x11-shared \
-	--enable-dga \
-	--enable-video-dga \
-	--enable-video-x11-dgamouse \
-	--enable-video-x11-vm \
-	--enable-video-x11-xv \
+	--disable-dga \
+	--disable-video-dga \
+	--disable-video-x11-dgamouse \
+	--disable-video-x11-vm \
+	--disable-video-x11-xv \
 	--disable-video-x11-xinerama \
 	--disable-video-x11-xme \
 	--disable-video-x11-xrandr \
@@ -80,7 +80,7 @@ CONFIGURE_ARGS+= \
 	--disable-video-carbon \
 	--disable-video-cocoa \
 	--enable-video-fbcon \
-	--enable-directfb-shared \
+	--disable-video-directfb \
 	--disable-video-ps2gs \
 	--disable-video-ps3 \
 	--disable-video-ggi \
