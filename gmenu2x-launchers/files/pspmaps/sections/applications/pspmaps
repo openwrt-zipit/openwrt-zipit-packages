@@ -1,0 +1,4 @@
+title=pspmaps
+icon=skin:icons/maps.png
+exec=/usr/bin/pspmaps
+clock=312

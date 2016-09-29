@@ -37,11 +37,6 @@ define Package/gmenu2x-tmux/install
 	$(CP) \
 		./files/tmux/tmux.conf \
 		$(1)/etc/tmux.conf
-
-	$(INSTALL_DIR) $(1)/etc/profile.d
-	$(CP) \
-		./files/tmux/tmux.sh \
-		$(1)/etc/profile.d/tmux.sh
 endef
 
 $(eval $(call BuildPackage,gmenu2x-tmux))
@@ -297,3 +292,22 @@ define Package/gmenu2x-nupdf/install
 endef
 
 $(eval $(call BuildPackage,gmenu2x-nupdf))
+
+define Package/gmenu2x-pspmaps
+	CATEGORY:=GMenu2X
+	TITLE:=pspmaps launcher for gmenu2x
+	DEPENDS:=+gmenu2x +pspmaps
+	VARIANT:=gmenu2x-pspmaps
+endef
+
+define Package/gmenu2x-pspmaps/install   
+	$(INSTALL_DIR) \
+	$(1)/usr/share/gmenu2x/ \
+
+	$(CP) \
+		./files/pspmaps/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-pspmaps))
+
