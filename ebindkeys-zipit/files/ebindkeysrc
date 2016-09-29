@@ -52,18 +52,9 @@ event
 event
 {
 	#Home:
-	action = "/usr/local/sbin/onHome"
+	action = "/usr/share/gmenu2x/scripts/onHome"
 	keys = {0x66} 
 }
-
-
-event
-{
-	# alt+tab
-	action = "/usr/local/sbin/onAltTab"
-	keys = {0x38,0xf}
-}
-
 
 event
 {
