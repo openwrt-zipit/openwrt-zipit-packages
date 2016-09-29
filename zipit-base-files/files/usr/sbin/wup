@@ -1,15 +1,21 @@
 #!/bin/sh
 # quick-n-dirty wifi setup script
 
-kill -s SIGQUIT $(pidof wpa_supplicant) &>/dev/null
-mac=`strings /dev/mtdblock1 | grep "macaddr" | sed 's/macaddr=//'`
-if [ -n "$mac" ]; then
-	ifconfig wlan0 down
-	ifconfig wlan0 hw ether "$mac"
-fi
+killall wpa_supplicant &>/dev/null
+
+mac(){
+	i2cget -y 1 0x50 $1 | sed s:0x::
+}
+
+macaddr=00:1D:04:$(mac 1):$(mac 2):$(mac 3)
+#mac=`strings /dev/mtdblock1 | grep "macaddr" | sed 's/macaddr=//'`
+
+ifconfig wlan0 down
+ifconfig wlan0 hw ether "$macaddr"
 ifconfig wlan0 up
+
 wpa_supplicant -B -D wext -i wlan0 -c /etc/wpa.conf
 sleep 1
-udhcpc -i wlan0
+udhcpc -i wlan0 -q
 echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 htpdate -4 -s -t google.com yahoo.com kernel.org &>/dev/null &

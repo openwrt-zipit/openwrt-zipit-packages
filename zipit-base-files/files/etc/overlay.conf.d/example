@@ -1,0 +1,36 @@
+### overlayfs configuration example (SD Card) ###
+### ALL options are REQUIRED ###
+# Files in /etc/overlay.conf.d are read from the
+# jffs partition during boot. conf files should
+# be numbered in the order you wish them to be
+# mounted, lowest number mounted first. The last
+# overlay mounted becomes the upper writable dir.
+# Numbers below 10 need the preceding 0 to be
+# mounted in proper order.
+# ex:
+#	01-mmcblk0p1.conf (mounted first)
+#	10-sda1.conf	  (mounted second)
+#	99-mmcblk0p2.conf (mounted last, writable)
+#
+# If a file name "disabled" exists in overlay.conf.d
+# then only the jffs will be mounted as overlay
+
+# Overlay device (default mmblk0p1, do not add
+# preceding /dev path)
+#overlaydev=mmcblk0p1
+
+# Overlay filesystem type (default, ext2)
+#fstype=ext2
+
+# Overlay upper directory (default, upper)
+# This is the directory of files on the overlaydev 
+# that are overlayed onto root as r/w. Cannot be
+# the device root (ie, /); must be a dir on the
+# device
+#upperdir=upper
+
+# Overlay work directory (default, work)
+# This is a directory on the overlaydev used by 
+# the overlayfs filesystem driver. Cannot be a
+# subdir of upperdir
+#workdir=work
