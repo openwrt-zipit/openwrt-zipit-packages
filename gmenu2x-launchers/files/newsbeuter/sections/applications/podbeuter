@@ -1,0 +1,4 @@
+title=podbeuter
+icon=skin:icons/newsbeuter.png
+exec=/usr/bin/podbeuter
+clock=312

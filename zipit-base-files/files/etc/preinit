@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # Zipit Z2 SquashFS with overlay preinit script
 
 # pivot root function
@@ -37,8 +37,8 @@ if [ "$rootdev" != "/dev/mtdblock3" ]; then
 	if [ $? -eq 1 ] || [ $? -eq 2 ]; then
 		echo "e2fsck corrected errors on $rootdev, restarting..." >/dev/tty0
 		sleep 3
-	exec /sbin/reboot -f
-    fi
+		exec /sbin/reboot -f
+	fi
 	mount -o remount,rw /
 	# Do not mount squash/jffs in case partition sizes are different.
 	# Potential data loss when mounting the writable jffs
@@ -50,9 +50,8 @@ fi
 
 # Make temporary rootfs
 /bin/mount -t tmpfs none /rom
-/bin/mkdir -p /overlay
-/bin/mkdir -p /mnt
 
+# FOR TESTING START: exit preinit and run testinit
 # Mount the jffs partition
 /bin/mount -t jffs2 -o rw,noatime /dev/mtdblock4 /overlay
 if [ $? -ne 0 ]; then
@@ -66,58 +65,112 @@ fi
 /bin/mkdir -p /overlay/upper
 /bin/mkdir -p /overlay/work
 
-#FOR TESTING: exit preinit and run testinit
+# exit preinit and run testinit
 if [ -f /overlay/upper/etc/testinit ]; then
-	exec /overlay/upper/etc/testinit
+	cp /overlay/upper/etc/testinit /tmp/testinit
+	chmod +x /tmp/testinit
+	/bin/umount /overlay
+	exec /tmp/testinit
+fi
+# FOR TESTING END: exit preinit and run testinit
+
+# Make needed overlay dirs
+/bin/mount -t tmpfs none /overlay
+/bin/mkdir -p /overlay/jffs
+/bin/mkdir -p /overlay/combined
+
+# Mount the jffs partition
+/bin/mount -t jffs2 -o rw,noatime /dev/mtdblock4 /overlay/jffs
+if [ $? -ne 0 ]; then
+	# jffs partition was not mountable, mount tmpfs instead & show warning
+	/bin/mount -t tmpfs none /overlay/jffs
+	echo "Unable to mount jffs, using tmpfs for overlay" >/dev/tty0
 fi
 
-confovpass=0
-mntdestdir=/overlay/mnt
+# Make our required overlay directories in jffs
+/bin/mkdir -p /overlay/jffs/upper
+/bin/mkdir -p /overlay/jffs/work
 
-#TODO: implement overlay from loop device (ie, image file from fat sd card)
-if [ -f "/overlay/upper/etc/overlay.conf" ]; then
-	# Source overlay.conf from jffs partition (not squashfs)
-	. /overlay/upper/etc/overlay.conf
-
-	# if overlay device is mounted, unmount it so we can check for errors
-	if /bin/grep -qs "^/dev/$overlaydev " /proc/mounts ; then
-		umount "/dev/$overlaydev";
-	fi
-
-	# check fs for errors
-	/usr/sbin/e2fsck -y "/dev/$overlaydev" &>/dev/tty0
-
-	# Mount the filesystem from our overlay config
-	mkdir -p "$mntdestdir/$overlaydev"
-
-	if ! /bin/mount -t "$fstype" -o rw,noatime "/dev/$overlaydev" "$mntdestdir/$overlaydev" ; then
-		# Failed to mount configured overlay, clean up mountpoint
-		rmdir "$mntdestdir/$overlaydev"
-		echo "Failed to mount configured overlay!" >/dev/tty0
-		# Mount the jffs overlay only
-		/bin/mount -t overlay /overlay -o lowerdir=/,upperdir=/overlay/upper,workdir=/overlay/work /mnt
-	else	
-		# Make our required overlay directories
-		/bin/mkdir -p "$mntdestdir/$overlaydev/$upperdir"
-		/bin/mkdir -p "$mntdestdir/$overlaydev/$workdir"
-		# Mount the jffs and configured overlays; writes go to the configured overlay
-		/bin/mount -t overlay overlay -o lowerdir=/overlay/upper:/,upperdir="$mntdestdir/$overlaydev/$upperdir",workdir="$mntdestdir/$overlaydev/$workdir" /mnt
-		confovpass=1
-		echo "Mounted jffs and $overlaydev overlay" >/dev/tty0
-	fi
-else
-	# Mount the jffs overlay if no configured overlay
-	/bin/mount -t overlay /overlay -o lowerdir=/,upperdir=/overlay/upper,workdir=/overlay/work /mnt
+# Create temporary ash history
+mkdir -p /overlay/jffs/upper/root
+if [ -f /overlay/jffs/upper/root/.ash_history ]; then
+	rm -f /overlay/jffs/upper/root/.ash_history
 fi
+ln -s /tmp/ash_history /overlay/jffs/upper/root/.ash_history
+
+# Set our default overlay variables to jffs dirs
+confovlist=""
+confovlast=/overlay/jffs/upper
+workovlast=/overlay/jffs/work
+
+#TODO: implement overlay from loop device (ie, image file from sd card)
+# loop thru config files in jffs overlay.conf.d. files should be numbered
+# 01 thru 99, highest number becomes the upper writable dir. if
+# overlay.conf.d/disabled exists, skip and just mount jffs overlay
+if [ ! -e /overlay/jffs/upper/etc/overlay.conf.d/disabled ]; then
+	for conffile in `ls -v /overlay/jffs/upper/etc/overlay.conf.d/*.conf` ; do
+		# Source conffile if exists
+		if [ ! -f "$conffile" ]; then
+			echo "$conffile not exist" >/dev/tty0
+			break
+		fi
+		echo "Sourcing $conffile" >/dev/tty0
+		. "$conffile"
+
+		# skip mounting if we are missing any variables in conffile
+		if [ -z "$overlaydev" ] || [ -z "$fstype" ] || [ -z "$upperdir" ] || [ -z "$workdir" ]; then
+			echo "Missing variable(s) in $conffile, skipping" >/dev/tty0
+			continue
+		fi
+
+		# if overlay device is mounted, unmount it so we can check for errors
+		if /bin/grep -qs "^/dev/$overlaydev " /proc/mounts ; then
+			umount "/dev/$overlaydev";
+		fi
+
+		# check fs for errors
+		/usr/sbin/e2fsck -y "/dev/$overlaydev" &>/dev/tty0
+
+		# Mount the filesystem from our overlay config
+		mkdir -p "/overlay/$overlaydev"
+		if ! /bin/mount -t "$fstype" -o rw,noatime "/dev/$overlaydev" "/overlay/$overlaydev" ; then
+			# Failed to mount configured overlay, clean up mountpoint
+			rmdir "/overlay/$overlaydev"
+			echo "Failed to mount configured overlay $overlaydev" &>/dev/tty0
+			# dont replace confovlast, just continue on
+		else
+			# add confovlast to confovlist and replace confovlast
+			if [ -z $confovlist ]; then
+				confovlist="$confovlast"
+			else
+				confovlist="$confovlist:$confovlast"
+			fi
+			confovlast="/overlay/$overlaydev/$upperdir"
+			workovlast="/overlay/$overlaydev/$workdir"
+			# Make our required overlay directories if needed
+			/bin/mkdir -p "/overlay/$overlaydev/$upperdir"
+			/bin/mkdir -p "/overlay/$overlaydev/$workdir"
+			echo "Mounted /overlay/$overlaydev" &>/dev/tty0
+		fi
+		# unset variables from config file in preparation for the next
+		unset $overlaydev
+		unset $fstype
+		unset $upperdir
+		unset $workdir
+	done
+fi
+
+if [ -n "$confovlist" ]; then
+	# add colon to end of list if we configured any overlays
+	confovlist="$confovlist:"
+fi
+
+# mount overlay with confovlist as lowerdir and confovlast as the upperdir
+/bin/mount -t overlay -o "lowerdir=$confovlist/,upperdir=$confovlast,workdir=$workovlast" overlayfs /overlay/combined
 
 # pivot root
-do_pivot /mnt /rom
-
-# If configured overlay mount passed, move overlaydev mount to /mnt
-if [ $confovpass -eq 1 ]; then
-	mkdir -p "/mnt/$overlaydev"
-	/bin/mount -o noatime,move "$mntdestdir/$overlaydev" "/mnt/$overlaydev"
-fi
+cd /overlay/combined
+do_pivot . /rom
 
 # Continue to regular init
 exec /sbin/init

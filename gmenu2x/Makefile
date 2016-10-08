@@ -47,7 +47,7 @@ define Package/gmenu2x
   CATEGORY:=GMenu2X
   TITLE:=GMenu2x frontend/launcher app
   URL:=http://projects.qi-hardware.com/index.php/p/gmenu2x/
-  DEPENDS:=+libsdl +libpng +libsdl-ttf +libstdcpp +libsdl-gfx
+  DEPENDS:=+libsdl +libpng +libsdl-ttf +libstdcpp +libsdl-gfx +i2c-tools
 endef
 
 define Build/Configure

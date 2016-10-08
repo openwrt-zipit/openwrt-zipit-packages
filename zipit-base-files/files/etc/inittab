@@ -1,5 +1,5 @@
 # Rescan devices
-::sysinit:/sbin/mdev -s
+#::sysinit:/sbin/mdev -s
 
 # Set the hostname
 ::sysinit:/bin/hostname -F /etc/hostname
@@ -23,4 +23,5 @@
 # Start the tty's
 ttyS2::askfirst:/bin/ash --login
 tty1::respawn:/usr/bin/z2-shell
+#tty1::respawn:/bin/ash --login
 tty2::respawn:/usr/sbin/ebindkeys -d -f /etc/ebindkeysrc

@@ -1,0 +1,68 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2008-2010 OpenWrt.org
+# Setup Zipit Z2 Dock Port GPIO's
+START=18
+
+start() {
+	# GPIO 12 | OUTPUT | User Choice |
+	echo "12" > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio12/direction
+
+	# GPIO 42 | INPUT | DOCK_DETECT | LOW=dock connected
+	echo "42" > /sys/class/gpio/export
+	echo "in" > /sys/class/gpio/gpio42/direction
+
+	# GPIO 44 | OUTPUT | User Choice |
+	echo "44" > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio44/direction
+
+	# GPIO 45 | OUTPUT | User Choice |
+	echo "45" > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio45/direction
+
+	# GPIO 50 | OUTPUT | User Choice |
+	echo "50" > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio50/direction
+
+	# GPIO 51 | OUTPUT | User Choice |
+	echo "51" > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio51/direction
+
+	# GPIO 52 | OUTPUT | User Choice |
+	echo "52" > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio52/direction
+
+	# GPIO 53 | OUTPUT | User Choice |
+	echo "53" > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio53/direction
+
+	# GPIO 54 | OUTPUT | 5V Regulator Toggle | HIGH=regulator on
+	echo "54" > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio54/direction
+	echo "1" > /sys/class/gpio/gpio54/value # enable regulator
+
+	# GPIO 81 | OUTPUT | User Choice |
+	echo "81" > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio81/direction
+
+	# GPIO 84 | OUTPUT | User Choice |
+	echo "84" > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio84/direction
+
+	# GPIO 86 | OUTPUT | User Choice |
+	echo "86" > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio86/direction
+
+	# GPIO 93 | OUTPUT | User Choice |
+	echo "93" > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio93/direction
+
+	# GPIO 94 | OUTPUT | User Choice |
+	echo "94" > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio94/direction
+
+	# GPIO 114 | OUTPUT | User Choice |
+	echo "114" > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio114/direction
+}
+

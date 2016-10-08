@@ -1,0 +1,33 @@
+#!/bin/sh
+# Toggle USB mode (or specify with command line switch)
+
+# Linux v4+
+syspath=/sys/devices/platform/pxabus/40600000.udc/usb_mode
+# Linux v3
+#syspath=/sys/devices/platform/z2-usb-switch/usb_mode
+
+mode=`cat $syspath`
+
+if [ -z "$1" ]; then
+	# We toggle
+	if [ "$mode" == "device" ]; then
+		echo "host" > "$syspath"
+		echo "Switched to USB Host mode"
+	else
+		echo "device" > "$syspath"
+		echo "Switched to USB Device mode"
+	fi
+else
+	# We set based on switch
+	if [ "$1" == "d" ]; then
+		echo "device" > "$syspath"
+		echo "Switched to USB Device mode"
+	elif [ "$1" == "h" ]; then
+		echo "host" > "$syspath"
+		echo "Switched to USB Host mode"
+	else
+		echo "Usage: usbtog <mode>"
+		echo "<mode> d for device, h for host, or none to toggle"
+		echo "Current mode: $mode"
+	fi
+fi
