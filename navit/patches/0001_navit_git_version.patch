@@ -1,0 +1,11 @@
+--- navit-0.5.0/navit/start_real.c~	2015-12-31 02:42:41.000000000 -0500
++++ navit-0.5.0/navit/start_real.c	2016-10-08 09:49:56.892226796 -0400
+@@ -51,7 +51,7 @@
+ #include <winbase.h>
+ #endif
+ 
+-char *version=PACKAGE_VERSION"+git:"GIT_VERSION""NAVIT_VARIANT;
++char *version=PACKAGE_VERSION"+git:"SVN_VERSION""NAVIT_VARIANT;
+ int main_argc;
+ char * const* main_argv;
+ 
