@@ -12,10 +12,10 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/navit-gps/navit/archive/v$(PKG_VERSION)/
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
-
 PKG_BUILD_DEPENDS:=gpsd
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/nls.mk
 
 define Package/navit
   TITLE:=navit
@@ -35,8 +35,14 @@ MAKE_VARS += \
 
 #MAKE_FLAGS += -f Makefile.zipit
 
+TARGET_CFLAGS+= \
+	$(ICONV_CFLAGS) \
+	$(INTL_CFLAGS)
+
 TARGET_LDFLAGS+= \
-       -Wl,-rpath-link=$(STAGING_DIR)/usr/lib
+	-Wl,-rpath-link=$(STAGING_DIR)/usr/lib \
+	$(ICONV_LDFLAGS) -liconv \
+	$(INTL_LDLAGS) -lintl
 
 define Build/Configure
 	( cd $(PKG_BUILD_DIR); ./autogen.sh );
