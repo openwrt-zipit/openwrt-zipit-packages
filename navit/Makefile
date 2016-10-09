@@ -23,7 +23,7 @@ define Package/navit
   CATEGORY:=Utilities
   URL:=http://www.navit-project.org/
 #  DEPENDS:=+libsdl +libsdl-image +glib2 +libintl +libiconv +zlib +libfreetype +libfontconfig +libcrypto +libpthread +fontconfig
-  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +glib2 +libsdl +libsdl-image +zlib +fontconfig +libfreetype +libpthread +libopenssl
+  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +glib2 +libsdl +libsdl-image +zlib +fontconfig +libfreetype +libpthread +libopenssl +liberation-fonts-ttf
 endef
 
 define Package/navit/description
@@ -79,11 +79,19 @@ define Package/navit/install
 		$(CP) $(PKG_INSTALL_DIR)/usr/lib/navit/vehicle/*.so $(1)/usr/lib/navit/vehicle/
 
 	$(INSTALL_DIR) $(1)/usr/share/navit
-		$(INSTALL_BIN) $(FILES_DIR)/navit.sh $(1)/usr/share/
+		$(INSTALL_BIN) $(FILES_DIR)/navit.sh $(1)/usr/share/navit/
 		$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/navit/navit.xml $(1)/usr/share/navit/
 		$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/navit/README $(1)/usr/share/navit/
 	$(INSTALL_DIR) $(1)/usr/share/navit/xpm
 		$(CP) $(PKG_INSTALL_DIR)/usr/share/navit/xpm/* $(1)/usr/share/navit/xpm/
+		$(CP) $(FILES_DIR)/navit*.png $(1)/usr/share/navit/xpm/
+	$(INSTALL_DIR) $(1)/usr/share/navit/maps
+		$(CP) $(FILES_DIR)/osm_bbox* $(1)/usr/share/navit/maps/
+	$(INSTALL_DIR) $(1)/usr/share/navit/fonts
+		$(LN) -s /usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf \
+			$(1)/usr/share/navit/fonts/LiberationSans-Regular.ttf
+		$(LN) -s /usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf \
+			$(1)/usr/share/navit/fonts/LiberationSans-Bold.ttf
 endef
 
 $(eval $(call BuildPackage,navit,+libopenssl,+fontconfig))
