@@ -311,3 +311,20 @@ endef
 
 $(eval $(call BuildPackage,gmenu2x-pspmaps))
 
+define Package/gmenu2x-navit
+	CATEGORY:=GMenu2X
+	TITLE:=navit launcher for gmenu2x
+	DEPENDS:=+gmenu2x +navit
+	VARIANT:=gmenu2x-navit
+endef
+
+define Package/gmenu2x-navit/install   
+	$(INSTALL_DIR) \
+	$(1)/usr/share/gmenu2x/ \
+
+	$(CP) \
+		./files/navit/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-navit))

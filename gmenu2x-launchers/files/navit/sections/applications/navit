@@ -1,0 +1,4 @@
+title=navit
+icon=skin:icons/navit.png
+exec=/usr/share/navit/navit.sh
+clock=312

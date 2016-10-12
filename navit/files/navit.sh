@@ -1,21 +1,21 @@
 #!/bin/sh
  
- cd /mnt/sd0
+# cd /usr/share/navit
  
- # Set some paths.
- export PATH=$PATH:/mnt/sd0/navit/bin
- export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mnt/sd0/navit/lib
- export HOME=/mnt/sd0/home/
- export NAVIT_LIBDIR=/mnt/sd0/navit/lib/navit
- export NAVIT_SHAREDIR=/mnt/sd0/navit/share
+# Set some paths.
+# export PATH=$PATH:/usr/share/navit/bin
+# export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/share/navit/lib
+# export HOME=/usr/share/navit/home/
+# export NAVIT_LIBDIR=/usr/share/navit/lib/navit
+# export NAVIT_SHAREDIR=/usr/share/navit/share
  
  # tslib requirements.
 # export TSLIB_CONSOLEDEVICE=none
 # export TSLIB_FBDEVICE=/dev/fb
 # export TSLIB_TSDEVICE=/dev/ts
-# export TSLIB_CALIBFILE=/mnt/sd0/navit/ts/pointercal
-# export TSLIB_CONFFILE=/mnt/sd0/navit/ts/ts.conf
-# export TSLIB_PLUGINDIR=/mnt/sd0/navit/lib/ts
+# export TSLIB_CALIBFILE=/usr/share/navit/ts/pointercal
+# export TSLIB_CONFFILE=/usr/share/navit/ts/ts.conf
+# export TSLIB_PLUGINDIR=/usr/share/navit/lib/ts
  
  # SDL requirements.
 # export SDL_MOUSEDRV=TSLIB
@@ -26,14 +26,15 @@
 # export SDL_AUDIODRIVER=dsp
  
  # fontconfig requirements
- export FC_CONFIG_DIR=/mnt/sd0/navit/fonts
- export FONTCONFIG_DIR=/mnt/sd0/navit/fonts
- export FC_CONFIG_FILE=/mnt/sd0/navit/fonts/fonts.conf
- export FONTCONFIG_FILE=/mnt/sd0/navit/fonts/fonts.conf
- export FC_DEBUG=0
+ #export FC_CONFIG_DIR=/usr/share/navit/fonts
+# export FONTCONFIG_DIR=/usr/share/navit/fonts
+# export FC_CONFIG_FILE=/usr/share/navit/fonts/fonts.conf
+# export FONTCONFIG_FILE=/usr/share/navit/fonts/fonts.conf
+# export FC_DEBUG=0
  
  # Set language.
  export LANG=en_US.utf8
  
  # Run Navit.
- /mnt/sd0/navit/bin/navit /mnt/sd0/navit/share/navit.xml 2>/mnt/sd0/navit/navit.log
+#usr/bin/navit /root/.navit/navit.xml 2>/usr/share/navit/navit.log
+/usr/bin/navit 2>/tmp/navit.log
