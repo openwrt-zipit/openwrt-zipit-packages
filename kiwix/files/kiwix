@@ -1,0 +1,31 @@
+#!/bin/sh
+# Wrapper script to run kiwix offline wikipedia
+
+# Port to use for browser
+PORT=8080
+
+# Preferred web browser to use
+# (default is links browser)
+BROWSER="links -g"
+
+# Full path to library of wikipedia dump
+LIBRARY=/usr/share/kiwix/library/z2-zim-sample.xml
+
+# Swapfile path. Minimum size 64Mb
+SWAPFILE=/usr/share/kiwix/swapfile.64
+
+ifconfig lo up
+
+if [ -f "$SWAPFILE" ]; then
+	swapon "$SWAPFILE"
+fi
+
+/usr/share/kiwix/kiwix-serve --port="$PORT" --library "$LIBRARY" --daemon
+
+$($BROWSER http://localhost:8080)
+
+killall kiwix-serve
+
+if [ -f "$SWAPFILE" ]; then
+	swapoff "$SWAPFILE"
+fi
