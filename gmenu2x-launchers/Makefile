@@ -328,3 +328,21 @@ define Package/gmenu2x-navit/install
 endef
 
 $(eval $(call BuildPackage,gmenu2x-navit))
+
+define Package/gmenu2x-kiwix
+	CATEGORY:=GMenu2X
+	TITLE:=kiwix launcher for gmenu2x
+	DEPENDS:=+gmenu2x +kiwix
+	VARIANT:=gmenu2x-kiwix
+endef
+
+define Package/gmenu2x-kiwix/install
+	$(INSTALL_DIR) \
+	$(1)/usr/share/gmenu2x/ \
+
+	$(CP) \
+		./files/kiwix/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-kiwix))

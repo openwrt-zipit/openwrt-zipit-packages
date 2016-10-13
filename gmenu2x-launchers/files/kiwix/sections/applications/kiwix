@@ -1,0 +1,4 @@
+title=kiwix
+icon=skin:icons/wiki.png
+exec=/usr/bin/kiwix
+clock=312
