@@ -1,0 +1,31 @@
+###    Kiwix Offline Wiki Server    ###
+###          for Zipit Z2           ###
+
+The kiwix-serve program runs a web
+server and database that parses OpenZim
+files. OpenZim files typically contain
+wikipedia.org information dumps. This
+allows for reading wikipedia without 
+and active internet connection.
+
+The server is started by a shell script
+then runs the links browser where you
+can browse or search for articles to
+read. 
+
+Wiki dumps can be downloaded in various
+languages from:
+
+http://wiki.kiwix.org/wiki/Content_in_all_languages
+
+Edit the shell script at /usr/bin/kiwix
+to point the library path to your
+preferred wiki dump.
+
+         ** Important Note **
+         
+Limited RAM on the Zipit can cause the
+kiwix-serve program to fail decompressing
+newer wikipedia dumps (dumps pre 2014).
+A swapfile is created during package
+installation in /usr/share/kiwix
