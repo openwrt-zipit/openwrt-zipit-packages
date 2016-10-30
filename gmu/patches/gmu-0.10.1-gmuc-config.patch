@@ -1,0 +1,12 @@
+--- gmu-0.10.1/configure~	2016-09-04 06:45:34.000000000 -0400
++++ gmu-0.10.1/configure	2016-10-23 13:10:53.687391959 -0400
+@@ -198,6 +198,9 @@
+ 		echo "gmuc enabled"
+ 		TOOLS_TO_BUILD="$TOOLS_TO_BUILD gmuc"
+ 		EXTRA_CFLAGS="$EXTRA_CFLAGS -I$BASE_INCLUDE_PATH/ncursesw"
++	else
++		echo "gmuc enabled"
++		TOOLS_TO_BUILD="$TOOLS_TO_BUILD gmuc"
+ 	fi
+ 	if [ $feature_medialib = 1 ]; then
+ 		echo "Media library enabled"

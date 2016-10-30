@@ -1,0 +1,10 @@
+--- gmu-0.10.1/src/decoders/opus.c~	2016-10-30 11:33:47.713142608 -0400
++++ gmu-0.10.1/src/decoders/opus.c	2016-10-30 11:35:55.720409900 -0400
+@@ -142,6 +142,7 @@
+ 	if (li != prev_li) {
+ 		prev_li = li;
+ 		read_tags(oof, li, tim);
++		trackinfo_set_updated(&ti);
+ 	}
+ 
+ 	if (seek_request && reader_is_seekable(r) && seek_to_sample_offset >= 0) {
