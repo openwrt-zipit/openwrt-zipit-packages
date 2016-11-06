@@ -94,7 +94,8 @@ define Package/navit/install
 		$(INSTALL_DATA) $(FILES_DIR)/navit.zipit.xml $(1)/root/.navit/navit.xml
 	$(INSTALL_DIR) $(1)/usr/share/navit
 		$(INSTALL_BIN) $(FILES_DIR)/navit.sh $(1)/usr/share/navit/
-		$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/navit/navit.xml $(1)/usr/share/navit/
+#		$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/navit/navit.xml $(1)/usr/share/navit/
+		$(INSTALL_DATA) $(FILES_DIR)/navit.zipit.xml $(1)/usr/share/navit/
 		$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/navit/README $(1)/usr/share/navit/
 	$(INSTALL_DIR) $(1)/usr/share/navit/xpm
 		$(CP) $(PKG_INSTALL_DIR)/usr/share/navit/xpm/* $(1)/usr/share/navit/xpm/
