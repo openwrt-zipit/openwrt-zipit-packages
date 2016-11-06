@@ -1,0 +1,11 @@
+--- navit-0.5.0/navit/graphics/sdl/graphics_sdl.c~	2016-10-09 12:23:16.614395673 -0400
++++ navit-0.5.0/navit/graphics/sdl/graphics_sdl.c	2016-11-06 08:40:31.148983039 -0500
+@@ -1501,6 +1501,8 @@
+         return NULL;
+     }
+ 
++    atexit(SDL_Quit);  /* Clean up SDL whenever we quit via exit(). */
++
+     /* Use screen size instead of requested */
+     w = this->screen->w;
+     h = this->screen->h;
