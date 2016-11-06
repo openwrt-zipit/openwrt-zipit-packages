@@ -34,9 +34,11 @@ define Package/libopusfile/description
  The libopusfile package provides a convenient high-level API for decoding and basic manipulation of all Ogg Opus audio streams.
 endef
 
-CONFIGURE_ARGS+= \
-	--disable-float \
-	--enable-fixed-point
+ifeq ($(CONFIG_SOFT_FLOAT),y)
+	CONFIGURE_ARGS+= \
+		--disable-float \
+		--enable-fixed-point
+endif
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include/opus
