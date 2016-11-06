@@ -7,6 +7,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=navit
 PKG_VERSION:=0.5.0
 PKG_RELEASE:=1
+#PKG_FIXUP:=autoreconf
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/navit-gps/navit/archive/v$(PKG_VERSION)/
@@ -39,10 +40,15 @@ TARGET_CFLAGS+= \
 	$(ICONV_CFLAGS) \
 	$(INTL_CFLAGS)
 
+#TARGET_LDFLAGS+= \
+#	-Wl,-rpath-link=$(STAGING_DIR)/usr/lib \
+#	$(ICONV_LDFLAGS) -liconv \
+#	$(INTL_LDLAGS) -lintl
+
 TARGET_LDFLAGS+= \
 	-Wl,-rpath-link=$(STAGING_DIR)/usr/lib \
-	$(ICONV_LDFLAGS) -liconv \
-	$(INTL_LDLAGS) -lintl
+	$(ICONV_LDFLAGS) \
+	$(INTL_LDLAGS)
 
 define Build/Configure
 	( cd $(PKG_BUILD_DIR); ./autogen.sh );
