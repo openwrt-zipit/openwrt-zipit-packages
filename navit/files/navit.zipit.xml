@@ -45,7 +45,7 @@
 		Center coordinates format: "Long Lat" in decimal degrees (WGS 84).
 		For other formats see http://wiki.navit-project.org/index.php/Coordinate_format.
 		-->
-	<navit center="11.5666 48.1333" zoom="256" tracking="1" orientation="-1" recent_dest="250">
+	<navit center="11.5666 48.1333" zoom="32" tracking="1" orientation="-1" recent_dest="250">
 		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. 
 		     On windows systems, use win32 -->
 		<graphics type="sdl" w="320" h="240" bpp="16" frame="0" flags="1"/>
@@ -199,7 +199,7 @@ Waypoint</text></img>
 		<!-- For the cumulative displacement filter to be enabled, set cdf_histsize="x" here, with x being an integer somewhere around 4 -->
 		<tracking cdf_histsize="0"/>
 
-		<vehicleprofile name="car" route_depth="4:25%,8:40000,18:10000" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
+		<vehicleprofile name="car" route_depth="4:15%,8:10000,18:2000" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
 			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10" />
 			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="30" />
 			<roadprofile item_types="street_3_city" speed="40" route_weight="40" />

@@ -59,7 +59,7 @@ define Build/Configure
 		--disable-binding-dbus \
 		--disable-fontconfig \
 		--disable-fribidi \
-		--enable-cache-size=16777216 \
+		--enable-cache-size=8388608 \
 		--disable-vehicle-gpsd \
 		--disable-binding-python \
 		--enable-avoid-float \
