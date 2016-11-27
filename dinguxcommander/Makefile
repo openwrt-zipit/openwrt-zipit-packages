@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dinguxcommander
 PKG_VERSION:=2.1
-PKG_REV:=c3df0f3d05f02c0b8fe2400b2932fb55737fe1e9
+PKG_REV:=d913eb31ccf0bb7113d652f2922eba62b57e65ab
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -73,7 +73,7 @@ endef
 define Package/dinguxcommander/install
 	$(INSTALL_DIR) \
 		$(1)/usr/bin/ \
-		$(1)/usr/share/dinguxcommander/ \
+		$(1)/usr/share/dinguxcommander/res/ \
 
 	$(INSTALL_BIN) \
 		$(FILES_DIR)/dinguxcommander \
@@ -86,7 +86,9 @@ define Package/dinguxcommander/install
 	$(CP) $(PKG_BUILD_DIR)/output/zipit/DinguxCommander \
 		$(1)/usr/share/dinguxcommander/dinguxcommander.bin
 
-	$(CP) $(PKG_BUILD_DIR)/res/* $(1)/usr/share/dinguxcommander/
+	$(CP) $(PKG_BUILD_DIR)/res/*.png $(1)/usr/share/dinguxcommander/res/
+
+	$(CP) $(PKG_BUILD_DIR)/res/Fiery_Turk.ttf $(1)/usr/share/dinguxcommander/res/font.ttf
 endef
 
 $(eval $(call BuildPackage,dinguxcommander))
