@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dinguxcommander
 PKG_VERSION:=2.1
-PKG_REV:=d913eb31ccf0bb7113d652f2922eba62b57e65ab
+PKG_REV:=b4e0f41a261e4f26d2fbfb786082bbcbf08e052a
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
