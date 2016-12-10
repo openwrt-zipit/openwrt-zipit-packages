@@ -38,7 +38,7 @@ for all possible input sources. However we are not there yet. The API is far
 from set in stone yet, and is likely to change.
 endef
 
-TARGET_CFLAGS += 
+TARGET_CFLAGS += -D_POSIX_SOURCE
 
 # fix for dependency between libgii and libgg.  If not rpath configured
 # linking with libgii and not libgg fails.
