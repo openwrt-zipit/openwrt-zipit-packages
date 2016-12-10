@@ -37,10 +37,6 @@ define Package/wolf4sdl/install
 	$(INSTALL_DIR) $(1)/usr/bin
 		$(INSTALL_BIN) $(PKG_BUILD_DIR)/wolf3d $(1)/usr/bin
 		$(INSTALL_BIN) ./files/runwolf $(1)/usr/bin
-	$(INSTALL_DIR) $(1)/usr/share/gmenu2x/sections/games
-		$(INSTALL_BIN) ./files/wolf3d.gmenu $(1)/usr/share/gmenu2x/sections/games
-	$(INSTALL_DIR) $(1)/usr/share/gmenu2x/skins/Default/icons
-		$(INSTALL_BIN) ./files/wolf3d.png $(1)/usr/share/gmenu2x/skins/Default/icons
 endef
 
 $(eval $(call BuildPackage,wolf4sdl))

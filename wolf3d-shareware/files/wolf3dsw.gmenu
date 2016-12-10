@@ -1,5 +1,0 @@
-title=Wolf3D Shareware
-icon=skin:icons/wolf3d.png
-exec=/usr/bin/runwolf
-params=/usr/games/wolf3d
-clock=312

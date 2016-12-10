@@ -53,8 +53,6 @@ define Package/wolf3d-shareware/install
 		$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(PKG_SOURCE_SUBDIR)/vgagraph.wl1 $(1)/usr/games/wolf3d/
 		$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(PKG_SOURCE_SUBDIR)/vswap.wl1 $(1)/usr/games/wolf3d/
 		$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(PKG_SOURCE_SUBDIR)/wolf3d.exe $(1)/usr/games/wolf3d/
-	$(INSTALL_DIR) $(1)/usr/share/gmenu2x/sections/games
-		$(INSTALL_BIN) ./files/wolf3dsw.gmenu $(1)/usr/share/gmenu2x/sections/games/
 endef
 
 $(eval $(call BuildPackage,wolf3d-shareware))
