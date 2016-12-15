@@ -32,11 +32,23 @@ endef
 
 MAKE_FLAGS += AR="$(TARGET_CROSS)ar cru" LD="$(TARGET_CXX)"
 
-TARGET_CFLAGS += -Wno-psabi
+TARGET_CFLAGS += -Wno-psabi \
+	-Wno-error \
+	-fpermissive
 
 define Build/Configure
-	$(call Build/Configure/Default, --backend=sdl --enable-tremor --enable-alsa --enable-zlib --disable-nasm --enable-mad --disable-scalers  --disable-mt32emu --disable-hq-scalers --with-sdl-prefix=$(STAGING_DIR)/usr/bin)
-
+	$(call Build/Configure/Default, \
+		--backend=sdl \
+		--enable-tremor \
+		--enable-alsa \
+		--enable-zlib \
+		--disable-nasm \
+		--enable-mad \
+		--disable-scalers \
+		--disable-mt32emu \
+		--disable-hq-scalers \
+		--with-sdl-prefix=$(STAGING_DIR)/usr/bin \
+	)
 endef
 
 define Package/scummvm/install
