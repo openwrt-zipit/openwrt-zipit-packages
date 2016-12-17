@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=handy
 PKG_VERSION:=0.95
 PKG_RELEASE:=1
-PKG_REV:=212248eb4cd5f32380b55ae172d2b57979d9f75a
+PKG_REV:=2e01813a6cfc0b5d72893a2f7252e77430382bd1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_REV).tar.gz
 PKG_SOURCE_URL:=git://github.com/mozzwald/handy-sdl.git
