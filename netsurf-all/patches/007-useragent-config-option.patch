@@ -1,0 +1,68 @@
+--- netsurf-all-3.5/netsurf/utils/useragent.c	2016-04-13 07:58:34.000000000 -0500
++++ netsurf-all-3.5-z2/netsurf/utils/useragent.c	2016-12-17 19:12:36.962894706 -0600
+@@ -25,6 +25,7 @@
+ #include "desktop/version.h"
+ #include "utils/log.h"
+ #include "utils/useragent.h"
++#include "utils/nsoption.h"
+ 
+ static const char *core_user_agent_string = NULL;
+ 
+@@ -44,24 +45,28 @@
+         char *ua_string;
+         int len;
+ 
+-        if (uname(&un) >= 0) {
+-                sysname = un.sysname;
+-        }
+-
+-        len = snprintf(NULL, 0, NETSURF_UA_FORMAT_STRING,
+-                       netsurf_version_major,
+-                       netsurf_version_minor,
+-                       sysname);
+-        ua_string = malloc(len + 1);
+-        if (!ua_string) {
+-                /** \todo this needs handling better */
+-                return;
+-        }
+-        snprintf(ua_string, len + 1,
+-                 NETSURF_UA_FORMAT_STRING,
+-                 netsurf_version_major,
+-                 netsurf_version_minor,
++        if (nsoption_charp(user_agent) == NULL){
++                if (uname(&un) >= 0) {
++                        sysname = un.sysname;
++                }
++        
++                len = snprintf(NULL, 0, NETSURF_UA_FORMAT_STRING,
++                               netsurf_version_major,
++                               netsurf_version_minor,
++                               sysname);
++                ua_string = malloc(len + 1);
++                if (!ua_string) {
++                        /** \todo this needs handling better */
++                        return;
++                }
++                snprintf(ua_string, len + 1,
++                         NETSURF_UA_FORMAT_STRING,
++                         netsurf_version_major,
++                         netsurf_version_minor,
+                  sysname);
++        }else{
++                ua_string = nsoption_charp(user_agent);
++        }
+ 
+         core_user_agent_string = ua_string;
+ 
+--- netsurf-all-3.5/netsurf/desktop/options.h	2016-04-13 07:58:34.000000000 -0500
++++ netsurf-all-3.5-z2/netsurf/desktop/options.h	2016-12-17 19:12:36.898894705 -0600
+@@ -38,6 +38,9 @@
+ 
+ #endif
+ 
++/** User defined User Agent String */
++NSOPTION_STRING(user_agent, NULL)
++
+ /** An HTTP proxy should be used. */
+ NSOPTION_BOOL(http_proxy, false) 
+ 

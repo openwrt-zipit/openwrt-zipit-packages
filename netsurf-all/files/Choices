@@ -1,3 +1,13 @@
+# No user_agent defined uses the default NetSurf user agent
+# Android Gingerbread User Agent
+#user_agent:Mozilla/5.0 (Linux; U; Android 2.3.4; en-us;) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1
+
+# Android Ice Cream Sandwich User Agent
+#user_agent:Mozilla/5.0 (Linux; U; Android 4.0.3; en-us;) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30
+
+# iPod Touch User Agent
+#user_agent:Mozilla/5.0 (iPod; U; CPU like Mac OS X; en) AppleWebKit/420.1 (KHTML, like Gecko) Version/3.0 Mobile/3A101a Safari/419.3
+
 http_proxy:0
 http_proxy_port:8080
 http_proxy_auth:0

@@ -1,5 +1,5 @@
---- a/netsurf/framebuffer/fbtk/event.c	2015-05-19 14:31:35.299517882 -0500
-+++ b/netsurf/framebuffer/fbtk/event.c	2015-05-19 14:35:46.787528308 -0500
+--- a/netsurf/frontends/framebuffer/fbtk/event.c	2015-05-19 14:31:35.299517882 -0500
++++ b/netsurf/frontends/framebuffer/fbtk/event.c	2015-05-19 14:35:46.787528308 -0500
 @@ -285,7 +285,7 @@
  	-1,  -1,  -1,  13,  -1,  -1,  -1,  -1,  -1,  -1, /*  10 -  19 */
  	-1,  -1,  -1,  -1,  -1,  -1,  -1,  27,  -1,  -1, /*  20 -  29 */
@@ -42,8 +42,8 @@
  
  	} else if (mods == FBTK_MOD_CLEAR) {
  		if ((code >= 0) && (code < (int) NOF_ELEMENTS(keymap)))
---- a/netsurf/framebuffer/fbtk/text.c	2015-05-19 14:31:57.835518816 -0500
-+++ b/netsurf/framebuffer/fbtk/text.c	2015-05-19 14:38:29.751535064 -0500
+--- a/netsurf/frontends/framebuffer/fbtk/text.c	2015-05-19 14:31:57.835518816 -0500
++++ b/netsurf/frontends/framebuffer/fbtk/text.c	2015-05-19 14:38:29.751535064 -0500
 @@ -324,6 +324,10 @@
  		case NSFB_KEY_LCTRL:
  			modifier &= ~FBTK_MOD_LCTRL;
@@ -67,8 +67,8 @@
  	case NSFB_KEY_RCTRL:
  		modifier |= FBTK_MOD_RCTRL;
  		break;
---- a/netsurf/framebuffer/gui.c	2015-05-19 14:32:56.355521242 -0500
-+++ b/netsurf/framebuffer/gui.c	2015-05-19 14:41:02.523541397 -0500
+--- a/netsurf/frontends/framebuffer/gui.c	2015-05-19 14:32:56.355521242 -0500
++++ b/netsurf/frontends/framebuffer/gui.c	2015-05-19 14:41:02.523541397 -0500
 @@ -906,6 +906,11 @@
  			modifier |= FBTK_MOD_LSHIFT;
  			break;
@@ -93,8 +93,8 @@
  
  		case NSFB_KEY_RCTRL:
  			modifier &= ~FBTK_MOD_RCTRL;
---- a/netsurf/framebuffer/fbtk.h	2015-05-19 14:33:18.531522161 -0500
-+++ b/netsurf/framebuffer/fbtk.h	2015-05-19 14:47:18.879557000 -0500
+--- a/netsurf/frontends/framebuffer/fbtk.h	2015-05-19 14:33:18.531522161 -0500
++++ b/netsurf/frontends/framebuffer/fbtk.h	2015-05-19 14:47:18.879557000 -0500
 @@ -78,10 +78,11 @@
  /** Key modifier status */
  typedef enum fbtk_modifier_type {

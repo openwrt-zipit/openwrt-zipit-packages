@@ -4,8 +4,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netsurf-all
-PKG_VERSION:=3.5
-PKG_RELEASE:=1
+PKG_VERSION:=3.6
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://download.netsurf-browser.org/netsurf/releases/source-full/
@@ -67,8 +67,8 @@ endef
 define Package/netsurf-all/install
 	$(INSTALL_DIR) $(1)/usr/bin $(1)/usr/share/netsurf
 
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/netsurf \
-		$(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/netsurf-fb \
+		$(1)/usr/bin/netsurf
 
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/netsurf/* \
 		$(1)/usr/share/netsurf/
