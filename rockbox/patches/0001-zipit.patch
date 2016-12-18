@@ -1,0 +1,648 @@
+Index: tools/configure
+===================================================================
+--- a/tools/configure	(revision 29632)
++++ b/tools/configure	(working copy)
+@@ -1437,7 +1437,7 @@
+  206) Android MIPS        ==IHIFI==              ==iBasso==
+  207) Android x86         230) 760               232) DX50
+  208) Samsung YP-R1       231) 960               233) DX90
+-
++ 209) Zipit Z2
+ 
+ EOF
+ 
+@@ -3890,6 +3890,36 @@
+     t_model="dx90"
+     ;;
+ 
++   209|zipitz2)
++    application="yes"
++    target_id=78
++    modelname="zipitz2"
++    app_type="sdl-app"
++    target="-DZIPIT_Z2"
++    #app_set_paths
++    sharedir="/usr/local/share/rockbox"
++    bindir="/usr/local/bin"
++    libdir="/usr/local/lib"
++    app_set_lcd_size 320 240
++    memory=8
++    uname=`uname`
++    simcc "sdl-app" #Should be zipitcc so I can decide if -DIZ2S
++    extradefines="$extradefines -DIZ2S" #Remove this when zipitcc works.
++    tool="cp "
++    boottool="cp "
++    bmp2rb_mono="$rootdir/tools/bmp2rb -f 0"
++    bmp2rb_native="$rootdir/tools/bmp2rb -f 4"
++    output="rockbox.bin"
++    bootoutput="rockbox.bin"
++    appextra="recorder:gui:radio"
++    plugins=
++    swcodec="yes"
++    # architecture, manufacturer and model for the target-tree build
++    t_cpu="hosted"
++    t_manufacturer="zipit"
++    t_model="app"
++    ;;
++
+    *)
+     echo "Please select a supported target platform!"
+     exit 7
+@@ -4427,6 +4457,10 @@
+     # Pandora needs the SDL port, too
+     TARGET_INC="$TARGET_INC -I\$(FIRMDIR)/target/hosted/sdl/app"
+     TARGET_INC="$TARGET_INC -I\$(FIRMDIR)/target/hosted/sdl"
++  elif [ "$t_cpu" = "hosted" ] && [ "$t_manufacturer" = "zipit" ]; then
++    # Zipit needs the SDL port, too
++    TARGET_INC="$TARGET_INC -I\$(FIRMDIR)/target/hosted/sdl/app"
++    TARGET_INC="$TARGET_INC -I\$(FIRMDIR)/target/hosted/sdl"
+   elif [ "$simulator" = "yes" ]; then # a few more includes for the sim target tree
+     TARGET_INC="$TARGET_INC -I\$(FIRMDIR)/target/hosted/sdl"
+     TARGET_INC="$TARGET_INC -I\$(FIRMDIR)/target/hosted"
+Index: apps/codecs.c
+===================================================================
+--- a/apps/codecs.c	(revision 29632)
++++ b/apps/codecs.c	(working copy)
+@@ -54,7 +54,7 @@
+ #define LOGF_ENABLE
+ #include "logf.h"
+ 
+-#if (CONFIG_PLATFORM & (PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA))
++#if (CONFIG_PLATFORM & (PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA|PLATFORM_ZIPIT_Z2))
+ #define PREFIX(_x_) sim_ ## _x_
+ #else
+ #define PREFIX(_x_) _x_
+Index: apps/SOURCES
+===================================================================
+--- a/apps/SOURCES	(revision 29632)
++++ b/apps/SOURCES	(working copy)
+@@ -282,8 +282,16 @@
+ keymaps/keymap-mpio-hd300.c
+ #elif CONFIG_KEYPAD == ANDROID_PAD
+ keymaps/keymap-android.c
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++keymaps/keymap-sdl.c
++#ifndef HAVE_TOUCHSCREEN
++keymaps/keymap-touchscreen.c
++#endif
+ #elif CONFIG_KEYPAD == SDL_PAD
+ keymaps/keymap-sdl.c
++#ifndef HAVE_TOUCHSCREEN
++keymaps/keymap-touchscreen.c
++#endif
+ #elif CONFIG_KEYPAD == SANSA_FUZEPLUS_PAD
+ keymaps/keymap-fuzeplus.c
+ #elif CONFIG_KEYPAD == RK27XX_GENERIC_PAD
+Index: apps/main.c
+===================================================================
+--- a/apps/main.c	(revision 29632)
++++ b/apps/main.c	(working copy)
+@@ -133,7 +133,7 @@
+ #define MAIN_NORETURN_ATTR
+ #endif
+ 
+-#if (CONFIG_PLATFORM & (PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA))
++#if (CONFIG_PLATFORM & (PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA|PLATFORM_ZIPIT_Z2))
+ #ifdef SIMULATOR
+ #include "sim_tasks.h"
+ #endif
+Index: firmware/export/config.h
+===================================================================
+--- a/firmware/export/config.h	(revision 29632)
++++ b/firmware/export/config.h	(working copy)
+@@ -100,6 +100,7 @@
+ #define PLATFORM_MAEMO5  (1<<5)
+ #define PLATFORM_MAEMO   (PLATFORM_MAEMO4|PLATFORM_MAEMO5)
+ #define PLATFORM_PANDORA (1<<6)
++#define PLATFORM_ZIPIT_Z2 (1<<7)
+ 
+ /* CONFIG_KEYPAD */
+ #define PLAYER_PAD          1
+@@ -545,6 +546,8 @@
+ #include "config/nokian900.h"
+ #elif defined(PANDORA)
+ #include "config/pandora.h"
++#elif defined(ZIPIT_Z2)
++#include "config/zipit_z2.h"
+ #elif defined(SAMSUNG_YPR0)
+ #include "config/samsungypr0.h"
+ #elif defined(CREATIVE_ZENXFI)
+@@ -656,6 +659,9 @@
+ #if ARCH == ARCH_ARM
+ #define CPU_ARM
+ #define ARM_ARCH ARCH_VERSION /* ARMv{4,5,6,7} */
++#elif (CONFIG_PLATFORM & PLATFORM_ZIPIT_Z2)
++#define CPU_ARM
++#define ARM_ARCH ARCH_VERSION /* ARMv{4,5,6,7} */
+ #endif
+ 
+ #if ARCH == ARCH_MIPS
+Index: firmware/export/config/zipit_z2.h
+===================================================================
+--- a/firmware/export/config/zipit_z2.h	(revision 0)
++++ b/firmware/export/config/zipit_z2.h	(revision 0)
+@@ -0,0 +1,107 @@
++/*
++ * This config file is for the SDL application
++ */
++#define TARGET_TREE /* this target is using the target tree system */
++
++/* We don't run on hardware directly */
++/* #define CONFIG_PLATFORM (PLATFORM_HOSTED|PLATFORM_ZIPIT_Z2) */
++/* ZIPIT_Z2 is just a minor tweak on PLATFORM_SDL so why not include both? */
++#define CONFIG_PLATFORM (PLATFORM_HOSTED|PLATFORM_SDL|PLATFORM_ZIPIT_Z2) 
++
++/* For Rolo and boot loader */
++#define MODEL_NUMBER 100
++
++#define MODEL_NAME   "Rockbox"
++
++#define USB_NONE
++
++/* define this if you have a bitmap LCD display */
++#define HAVE_LCD_BITMAP
++
++/* define this if you have a colour LCD */
++#define HAVE_LCD_COLOR
++
++/* define this if you want album art for this target */
++#define HAVE_ALBUMART
++
++/* define this to enable bitmap scaling */
++#define HAVE_BMP_SCALING
++
++/* define this to enable JPEG decoding */
++#define HAVE_JPEG
++
++/* define this if you have access to the quickscreen */
++#define HAVE_QUICKSCREEN
++/* define this if you have access to the pitchscreen */
++#define HAVE_PITCHSCREEN
++
++/* define this if you would like tagcache to build on this target */
++#define HAVE_TAGCACHE
++
++/* LCD dimensions
++ *
++ * overriden by configure for application builds */
++#ifndef LCD_WIDTH
++#define LCD_WIDTH  320
++#endif
++
++#ifndef LCD_HEIGHT
++#define LCD_HEIGHT 240
++#endif
++
++#define LCD_DEPTH  16
++#define LCD_PIXELFORMAT 565
++
++/* define this to indicate your device's keypad */
++/* #define HAVE_TOUCHSCREEN */
++/* #define HAVE_BUTTON_DATA */
++
++/* define this if you have RTC RAM available for settings */
++//#define HAVE_RTC_RAM
++
++/* define this if you have a real-time clock */
++#define CONFIG_RTC APPLICATION
++
++/* The number of bytes reserved for loadable codecs */
++#define CODEC_SIZE 0x100000
++
++/* The number of bytes reserved for loadable plugins */
++/* Could save 512K here on IZ2S build. */
++#define PLUGIN_BUFFER_SIZE 0x80000
++
++#define AB_REPEAT_ENABLE
++
++/* Define this if you do software codec */
++#define CONFIG_CODEC SWCODEC
++
++#define HAVE_SCROLLWHEEL
++#define CONFIG_KEYPAD ZIPIT_Z2_PAD
++
++/* Use SDL audio/pcm in a SDL app build */
++#define HAVE_SDL
++#define HAVE_SDL_AUDIO
++
++#define HAVE_SW_TONE_CONTROLS 
++
++/* Define current usage levels. */
++#define CURRENT_NORMAL     88 /* 18 hours from a 1600 mAh battery */  
++#define CURRENT_BACKLIGHT  30 /* TBD */ 
++#define CURRENT_RECORD     0  /* no recording yet */ 
++
++/* Define this to the CPU frequency */
++/*
++#define CPU_FREQ 48000000
++*/
++
++/* Offset ( in the firmware file's header ) to the file CRC */
++#define FIRMWARE_OFFSET_FILE_CRC 0
++
++/* Offset ( in the firmware file's header ) to the real data */
++#define FIRMWARE_OFFSET_FILE_DATA 8
++
++#define CONFIG_LCD LCD_COWOND2
++
++/* Define this if a programmable hotkey is mapped */
++#define HAVE_HOTKEY
++
++#define BOOTDIR "/.rockbox"
+Index: firmware/SOURCES
+===================================================================
+--- a/firmware/SOURCES	(revision 29632)
++++ b/firmware/SOURCES	(working copy)
+@@ -1802,3 +1802,7 @@
+ drivers/audio/android.c
+ thread.c
+ #endif
++
++#if (CONFIG_PLATFORM & PLATFORM_ZIPIT_Z2)
++target/hosted/zipit/powermgmt-zipit-z2.c
++#endif
+Index: firmware/target/hosted/zipit/powermgmt-zipit-z2.c
+===================================================================
+--- a/firmware/target/hosted/zipit/powermgmt-zipit-z2.c	(revision 0)
++++ b/firmware/target/hosted/zipit/powermgmt-zipit-z2.c	(revision 0)
+@@ -0,0 +1,241 @@
++/***************************************************************************
++ *             __________               __   ___.
++ *   Open      \______   \ ____   ____ |  | _\_ |__   _______  ___
++ *   Source     |       _//  _ \_/ ___\|  |/ /| __ \ /  _ \  \/  /
++ *   Jukebox    |    |   (  <_> )  \___|    < | \_\ (  <_> > <  <
++ *   Firmware   |____|_  /\____/ \___  >__|_ \|___  /\____/__/\_ \
++ *                     \/            \/     \/    \/            \/
++ * $Id: powermgmt-sim.c 29543 2011-03-08 19:33:30Z thomasjfox $
++ *
++ * Copyright (C) 2002 by Heikki Hannikainen, Uwe Freese
++ * Revisions copyright (C) 2005 by Gerald Van Baren
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
++ * KIND, either express or implied.
++ *
++ ****************************************************************************/
++#include "config.h"
++#include "system.h"
++#include <time.h>
++#include "kernel.h"
++#include "powermgmt.h"
++#include <stdio.h>
++
++#define BATT_MINMVOLT   3500      /* minimum millivolts of battery */
++#define BATT_MAXMVOLT   4200      /* maximum millivolts of battery */
++#define BATT_MAXRUNTIME (10 * 60) /* maximum runtime with full battery in
++                                     minutes */
++
++#ifdef IZ2S
++#include <errno.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <fcntl.h>
++#include <linux/i2c-dev.h>
++#include <time.h>
++#include <sys/types.h>
++#include <sys/mman.h>
++
++unsigned char batlvl_calibration[256] = {
++  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
++  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
++  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
++  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
++  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
++  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
++  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
++  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
++  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
++  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
++  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
++  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
++  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  2,  5,
++  6,  7,  8,  9, 11, 13, 16, 20, 23, 29, 36, 42, 48, 54, 58, 62,
++  65, 68, 69, 71, 73, 77, 80,82, 83, 84, 85, 86, 88, 91, 92, 94,
++  94, 95, 95, 95, 95, 95, 96,96, 96, 97, 97, 98, 99, 99,100,100,
++};
++
++#define MAP_SIZE 4096UL
++
++#define GPIO 0	/* AC Power */
++#define GPIO_BASE 0x40E00000 /* PXA270 GPIO Register Base */
++
++typedef unsigned long u32;
++
++static int regoffset(int gpio) {
++	if (gpio < 32) return 0;
++	if (gpio < 64) return 4;
++	if (gpio < 96) return 8;
++	return 0x100;
++}
++
++static int gpio_read(void *map_base, int gpio) {
++	volatile u32 *reg = (u32*)((u32)map_base + regoffset(gpio));
++	return (*reg >> (gpio&31)) & 1;
++}
++#endif /* IZ2S */
++
++extern void send_battery_level_event(void);
++extern int last_sent_battery_level;
++extern int battery_percent;
++
++static unsigned int battery_millivolts = BATT_MAXMVOLT;
++/* estimated remaining time in minutes */
++static int powermgmt_est_runningtime_min = BATT_MAXRUNTIME;
++
++static void battery_status_update(void)
++{
++    static time_t last_change = 0;
++    static bool charging = false;
++    time_t now;
++
++    time(&now);
++
++#ifdef IZ2S
++    /* Check once a second? */
++    if ((last_change) < now) {
++	int fd;
++	void *map_base; 
++	unsigned char res;
++	static int tot, n = -1;
++	static unsigned char lvl[64];
++
++	fd = open("/dev/mem", O_RDONLY | O_SYNC);
++   	if (fd < 0) return;
++    	map_base = mmap(0, MAP_SIZE, PROT_READ, MAP_SHARED, fd, GPIO_BASE);
++	if(map_base == (void *) -1) return;
++	if (gpio_read(map_base,GPIO) == 1)
++	  charging= true; /* mains */
++	else
++	  charging= false; /* battery(0) or error */
++	if(munmap(map_base, MAP_SIZE) == -1) return;
++	close(fd);
++
++	/* Open lpc915 controller via i2c */
++	if ( (fd = open("/dev/i2c-0",O_RDWR)) < 0) return;
++	/* FORCE so we can look at registers even when a driver is also running */
++	if (ioctl(fd,I2C_SLAVE_FORCE,0x55) < 0) return;
++	/* Take 64 readings, and give the average value. */
++	res = i2c_smbus_read_byte_data(fd, 0x02);  /* batt chg level */
++	close(fd);
++	if (n < 0) /* first time */
++	{
++	  n = 0;
++          memset(lvl, res, 64);
++          tot = res * 64;
++	}
++        tot -= lvl[n];
++        tot += res;
++	lvl[n++] = res;
++	n = n %64;
++	battery_percent = batlvl_calibration[tot/64];
++	/* got charging and battery_percent */
++#else /* NOT IZ2S */
++    /* Check once a minute? */
++    if ((last_change+60) < now) {
++
++        int batteryTime = 0;
++	int ac, charge, flag;
++	char units[32];
++      
++        FILE* fapm = fopen("/proc/apm", "r");
++
++        last_change = now;
++
++	if (!fapm) return;
++
++	fscanf(fapm, "%*s %*d.%*d %*x %x %x %x %d%% %d %s\n", &ac,
++	       &charge, &flag, &battery_percent, &batteryTime, units);
++        fclose(fapm);
++
++	if (charge)
++	  charging = true;
++	else
++	  charging = false;
++
++#if 0
++	// BatteryTime not available on Zipit_Z2 yet.
++	if ((flag & 0x80) == 0 && charge != 0xFF && ac != 1 && batteryTime != -1) {
++	  if (!strncmp(units, "min", 32))
++	    powermgmt_est_runningtime_min = batteryTime *= 60;
++	}
++#endif
++
++#endif /* NOT IZ2S, move onto ZIPIT_Z2 common code. */
++	powermgmt_est_runningtime_min =
++	    battery_percent * BATT_MAXRUNTIME / 100;
++
++	battery_millivolts = battery_percent * (BATT_MAXMVOLT - BATT_MINMVOLT);
++	battery_millivolts /= 100;
++	battery_millivolts += BATT_MINMVOLT;
++
++	send_battery_level_event();
++    }
++    return;
++
++}
++
++void battery_read_info(int *voltage, int *level)
++{
++    battery_status_update();
++
++    if (voltage)
++        *voltage = battery_millivolts;
++
++    if (level)
++        *level = battery_percent;
++}
++
++unsigned int battery_voltage(void)
++{
++    battery_status_update();
++    return battery_millivolts;
++}
++
++int battery_level(void)
++{
++    battery_status_update();
++    return battery_percent;
++}
++
++int battery_time(void)
++{
++    battery_status_update();
++    return powermgmt_est_runningtime_min;
++}
++
++bool battery_level_safe(void)
++{
++    return battery_level() >= 10;
++}
++
++void set_battery_capacity(int capacity)
++{
++  (void)capacity;
++}
++
++#if BATTERY_TYPES_COUNT > 1
++void set_battery_type(int type)
++{
++    (void)type;
++}
++#endif
++
++#ifdef HAVE_ACCESSORY_SUPPLY
++void accessory_supply_set(bool enable)
++{
++    (void)enable;
++}
++#endif
++
++#ifdef HAVE_LINEOUT_POWEROFF
++void lineout_set(bool enable)
++{
++    (void)enable;
++}
++#endif
+Index: firmware/target/hosted/sdl/app/button-application.c
+===================================================================
+--- a/firmware/target/hosted/sdl/app/button-application.c	(revision 29632)
++++ b/firmware/target/hosted/sdl/app/button-application.c	(working copy)
+@@ -17,7 +17,7 @@
+  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+  * KIND, either express or implied.
+  *
+- ***************************************************9*************************/
++ ****************************************************************************/
+ 
+ 
+ #include <stdio.h>
+@@ -50,8 +50,50 @@
+         case SDLK_LEFT:
+             new_btn = BUTTON_MIDLEFT;
+             break;
+-#if (CONFIG_PLATFORM & PLATFORM_MAEMO|PLATFORM_PANDORA)
++#if (CONFIG_PLATFORM & PLATFORM_ZIPIT_Z2)
++        case SDLK_HOME: /* Maybe switch home/end (prev/next on zipit z2) */
++        case SDLK_TAB:
++        case SDLK_o:
++        case SDLK_9:
++	    /* new_btn = BUTTON_MENU; */
++            new_btn = BUTTON_TOPLEFT;
++            break;
++        case SDLK_END: /* Maybe switch home/end (prev/next on zipit z2) */
++        case SDLK_p:
++        case SDLK_0:
++            /* new_btn = BUTTON_BACK; */
++            new_btn = BUTTON_TOPRIGHT;
++            break;
++        case SDLK_KP_PLUS:
++        case SDLK_PAGEUP:
++            /* new_btn = BUTTON_VOL_UP (not in sdl button_target.h) */
++	    /* No BUTTON_VOL_UP defined in SDL application.  Add it? */
++            new_btn = BUTTON_TOPMIDDLE; 
++            break;
++        case SDLK_KP_MINUS:
++        case SDLK_PAGEDOWN:
++            /* new_btn = BUTTON_VOL_DOWN (not in sdl button_target.h) */
++            new_btn = BUTTON_BOTTOMMIDDLE;
++            break;
++        case SDLK_COMMA:
++            new_btn = BUTTON_MIDLEFT;
++            break;
++        case SDLK_l:
++            new_btn = BUTTON_BOTTOMLEFT;
++            break;
++        case SDLK_PERIOD:
++        case SDLK_KP_PERIOD:
++            new_btn = BUTTON_MIDRIGHT;
++            break;
++        case SDLK_BACKSPACE:
++            new_btn = BUTTON_BOTTOMRIGHT;
++            break;
++        case SDLK_KP_ENTER:
+         case SDLK_RETURN:
++        case SDLK_SPACE:
++#endif /* ZIPIT_Z2 */        
++#if (CONFIG_PLATFORM & (PLATFORM_MAEMO|PLATFORM_PANDORA))
++        case SDLK_RETURN:
+         case SDLK_KP_ENTER:
+ #endif
+         case SDLK_KP5:
+Index: firmware/target/hosted/sdl/system-sdl.c
+===================================================================
+--- a/firmware/target/hosted/sdl/system-sdl.c	(revision 29632)
++++ b/firmware/target/hosted/sdl/system-sdl.c	(working copy)
+@@ -133,7 +133,7 @@
+         depth = 16;
+ 
+     flags = SDL_HWSURFACE|SDL_DOUBLEBUF;
+-#if (CONFIG_PLATFORM & (PLATFORM_MAEMO|PLATFORM_PANDORA))
++#if (CONFIG_PLATFORM & (PLATFORM_MAEMO|PLATFORM_PANDORA|PLATFORM_ZIPIT_Z2))
+     /* Fullscreen mode for maemo app */
+     flags |= SDL_FULLSCREEN;
+ #endif
+@@ -144,6 +144,11 @@
+         panicf("%s", SDL_GetError());
+     }
+ 
++#if (CONFIG_PLATFORM & PLATFORM_ZIPIT_Z2)
++     /* Hide mouse cursor on real touchscreen device */
++     SDL_ShowCursor(SDL_DISABLE);
++ #endif
++
+ #if (CONFIG_PLATFORM & (PLATFORM_MAEMO|PLATFORM_PANDORA))
+     /* SDL touch screen fix: Work around a SDL assumption that returns
+        relative mouse coordinates when you get to the screen edges
+Index: firmware/target/hosted/sdl/button-sdl.c
+===================================================================
+--- a/firmware/target/hosted/sdl/button-sdl.c	(revision 29632)
++++ b/firmware/target/hosted/sdl/button-sdl.c	(working copy)
+@@ -330,6 +330,12 @@
+         return;
+ #endif
+ #endif
++#if (CONFIG_PLATFORM & PLATFORM_ZIPIT_Z2)
++    case SDLK_ESCAPE:
++        /* Will post SDL_USEREVENT in shutdown_hw() if successful. */
++        sys_poweroff();
++        break;
++#endif
+ #if (CONFIG_PLATFORM & PLATFORM_PANDORA)
+     case SDLK_LCTRL:
+         /* Will post SDL_USEREVENT in shutdown_hw() if successful. */
+Index: firmware/drivers/lcd-16bit.c
+===================================================================
+--- a/firmware/drivers/lcd-16bit.c	(revision 29632)
++++ b/firmware/drivers/lcd-16bit.c	(working copy)
+@@ -855,10 +855,10 @@
+ #ifdef CPU_ARM
+     {
+         int w, px;
+-        asm volatile (
+-        ".rowstart:                              \n"
++        asm volatile ( 
++        ".rowstart%=:                            \n"
+             "mov     %[w], %[width]              \n" /* Load width for inner loop */
+-        ".nextpixel:                             \n"
++        ".nextpixel%=:                           \n"
+             "ldrh    %[px], [%[s]], #2           \n" /* Load src pixel */
+             "add     %[d], %[d], #2              \n" /* Uncoditionally increment dst */
+                                                  /* done here for better pipelining */
+@@ -867,11 +867,11 @@
+             "cmpne   %[px], %[transcolor]        \n" /* Compare to transparent color */
+             "strneh  %[px], [%[d], #-2]          \n" /* Store dst if not transparent */
+             "subs    %[w], %[w], #1              \n" /* Width counter has run down? */
+-            "bgt     .nextpixel                  \n" /* More in this row? */
++            "bgt     .nextpixel%=                \n" /* More in this row? */
+             "add     %[s], %[s], %[sstp], lsl #1 \n" /* Skip over to start of next line */
+             "add     %[d], %[d], %[dstp], lsl #1 \n"
+             "subs    %[h], %[h], #1              \n" /* Height counter has run down? */
+-            "bgt     .rowstart                   \n" /* More rows? */
++            "bgt     .rowstart%=                 \n" /* More rows? */
+             : [w]"=&r"(w), [h]"+&r"(height), [px]"=&r"(px),
+               [s]"+&r"(src), [d]"+&r"(dst)
+             : [width]"r"(width),
