@@ -44,6 +44,8 @@ CONFIGURE_ARGS += \
 	--disable-smpeg \
 	--disable-speex \
 
+TARGET_CFLAGS += -D_FORTIFY_SOURCE=0
+
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include/SDL $(1)/usr/lib
 	$(CP) \

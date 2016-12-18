@@ -346,3 +346,57 @@ define Package/gmenu2x-kiwix/install
 endef
 
 $(eval $(call BuildPackage,gmenu2x-kiwix))
+
+define Package/gmenu2x-mutt
+	CATEGORY:=GMenu2X
+	TITLE:=mutt launcher for gmenu2x
+	DEPENDS:=+gmenu2x +mutt
+	VARIANT:=gmenu2x-mutt
+endef
+
+define Package/gmenu2x-mutt/install
+	$(INSTALL_DIR) \
+		$(1)/usr/share/gmenu2x/ \    
+
+	$(CP) \
+		./files/mutt/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-mutt))
+
+define Package/gmenu2x-wolf3d
+	CATEGORY:=GMenu2X
+	TITLE:=wolf3d launcher for gmenu2x
+	DEPENDS:=+gmenu2x +wolf4sdl +wolf3d-shareware
+	VARIANT:=gmenu2x-wolf3d
+endef
+
+define Package/gmenu2x-wolf3d/install
+	$(INSTALL_DIR) \
+		$(1)/usr/share/gmenu2x/ \    
+
+	$(CP) \
+		./files/wolf3d/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-wolf3d))
+
+define Package/gmenu2x-sdlquake
+	CATEGORY:=GMenu2X
+	TITLE:=sdlquake launcher for gmenu2x
+	DEPENDS:=+gmenu2x +sdlquake +sdlquake-shareware-data
+	VARIANT:=gmenu2x-sdlquake
+endef
+
+define Package/gmenu2x-sdlquake/install
+	$(INSTALL_DIR) \
+		$(1)/usr/share/gmenu2x/ \    
+
+	$(CP) \
+		./files/sdlquake/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-sdlquake))

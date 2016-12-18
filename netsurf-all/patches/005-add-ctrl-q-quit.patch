@@ -1,5 +1,5 @@
---- a/netsurf/framebuffer/gui.c	2016-09-08 18:22:21.527029324 -0500
-+++ b/netsurf/framebuffer/gui.c	2016-09-08 18:39:00.051049449 -0500
+--- a/netsurf/frontends/framebuffer/gui.c	2016-09-08 18:22:21.527029324 -0500
++++ b/netsurf/frontends/framebuffer/gui.c	2016-09-08 18:39:00.051049449 -0500
 @@ -934,9 +934,17 @@
  				browser_window_key_press(gw->bw, NS_KEY_REDO);
  				break;

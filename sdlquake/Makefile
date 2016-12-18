@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=sdlquake
 PKG_VERSION:=0.1
 PKG_RELEASE:=1
-PKG_REV:=8e33585fa1eede0e8aba522d9903a791dce064c1
+PKG_REV:=fe5b14189e1fbdf31d069cc20b2e6d3197fa0a31
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_REV).tar.gz
 PKG_SOURCE_URL:=git://github.com/mozzwald/sdlquake-zipit.git
@@ -39,10 +39,6 @@ define Package/sdlquake/install
 		$(INSTALL_BIN) ./files/runquake $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/usr/games/sdlquake
 		$(INSTALL_BIN) ./files/config.cfg.z2 $(1)/usr/games/sdlquake
-	$(INSTALL_DIR) $(1)/usr/share/gmenu2x/sections/games
-		$(INSTALL_BIN) ./files/sdlquake.gmenu $(1)/usr/share/gmenu2x/sections/games
-	$(INSTALL_DIR) $(1)/usr/share/gmenu2x/skins/Default/icons
-		$(INSTALL_BIN) ./files/quake.png $(1)/usr/share/gmenu2x/skins/Default/icons
 endef
 
 $(eval $(call BuildPackage,sdlquake))

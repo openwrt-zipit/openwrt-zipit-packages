@@ -6,12 +6,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=flite
-PKG_VERSION:=1.5.5
+PKG_VERSION:=2.0.0
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-current.tar.bz2
-PKG_SOURCE_URL:=http://festvox.org/bard/old/0.7/
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-release.tar.bz2
+PKG_SOURCE_URL:=http://festvox.org/flite/packed/flite-2.0
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)-current
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)-release
 PKG_RELEASE:=1
 
 include $(INCLUDE_DIR)/package.mk

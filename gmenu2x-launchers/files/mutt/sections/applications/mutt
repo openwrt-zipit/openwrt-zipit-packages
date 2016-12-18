@@ -1,0 +1,4 @@
+title=mutt
+icon=skin:icons/mutt.png
+exec=/usr/bin/mutt
+clock=312
