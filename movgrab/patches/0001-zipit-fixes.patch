@@ -1,0 +1,31 @@
+--- movgrab-1.2.1/libUseful-2.0/file.h~	2013-03-27 06:09:27.000000000 -0400
++++ movgrab-1.2.1/libUseful-2.0/file.h	2016-12-20 08:46:11.936427802 -0500
+@@ -2,6 +2,8 @@
+ #define LIBUSEFUL_FILE_H
+ 
+ #include <fcntl.h>
++#include <unistd.h>
++#include <sys/file.h>
+ #include "list.h"
+ 
+ 
+--- movgrab-1.2.1/libUseful-2.0/libUseful.h~	2013-03-24 10:21:17.000000000 -0400
++++ movgrab-1.2.1/libUseful-2.0/libUseful.h	2016-12-20 08:42:16.828975032 -0500
+@@ -12,6 +12,7 @@
+ #include <unistd.h>
+ #include <stdlib.h>
+ #include <sys/types.h>
++#include <sys/file.h>
+ #include <stdio.h>
+ #include "socket.h"
+ #include "unix_socket.h"
+--- movgrab-1.2.1/libUseful-2.0/unix_socket.h~	2013-03-24 10:17:13.000000000 -0400
++++ movgrab-1.2.1/libUseful-2.0/unix_socket.h	2016-12-20 08:45:57.908460569 -0500
+@@ -1,6 +1,7 @@
+ #ifndef LIBUSEFUL_UNIXSOCK_H
+ #define LIBUSEFUL_UNIXSOCK_H
+ 
++#include <unistd.h>
+ #include "file.h"
+ #include "defines.h"
+ 
