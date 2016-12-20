@@ -30,7 +30,7 @@ endef
 
 define Build/Configure
 	$(call Build/Configure/Default,\
-		)
+		--enable-ssl)
 endef
 
 define Package/movgrab/install

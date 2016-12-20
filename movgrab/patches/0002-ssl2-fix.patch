@@ -1,0 +1,12 @@
+--- movgrab-1.2.1/libUseful-2.0/socket.c~	2013-04-26 09:11:55.000000000 -0400
++++ movgrab-1.2.1/libUseful-2.0/socket.c	2016-12-20 12:22:48.937572277 -0500
+@@ -9,6 +9,9 @@
+ #include <openssl/ssl.h>
+ #include <openssl/err.h>
+ 
++SSL_METHOD *SSLv2_method(void) { return NULL; }
++SSL_METHOD *SSLv2_client_method(void) { return NULL; }
++SSL_METHOD *SSLv2_server_method(void) { return NULL; }
+ #endif
+ 
+ #include "ConnectionChain.h"
