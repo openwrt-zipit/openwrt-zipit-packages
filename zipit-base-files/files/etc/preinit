@@ -71,6 +71,8 @@ if [ -f /overlay/upper/etc/testinit ]; then
 	chmod +x /tmp/testinit
 	/bin/umount /overlay
 	exec /tmp/testinit
+else
+	/bin/umount /overlay
 fi
 # FOR TESTING END: exit preinit and run testinit
 
