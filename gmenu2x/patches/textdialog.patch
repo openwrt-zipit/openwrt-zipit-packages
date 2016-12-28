@@ -1,0 +1,31 @@
+--- gmenu2x-zipit-313284bc1a6644601f1cb972ee534d9b44f29aac/src/textdialog.cpp~	2016-11-13 18:35:59.000000000 -0500
++++ gmenu2x-zipit-313284bc1a6644601f1cb972ee534d9b44f29aac/src/textdialog.cpp	2016-12-28 17:50:31.382019936 -0500
+@@ -110,7 +110,7 @@
+ 	writeTitle(title,&bg);
+ 	writeSubTitle(description,&bg);
+ 
+-	gmenu2x->drawButton(&bg, "start", gmenu2x->tr["Exit"],
++	gmenu2x->drawButton(&bg, "accept", gmenu2x->tr["Exit"],
+ 	gmenu2x->drawButton(&bg, "cancel", "",
+ 	gmenu2x->drawButton(&bg, "down", gmenu2x->tr["Scroll"],
+ 	gmenu2x->drawButton(&bg, "up", "", 5)-10))-10);
+--- gmenu2x-zipit-313284bc1a6644601f1cb972ee534d9b44f29aac/src/textmanualdialog.cpp~	2016-11-13 18:35:59.000000000 -0500
++++ gmenu2x-zipit-313284bc1a6644601f1cb972ee534d9b44f29aac/src/textmanualdialog.cpp	2016-12-28 17:51:10.549928280 -0500
+@@ -79,7 +79,7 @@
+ 		drawTitleIcon(icon,false,&bg);
+ 	writeTitle(title+(description.empty() ? "" : ": "+description),&bg);
+ 
+-	gmenu2x->drawButton(&bg, "start", gmenu2x->tr["Exit"],
++	gmenu2x->drawButton(&bg, "accept", gmenu2x->tr["Exit"],
+ 	gmenu2x->drawButton(&bg, "cancel", "",
+ 	gmenu2x->drawButton(&bg, "right", gmenu2x->tr["Change page"],
+ 	gmenu2x->drawButton(&bg, "left", "",
+@@ -136,7 +136,7 @@
+ 				else firstRow = max(0u, pages[page].text.size() - rowsPerPage);
+ 				break;
+ 			case InputManager::CANCEL:
+-			case InputManager::SETTINGS:
++			case InputManager::ACCEPT:
+ 				close = true;
+ 				break;
+ 			default:

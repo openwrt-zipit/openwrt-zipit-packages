@@ -1,0 +1,48 @@
+--- gmenu2x-zipit-orig/src/selector.cpp	2016-12-28 16:22:08.309783465 -0500
++++ gmenu2x-zipit-313284bc1a6644601f1cb972ee534d9b44f29aac/src/selector.cpp	2016-12-28 16:44:31.455255167 -0500
+@@ -69,12 +69,12 @@
+ 	writeSubTitle(link->getDescription(), &bg);
+ 
+ 	if (link->getSelectorBrowser()) {
+-		gmenu2x->drawButton(&bg, "start", gmenu2x->tr["Exit"],
++		gmenu2x->drawButton(&bg, "cancel", gmenu2x->tr["Exit"],
++		gmenu2x->drawButton(&bg, "start",  gmenu2x->tr["a folder"],
+ 		gmenu2x->drawButton(&bg, "accept", gmenu2x->tr["Select a file"],
+-		gmenu2x->drawButton(&bg, "cancel", gmenu2x->tr["Up one folder"],
+-		gmenu2x->drawButton(&bg, "left", "", 5)-10)));
++		gmenu2x->drawButton(&bg, "left",   gmenu2x->tr["Up one folder"], 5))));
+ 	} else {
+-		gmenu2x->drawButton(&bg, "start", gmenu2x->tr["Exit"],
++		gmenu2x->drawButton(&bg, "cancel", gmenu2x->tr["Exit"],
+ 		gmenu2x->drawButton(&bg, "accept", gmenu2x->tr["Select a file"], 5));
+ 	}
+ 
+@@ -129,6 +129,20 @@
+ 
+         switch (gmenu2x->input.waitForPressedButton()) {
+             case InputManager::SETTINGS:
++		// Let the S key play a whole directory.  Switch to ESC for Cancel.
++		file = fl[selected];
++		close = true; 
++		if (fl.isDirectory(selected)) {
++			file = file+"/*"; 
++			//fl->setPath(dir+file+"/"); // Apply the filter...
++			//loop through filtered files and add them to file string.
++			// Then we must update launch() to handle many files instead of *.
++			//file = "";
++			//for (uint i=0; i<fl->getFiles().size(); i++)
++			//  file = file + " " + fl->getFiles()[i];
++		}
++                break;
++            case InputManager::CANCEL:
+                 close = true;
+                 result = false;
+                 break;
+@@ -152,7 +166,6 @@
+                 else selected += SELECTOR_ELEMENTS-1;
+                 selTick = SDL_GetTicks();
+                 break;
+-            case InputManager::CANCEL:
+             case InputManager::LEFT:
+                 if (link->getSelectorBrowser()) {
+                     string::size_type p = dir.rfind("/", dir.size()-2);

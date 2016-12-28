@@ -1,0 +1,28 @@
+--- gmenu2x-zipit-orig/src/linkapp.cpp	2016-12-28 16:21:52.629809224 -0500
++++ gmenu2x-zipit-313284bc1a6644601f1cb972ee534d9b44f29aac/src/linkapp.cpp	2016-12-28 16:56:44.629512615 -0500
+@@ -350,6 +350,8 @@
+ 		chdir(wd.c_str());
+ 	}
+ 
++	string origParams = params; // bugfix.  restore original params for multiple dontleave calls.
++
+ 	//selectedFile
+ 	if (selectedFile!="") {
+ 		string selectedFileExtension;
+@@ -368,7 +370,7 @@
+ 		if (params=="") {
+ 			params = cmdclean(dir+selectedFile);
+ 		} else {
+-			string origParams = params;
++			// string origParams = params; // bugfix.  Create origParms earlier.  
+ 			params = strreplace(params,"[selFullPath]",cmdclean(dir+selectedFile));
+ 			params = strreplace(params,"[selPath]",cmdclean(dir));
+ 			params = strreplace(params,"[selFile]",cmdclean(selectedFileName));
+@@ -398,6 +400,7 @@
+ 	} // else, well.. we are no worse off :)
+ 
+ 	if (params!="") command += " " + params;
++	params = origParams; // bugfix.  Now that we've used them, restore original params for multiple dontleave or newTerm or whatever calls.
+ 	if (gmenu2x->confInt["outputLogs"]) command += " &> " + cmdclean(gmenu2x->getHome()) + "/log.txt";
+ 	if (wrapper) command += "; sync & cd "+cmdclean(gmenu2x->getExePath())+"; exec ./gmenu2x";
+ 	if (dontleave) {

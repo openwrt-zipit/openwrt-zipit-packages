@@ -8,7 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gmenu2x-zipit
-PKG_VERSION:=2016mar
+#:=2016mar
+PKG_VERSION:=313284bc1a6644601f1cb972ee534d9b44f29aac
 PKG_REV:=testing
 PKG_RELEASE:=3
 PKG_INSTALL:=1
@@ -31,7 +32,7 @@ TARGET_CFLAGS+= \
 	-DTIXML_USE_STL -msoft-float -fomit-frame-pointer \
 	-ffast-math -Wall -Wno-unknown-pragmas -Wno-format \
 	-pipe -g -fno-exceptions -Os -fdata-sections -ffunction-sections
-	
+
 TARGET_CPPFLAGS+= \
   -I$(STAGING_DIR)/usr/include/SDL \
   -I$(STAGING_DIR)/usr/include/google/sparsehash \
@@ -72,6 +73,10 @@ define Package/gmenu2x/install
 	mv \
 		$(1)/usr/share/gmenu2x/gmenu2x.sh \
 		$(1)/usr/bin/gmenu2x
+
+	$(INSTALL_BIN) \
+		$(FILES_DIR)/buttons/*.png \
+		$(1)/usr/share/gmenu2x/skins/Default/imgs/buttons/
 endef
 
 $(eval $(call BuildPackage,gmenu2x))

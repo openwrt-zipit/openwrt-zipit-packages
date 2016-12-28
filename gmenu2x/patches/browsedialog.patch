@@ -1,0 +1,46 @@
+--- gmenu2x-zipit-orig/src/browsedialog.cpp	2016-12-28 16:22:17.277768731 -0500
++++ gmenu2x-zipit-313284bc1a6644601f1cb972ee534d9b44f29aac/src/browsedialog.cpp	2016-12-28 16:36:24.568371926 -0500
+@@ -21,23 +21,18 @@
+ {
+ 	IconButton *btn;
+ 
+-	buttonBox.add(new IconButton(gmenu2x, ts, "skin:imgs/buttons/left.png"));
+-	btn = new IconButton(gmenu2x, ts, "skin:imgs/buttons/cancel.png", gmenu2x->tr["Up one folder"]);
++	btn = new IconButton(gmenu2x, ts, "skin:imgs/buttons/left.png", gmenu2x->tr["Up one folder"]);
+ 	btn->setAction(MakeDelegate(this, &BrowseDialog::directoryUp));
+ 	buttonBox.add(btn);
+ 
+-	btn = new IconButton(gmenu2x, ts, "skin:imgs/buttons/accept.png", gmenu2x->tr["Enter folder"]);
++	btn = new IconButton(gmenu2x, ts, "skin:imgs/buttons/accept.png", gmenu2x->tr["Enter and Select"]);
+ 	btn->setAction(MakeDelegate(this, &BrowseDialog::directoryEnter));
+ 	buttonBox.add(btn);
+ 
+-/*	btn = new IconButton(gmenu2x, ts, "skin:imgs/buttons/start.png", gmenu2x->tr["Confirm"]);
+-	btn->setAction(MakeDelegate(this, &BrowseDialog::confirm));
+-	buttonBox.add(btn);
+-
+-	btn = new IconButton(gmenu2x, ts, "skin:imgs/buttons/select.png", gmenu2x->tr["Exit"]);
++	btn = new IconButton(gmenu2x, ts, "skin:imgs/buttons/cancel.png", gmenu2x->tr["Exit"]);
+ 	btn->setAction(MakeDelegate(this, &BrowseDialog::quit));
+ 	buttonBox.add(btn);
+-*/
++
+ 	iconGoUp = gmenu2x->sc.skinRes("imgs/go-up.png");
+ 	iconFolder = gmenu2x->sc.skinRes("imgs/folder.png");
+ 	iconFile = gmenu2x->sc.skinRes("imgs/file.png");
+@@ -80,6 +75,7 @@
+ {
+ 	switch (button) {
+ 		case InputManager::MENU:
++		case InputManager::CANCEL:
+ 			return BrowseDialog::ACT_CLOSE;
+ 		case InputManager::UP:
+ 			return BrowseDialog::ACT_UP;
+@@ -90,7 +86,6 @@
+ 		case InputManager::ALTRIGHT:
+ 			return BrowseDialog::ACT_SCROLLDOWN;
+ 		case InputManager::LEFT:
+-		case InputManager::CANCEL:
+ 			return BrowseDialog::ACT_GOUP;
+ 		case InputManager::ACCEPT:
+ 			return BrowseDialog::ACT_SELECT;
