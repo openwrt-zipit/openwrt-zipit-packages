@@ -410,25 +410,29 @@ endef
 
 define Package/gmenu2x-mpg123/install
 	$(INSTALL_DIR) \
-	$(1)/usr/share/gmenu2x/ \
+	$(1)/usr/share/gmenu2x/
+
 	$(CP) \
 		./files/mpg123/usr/share/gmenu2x/* \
 		$(1)/usr/share/gmenu2x/
 
 	$(INSTALL_DIR) \
-	$(1)/usr/local/bin/ \
+	$(1)/usr/local/bin/
+
 	$(CP) \
 		./files/mpg123/usr/local/bin/* \
 		$(1)/usr/local/bin/
 
 	$(INSTALL_DIR) \
-	$(1)/root/music/ \
+	$(1)/root/music/
+
 	$(CP) \
 		./files/mpg123/root/music/* \
 		$(1)/root/music/
 
 	$(INSTALL_DIR) \
-	$(1)/root/radio/ \
+	$(1)/root/radio/
+
 	$(CP) \
 		./files/mpg123/root/radio/* \
 		$(1)/root/radio/
