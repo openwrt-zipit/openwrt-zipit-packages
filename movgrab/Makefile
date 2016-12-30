@@ -21,20 +21,21 @@ define Package/movgrab
   SECTION:=utils
   CATEGORY:=Utilities
   URL:=https://sites.google.com/site/columscode/home/movgrab
-  DEPENDS:=+libcrypto +libopenssl
+#  DEPENDS:=+libcrypto +libopenssl
 endef
 
 define Package/movgrab/description
 	Simple downloader for videos from various websites
 endef
 
-define Build/Configure
-	$(call Build/Configure/Default,\
-		--enable-ssl)
-endef
+#define Build/Configure
+#	$(call Build/Configure/Default,\
+#		--enable-ssl)
+#endef
 
 #       The musl build has issues with sockets timing out in select()
 #       So for now use a static build made with uclibc.
+#       Also skip crypto,ssl DEPENDS not needed by the static build. 
 #	$(INSTALL_DIR) $(1)/usr/bin/
 #		$(INSTALL_BIN) $(PKG_BUILD_DIR)/movgrab $(1)/usr/bin/
 
