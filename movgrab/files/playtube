@@ -1,0 +1,80 @@
+#!/bin/sh
+ 
+#save videos here
+viddir=/root/video
+
+killall mpg123; killall mplayer; killall movgrab
+deallocvt
+ 
+vidlink=$(sed -e s/https/http/g ${1} | head -1)
+vidname=$(echo ${vidlink} | cut -d "=" -f 2)
+viddata=`movgrab -st 30 -T ${vidlink} -o - 2>&1`
+vidtitle=$(echo ${viddata} | grep "TEST MODE" | cut -d "'" -f 2)
+#if [ ! -d "$viddir" ] ; then
+#	mkdir "$viddir"
+#fi
+#vidname="${viddir}/${vidname}.3gp"
+#if [ ! -d "$viddir" ] ; then
+	# Try a fifo.  Can rezize from 64K to 1MB on openwrt.
+	rm -f /tmp/vidfifo
+	mkfifo /tmp/vidfifo
+	fifosize /tmp/vidfifo $(cat /proc/sys/fs/pipe-max-size)
+	vidname=/tmp/vidfifo
+#fi
+
+format=3gp:400x240
+available=$(echo ${viddata} | grep -e ${format})
+ 
+if [ -z "$available" ]; then
+    format=3gp:176x144
+fi
+
+# Debug stuff
+oldtty=$(fgconsole)
+echo ${vidlink} > /tmp/vid
+echo "started from tty${oldtty}" >> /tmp/vid
+echo "title is ${vidtitle}" >> /tmp/vid
+echo "saving ${vidname}" >> /tmp/vid
+echo "format ${format}" >> /tmp/vid
+echo "" >> /tmp/vid
+#echo "${viddata}" >> /tmp/vid
+
+linkstty=$(cat /tmp/vt/links)
+echo "links tty is ${linkstty}" >> /tmp/vid
+if [ ! -z "$linkstty" ]; then
+  oldtty=$(($linkstty+1))
+fi
+
+#exit   # Exit here if only want debug info. 
+
+# Double background to detach movgrab from tty and reparent to init.
+(movgrab -q -st 30 -b -f $format ${vidlink} -o ${vidname} 2>/dev/null &) &
+
+# Buffer up a second or two of video.
+# Hide text cursor on screen.
+# Run mplayer 
+# Un-hide cursor
+
+openvt -sc 63 sh -c \
+  echo "" >/dev/null 2>&1 ; \
+  chvt 63 ; \
+  echo "" > /dev/tty63 ; \
+  echo "" > /dev/tty63 ; \
+  echo "${vidtitle}" > /dev/tty63 ; \
+  echo ""  > /dev/tty63 ; \
+  echo "  Buffering..." > /dev/tty63  ; \
+  echo "" > /dev/tty63 ; \
+  sleep 6; \
+  echo -e "\033[?25l" > /dev/tty63; \
+  mplayer -mc 10 -cache 128 -lavdopts fast "${vidname}" 2>/dev/null </dev/tty63 ; \
+  echo -e "\033[?25h" > /dev/tty63 ; \
+  chvt ${oldtty} ; \
+  sleep 1 ; \
+
+deallocvt
+
+# More Debug stuff
+echo "Return to tty${oldtty}" >> /tmp/vid
+
+# If you don't want to fill your SD card with video then do this.
+killall movgrab; rm "${vidname}"

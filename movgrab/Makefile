@@ -33,9 +33,65 @@ define Build/Configure
 		--enable-ssl)
 endef
 
+#       The musl build has issues with sockets timing out in select()
+#       So for now use a static build made with uclibc.
+#	$(INSTALL_DIR) $(1)/usr/bin/
+#		$(INSTALL_BIN) $(PKG_BUILD_DIR)/movgrab $(1)/usr/bin/
+
 define Package/movgrab/install
 	$(INSTALL_DIR) $(1)/usr/bin/
-		$(INSTALL_BIN) $(PKG_BUILD_DIR)/movgrab $(1)/usr/bin/
+		$(INSTALL_BIN) $(FILES_DIR)/movgrab $(1)/usr/bin/
+
+	$(INSTALL_DIR) $(1)/usr/local/bin/
+		$(INSTALL_BIN) $(FILES_DIR)/playtube* $(1)/usr/local/bin/
+		$(INSTALL_BIN) $(FILES_DIR)/fifosize $(1)/usr/local/bin/
+
+	$(INSTALL_DIR) $(1)/root/
+		$(INSTALL_DATA) $(FILES_DIR)/links.cfg $(1)/root/
+		$(INSTALL_DATA) $(FILES_DIR)/mobilist.html $(1)/root/
 endef
+
+define Package/movgrab/postinst
+#!/bin/sh
+# check if we are on real system
+if [ -z "$${IPKG_INSTROOT}" ]; then
+  if [ ! -e /root/.links/links.cfg ] ; then
+    echo installing links.cfg
+    cp /root/links.cfg /root/.links/links.cfg
+  elif [ "b1feff2a5c0cebf9f61455f002b84d74" = "$(md5sum /root/.links/links.cfg | cut -d ' ' -f 1)" ] ; then
+    echo updating default links.cfg
+    cp /root/links.cfg /root/.links/links.cfg
+  else
+    echo updating links.cfg
+    if [ -z "$(grep "audio/x-scpls" /root/.links/links.cfg)" ] ; then
+	echo Adding association "audio/x-scpls" to links.cfg
+	echo 'association "mp3-pls" "audio/x-scpls" "mpg123tty4 -C@ %" 21 1' >> links.cfg
+    fi
+    if [ -z "$(grep "audio/x-mpegurl" /root/.links/links.cfg)" ] ; then
+	echo Adding association "audio/x-scpls" to links.cfg
+	echo 'association "radio" "audio/x-mpegurl" "mpg123tty4 -C@ %" 21 1' >> links.cfg
+    fi
+    if [ -z "$(grep "audio/x-mpeg" /root/.links/links.cfg)" ] ; then
+	echo Adding association "audio/x-scpls" to links.cfg
+	echo 'association "mpg123" "audio/x-mpeg" "mpg123tty4 -C %" 21 1' >> links.cfg
+    fi
+    if [ -z "$(grep "audio/x-ogg" /root/.links/links.cfg)" ] ; then
+	echo Adding association "audio/x-scpls" to links.cfg
+	echo 'association "mplayer" "audio/x-ogg" "mplayer -playlist %" 19 1' >> links.cfg
+    fi
+    if [ -z "$(grep "application/zyt" /root/.links/links.cfg)" ] ; then
+	echo Adding association "audio/x-scpls" to links.cfg
+	echo 'association "Zipit YouTube" "application/zyt" "playtube %" 15 1' >> links.cfg
+	echo 'extension "zyt" "application/zyt"' >> links.cfg
+    fi
+    if [ -z "$(grep "tn3270" /root/.links/links.cfg)" ] ; then
+	echo Adding tn3270 "mplayer" to links.cfg
+	echo 'tn3270 "mplayer %" 1' >> links.cfg
+    fi
+  fi
+fi
+exit 0
+endef
+
 
 $(eval $(call BuildPackage,movgrab))
