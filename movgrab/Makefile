@@ -65,28 +65,28 @@ if [ -z "$${IPKG_INSTROOT}" ]; then
     echo updating links.cfg
     if [ -z "$(grep "audio/x-scpls" /root/.links/links.cfg)" ] ; then
 	echo Adding association "audio/x-scpls" to links.cfg
-	echo 'association "mp3-pls" "audio/x-scpls" "mpg123tty4 -C@ %" 21 1' >> links.cfg
+	echo 'association "mp3-pls" "audio/x-scpls" "mpg123tty4 -C@ %" 21 1' >> /root/.links/links.cfg
     fi
     if [ -z "$(grep "audio/x-mpegurl" /root/.links/links.cfg)" ] ; then
-	echo Adding association "audio/x-scpls" to links.cfg
-	echo 'association "radio" "audio/x-mpegurl" "mpg123tty4 -C@ %" 21 1' >> links.cfg
+	echo Adding association "audio/x-mpegurl" to links.cfg
+	echo 'association "radio" "audio/x-mpegurl" "mpg123tty4 -C@ %" 21 1' >> /root/.links/links.cfg
     fi
     if [ -z "$(grep "audio/x-mpeg" /root/.links/links.cfg)" ] ; then
-	echo Adding association "audio/x-scpls" to links.cfg
-	echo 'association "mpg123" "audio/x-mpeg" "mpg123tty4 -C %" 21 1' >> links.cfg
+	echo Adding association "audio/x-mpeg" to links.cfg
+	echo 'association "mpg123" "audio/x-mpeg" "mpg123tty4 -C %" 21 1' >> /root/.links/links.cfg
     fi
     if [ -z "$(grep "audio/x-ogg" /root/.links/links.cfg)" ] ; then
-	echo Adding association "audio/x-scpls" to links.cfg
-	echo 'association "mplayer" "audio/x-ogg" "mplayer -playlist %" 19 1' >> links.cfg
+	echo Adding association "audio/x-ogg" to links.cfg
+	echo 'association "mplayer" "audio/x-ogg" "mplayer -playlist %" 19 1' >> /root/.links/links.cfg
     fi
     if [ -z "$(grep "application/zyt" /root/.links/links.cfg)" ] ; then
-	echo Adding association "audio/x-scpls" to links.cfg
-	echo 'association "Zipit YouTube" "application/zyt" "playtube %" 15 1' >> links.cfg
-	echo 'extension "zyt" "application/zyt"' >> links.cfg
+	echo Adding association "application/zyt" to links.cfg
+	echo 'association "Zipit YouTube" "application/zyt" "playtube %" 15 1' >> /root/.links/links.cfg
+	echo 'extension "zyt" "application/zyt"' >> /root/.links/links.cfg
     fi
     if [ -z "$(grep "tn3270" /root/.links/links.cfg)" ] ; then
 	echo Adding tn3270 "mplayer" to links.cfg
-	echo 'tn3270 "mplayer %" 1' >> links.cfg
+	echo 'tn3270 "mplayer %" 1' >> /root/.links/links.cfg
     fi
   fi
 fi
