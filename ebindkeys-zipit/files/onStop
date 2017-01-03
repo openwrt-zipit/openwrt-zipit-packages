@@ -1,0 +1,41 @@
+#!/bin/sh
+
+ps="$(ps)"
+
+# Look for SDL progs.  If so, send SCANCODE for escape to tty0.
+task="-e gmu -e rockbox"
+pid=$(echo "$ps" |grep $task |grep -v grep)
+if [ ! -z "${pid}" ] ; then
+  key=$(echo -ne "\001") # Send scancode for escape to SDL prog.
+  #echo task rockbox_gmu cmd is ${pid} >/tmp/stop.txt
+  #echo sendtty $tty _"$key"_ >>/tmp/stop.txt
+  /usr/local/bin/sendtty /dev/tty0 "$key"
+  deallocvt
+  exit 0
+fi
+
+# Look for console progs.  If so, send escape key to the right tty.
+key="q"
+task="-e mpg123 -e mplayer"
+pid=$(echo "$ps" |grep $task |grep -v grep)
+#echo task $task cmd is ${pid} >/tmp/stop.txt
+if [ ! -z "${pid}" ] ; then
+  pid=$(echo ${pid} | sed 's/^[ \t]+//g' | cut -d " " -f 1)
+fi
+if [ -z "${pid}" ] ; then
+  exit 0 # No known media app running.
+fi
+#echo pid is ${pid} >>/tmp/stop.txt
+
+tty=$(readlink -f /proc/${pid}/fd/0)
+#echo tty is ${tty} >>/tmp/stop.txt
+if [ ! -z "$tty" ] ; then
+  #echo sendtty $tty _"$key"_ >>/tmp/stop.txt
+  /usr/local/bin/sendtty $tty "$key"
+fi
+
+# Kill anything still moving.
+killall mpg123
+killall mplayer
+killall movgrab
+deallocvt

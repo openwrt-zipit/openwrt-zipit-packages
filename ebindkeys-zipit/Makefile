@@ -8,12 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ebindkeys-zipit
-PKG_VERSION:=2016.06.02
+#PKG_VERSION:=2016.06.02
+PKG_VERSION:=ca038a8dee499ea830c2f2d1f09e4ce836165015
 PKG_RELEASE:=2
 PKG_REV:=bldaemon
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_REV).tar.gz
-PKG_SOURCE_URL:=git://github.com/mozzwald/ebindkeys-zipit.git
+#PKG_SOURCE_URL:=git://github.com/mozzwald/ebindkeys-zipit.git
+PKG_SOURCE_URL:=git://github.com/deeice/ebindkeys-zipit.git
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=$(PKG_REV)
@@ -33,7 +35,17 @@ define Package/ebindkeys-zipit/description
 	ebindkeys-zipit lets you bind a key or key-combo to a command, now with keymouse and bldaemon
 endef
 
+#define Build/Compile
+#	$(TARGET_CC) -s -Os -o $(PKG_BUILD_DIR)/sendtty $(PKG_BUILD_DIR)/sendtty.c
+#endef
+
 define Package/ebindkeys-zipit/install
+	$(CP) ./files/sendtty.c $(PKG_BUILD_DIR)/
+		$(TARGET_CC) -s -Os -o $(PKG_BUILD_DIR)/sendtty $(PKG_BUILD_DIR)/sendtty.c
+	$(INSTALL_DIR) $(1)/usr/local/bin
+		$(INSTALL_BIN) ./files/onStop $(1)/usr/local/bin/onStop
+		$(INSTALL_BIN) ./files/onPlay $(1)/usr/local/bin/onPlay
+		$(INSTALL_BIN) $(PKG_BUILD_DIR)/sendtty $(1)/usr/local/bin/sendtty
 	$(INSTALL_DIR) $(1)/usr/sbin
 		$(INSTALL_BIN) $(PKG_BUILD_DIR)/ebindkeys $(1)/usr/sbin/
 		$(INSTALL_BIN) $(PKG_BUILD_DIR)/ebkfork $(1)/usr/sbin/

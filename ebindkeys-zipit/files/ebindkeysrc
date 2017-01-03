@@ -100,3 +100,19 @@ event
 }
 
 
+event
+{
+	#Play:
+	action = "/usr/local/bin/onPlay"
+	keys = {0xc8} 
+}
+
+
+event
+{
+	#Stop:
+	action = "/usr/local/bin/onStop"
+	keys = {0xa6} 
+}
+
+

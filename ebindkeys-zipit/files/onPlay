@@ -1,0 +1,34 @@
+#!/bin/sh
+
+ps="$(ps)"
+
+# Look for SDL progs.  If so, send SCANCODE for space to tty0.
+task="-e gmu -e rockbox"
+pid=$(echo "$ps" |grep $task |grep -v grep)
+if [ ! -z "${pid}" ] ; then
+  #echo task rockbox_gmu cmd is ${pid} >/tmp/play.txt
+  #echo sendtty /dev/tty0 _9_ >>/tmp/play.txt
+  /usr/local/bin/sendtty /dev/tty0 9
+  exit 0
+fi
+
+# Look for console progs.  If so, send a space to the right tty.
+key=" "
+task="-e mpg123 -e mplayer"
+pid=$(echo "$ps" |grep $task |grep -v grep)
+#echo task $task cmd is ${pid} >/tmp/play.txt
+if [ ! -z "${pid}" ] ; then
+  pid=$(echo ${pid} | sed 's/^[ \t]+//g' | cut -d " " -f 1)
+fi
+if [ -z "${pid}" ] ; then
+  exit 0 # No known media app running.
+fi
+#echo pid is ${pid} >>/tmp/play.txt
+
+tty=$(readlink -f /proc/${pid}/fd/0)
+#echo tty is ${tty} >>/tmp/play.txt
+if [ ! -z "$tty" ] ; then
+  #echo sendtty $tty _"$key"_ >>/tmp/play.txt
+  /usr/local/bin/sendtty $tty "$key"
+fi
+
