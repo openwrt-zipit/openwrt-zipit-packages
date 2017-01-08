@@ -2,22 +2,21 @@ Index: tools/configure
 ===================================================================
 --- a/tools/configure	(revision 29632)
 +++ b/tools/configure	(working copy)
-@@ -1437,7 +1437,7 @@
-  206) Android MIPS        ==IHIFI==              ==iBasso==
-  207) Android x86         230) 760               232) DX50
-  208) Samsung YP-R1       231) 960               233) DX90
--
-+ 209) Zipit Z2
+@@ -1273,6 +1273,7 @@
+  202) Nokia N8xx
+  203) Nokia N900
+  204) Pandora
++ 205) Zipit Z2
  
  EOF
  
-@@ -3890,6 +3890,37 @@
-     t_model="dx90"
+@@ -3082,6 +3083,36 @@
+     t_model="app"
      ;;
  
-+   209|zipitz2)
++   205|zipitz2)
 +    application="yes"
-+    target_id=98
++    target_id=78
 +    modelname="zipitz2"
 +    app_type="sdl-app"
 +    target="-DZIPIT_Z2"
@@ -28,8 +27,8 @@ Index: tools/configure
 +    app_set_lcd_size 320 240
 +    memory=8
 +    uname=`uname`
-+    #simcc "sdl-app" #Should be zipitcc so I can decide if -DIZ2S
-+    #extradefines="$extradefines -DIZ2S" #Remove this when zipitcc works.
++    simcc "sdl-app" #Should be zipitcc so I can decide if -DIZ2S
++    extradefines="$extradefines -DIZ2S" #Remove this when zipitcc works.
 +    tool="cp "
 +    boottool="cp "
 +    bmp2rb_mono="$rootdir/tools/bmp2rb -f 0"
@@ -41,7 +40,6 @@ Index: tools/configure
 +    swcodec="yes"
 +    # architecture, manufacturer and model for the target-tree build
 +    t_cpu="hosted"
-+    #t_cpu="arm"
 +    t_manufacturer="zipit"
 +    t_model="app"
 +    ;;
@@ -49,7 +47,7 @@ Index: tools/configure
     *)
      echo "Please select a supported target platform!"
      exit 7
-@@ -4427,6 +4457,10 @@
+@@ -3543,6 +3574,10 @@
      # Pandora needs the SDL port, too
      TARGET_INC="$TARGET_INC -I\$(FIRMDIR)/target/hosted/sdl/app"
      TARGET_INC="$TARGET_INC -I\$(FIRMDIR)/target/hosted/sdl"
@@ -77,7 +75,7 @@ Index: apps/SOURCES
 ===================================================================
 --- a/apps/SOURCES	(revision 29632)
 +++ b/apps/SOURCES	(working copy)
-@@ -282,8 +282,16 @@
+@@ -312,6 +312,14 @@
  keymaps/keymap-mpio-hd300.c
  #elif CONFIG_KEYPAD == ANDROID_PAD
  keymaps/keymap-android.c
@@ -90,28 +88,35 @@ Index: apps/SOURCES
  keymaps/keymap-sdl.c
 +#ifndef HAVE_TOUCHSCREEN
 +keymaps/keymap-touchscreen.c
+ #endif
 +#endif
- #elif CONFIG_KEYPAD == SANSA_FUZEPLUS_PAD
- keymaps/keymap-fuzeplus.c
- #elif CONFIG_KEYPAD == RK27XX_GENERIC_PAD
 Index: apps/main.c
 ===================================================================
 --- a/apps/main.c	(revision 29632)
 +++ b/apps/main.c	(working copy)
-@@ -133,7 +133,7 @@
+@@ -125,7 +125,7 @@
  #define MAIN_NORETURN_ATTR
  #endif
  
 -#if (CONFIG_PLATFORM & (PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA))
 +#if (CONFIG_PLATFORM & (PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA|PLATFORM_ZIPIT_Z2))
- #ifdef SIMULATOR
  #include "sim_tasks.h"
+ #include "system-sdl.h"
+ #define HAVE_ARGV_MAIN
+@@ -352,7 +352,7 @@
+     button_init();
+     powermgmt_init();
+     backlight_init();
+-#if (CONFIG_PLATFORM & (PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA))
++#if (CONFIG_PLATFORM & (PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA|PLATFORM_ZIPIT_Z2))
+     sim_tasks_init();
  #endif
+ #if (CONFIG_PLATFORM & PLATFORM_ANDROID)
 Index: firmware/export/config.h
 ===================================================================
 --- a/firmware/export/config.h	(revision 29632)
 +++ b/firmware/export/config.h	(working copy)
-@@ -100,6 +100,7 @@
+@@ -87,6 +87,7 @@
  #define PLATFORM_MAEMO5  (1<<5)
  #define PLATFORM_MAEMO   (PLATFORM_MAEMO4|PLATFORM_MAEMO5)
  #define PLATFORM_PANDORA (1<<6)
@@ -119,25 +124,23 @@ Index: firmware/export/config.h
  
  /* CONFIG_KEYPAD */
  #define PLAYER_PAD          1
-@@ -545,6 +546,8 @@
+@@ -451,6 +452,8 @@
  #include "config/nokian900.h"
  #elif defined(PANDORA)
  #include "config/pandora.h"
 +#elif defined(ZIPIT_Z2)
 +#include "config/zipit_z2.h"
- #elif defined(SAMSUNG_YPR0)
- #include "config/samsungypr0.h"
- #elif defined(CREATIVE_ZENXFI)
-@@ -656,6 +659,9 @@
- #if ARCH == ARCH_ARM
- #define CPU_ARM
- #define ARM_ARCH ARCH_VERSION /* ARMv{4,5,6,7} */
-+#elif (CONFIG_PLATFORM & PLATFORM_ZIPIT_Z2)
-+#define CPU_ARM
-+#define ARM_ARCH ARCH_VERSION /* ARMv{4,5,6,7} */
+ #else
+ /* no known platform */
  #endif
+@@ -525,6 +528,7 @@
+ #define ARM_ARCH 6 /* ARMv6 */
  
- #if ARCH == ARCH_MIPS
+ #elif defined(CPU_TCC77X) || defined(CPU_TCC780X) || (CONFIG_CPU == DM320) \
++  || (CONFIG_PLATFORM & PLATFORM_ZIPIT_Z2) \
+   || (CONFIG_CPU == AT91SAM9260) || (CONFIG_CPU == AS3525v2) \
+   || (CONFIG_CPU == S5L8702) || (CONFIG_PLATFORM & PLATFORM_ANDROID)
+ #define CPU_ARM
 Index: firmware/export/config/zipit_z2.h
 ===================================================================
 --- a/firmware/export/config/zipit_z2.h	(revision 0)
@@ -250,6 +253,32 @@ Index: firmware/export/config/zipit_z2.h
 +#define HAVE_HOTKEY
 +
 +#define BOOTDIR "/.rockbox"
+Index: firmware/include/dir_uncached.h
+===================================================================
+--- a/firmware/include/dir_uncached.h	(revision 29632)
++++ b/firmware/include/dir_uncached.h	(working copy)
+@@ -33,7 +33,7 @@
+ #include <stdbool.h>
+ #include "file.h"
+ 
+-#if (CONFIG_PLATFORM & (PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA))
++#if (CONFIG_PLATFORM & (PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA|PLATFORM_ZIPIT_Z2))
+ #   define dirent_uncached sim_dirent
+ #   define DIR_UNCACHED SIM_DIR
+ #   define opendir_uncached sim_opendir
+Index: firmware/include/file.h
+===================================================================
+--- a/firmware/include/file.h	(revision 29632)
++++ b/firmware/include/file.h	(working copy)
+@@ -46,7 +46,7 @@
+ extern int app_creat(const char *name, mode_t mode);
+ extern int app_remove(const char* pathname);
+ extern int app_rename(const char* path, const char* newname);
+-#   if (CONFIG_PLATFORM & (PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA))
++#   if (CONFIG_PLATFORM & (PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA|PLATFORM_ZIPIT_Z2))
+ #   define filesize(x) sim_filesize(x)
+ #   define fsync(x) sim_fsync(x)
+ #   define ftruncate(x,y) sim_ftruncate(x,y)
 Index: firmware/SOURCES
 ===================================================================
 --- a/firmware/SOURCES	(revision 29632)
@@ -577,7 +606,7 @@ Index: firmware/target/hosted/sdl/system-sdl.c
 ===================================================================
 --- a/firmware/target/hosted/sdl/system-sdl.c	(revision 29632)
 +++ b/firmware/target/hosted/sdl/system-sdl.c	(working copy)
-@@ -133,7 +133,7 @@
+@@ -128,7 +128,7 @@
          depth = 16;
  
      flags = SDL_HWSURFACE|SDL_DOUBLEBUF;
@@ -586,26 +615,23 @@ Index: firmware/target/hosted/sdl/system-sdl.c
      /* Fullscreen mode for maemo app */
      flags |= SDL_FULLSCREEN;
  #endif
-@@ -144,6 +144,11 @@
+@@ -137,7 +137,7 @@
          panicf("%s", SDL_GetError());
      }
  
-+#if (CONFIG_PLATFORM & PLATFORM_ZIPIT_Z2)
-+     /* Hide mouse cursor on real touchscreen device */
-+     SDL_ShowCursor(SDL_DISABLE);
-+ #endif
-+
- #if (CONFIG_PLATFORM & (PLATFORM_MAEMO|PLATFORM_PANDORA))
-     /* SDL touch screen fix: Work around a SDL assumption that returns
-        relative mouse coordinates when you get to the screen edges
+-#if (CONFIG_PLATFORM & (PLATFORM_MAEMO|PLATFORM_PANDORA))
++#if (CONFIG_PLATFORM & (PLATFORM_MAEMO|PLATFORM_PANDORA|PLATFORM_ZIPIT_Z2))
+     /* Hide mouse cursor on real touchscreen device */
+     SDL_ShowCursor(SDL_DISABLE);
+ #endif
 Index: firmware/target/hosted/sdl/button-sdl.c
 ===================================================================
 --- a/firmware/target/hosted/sdl/button-sdl.c	(revision 29632)
 +++ b/firmware/target/hosted/sdl/button-sdl.c	(working copy)
-@@ -330,6 +330,12 @@
+@@ -322,6 +322,12 @@
+         }
          return;
- #endif
- #endif
+ 
 +#if (CONFIG_PLATFORM & PLATFORM_ZIPIT_Z2)
 +    case SDLK_ESCAPE:
 +        /* Will post SDL_USEREVENT in shutdown_hw() if successful. */
@@ -615,6 +641,32 @@ Index: firmware/target/hosted/sdl/button-sdl.c
  #if (CONFIG_PLATFORM & PLATFORM_PANDORA)
      case SDLK_LCTRL:
          /* Will post SDL_USEREVENT in shutdown_hw() if successful. */
+Index: firmware/common/rbpaths.c
+===================================================================
+--- a/firmware/common/rbpaths.c	(revision 29632)
++++ b/firmware/common/rbpaths.c	(working copy)
+@@ -43,7 +43,7 @@
+ #define opendir opendir_android
+ #define mkdir   mkdir_android
+ #define rmdir   rmdir_android
+-#elif (CONFIG_PLATFORM & (PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA))
++#elif (CONFIG_PLATFORM & (PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA|PLATFORM_ZIPIT_Z2))
+ #define open    sim_open
+ #define remove  sim_remove
+ #define rename  sim_rename
+Index: firmware/common/filefuncs.c
+===================================================================
+--- a/firmware/common/filefuncs.c	(revision 29632)
++++ b/firmware/common/filefuncs.c	(working copy)
+@@ -91,7 +91,7 @@
+ 
+ #endif /* __PCTOOL__ */
+ 
+-#if (CONFIG_PLATFORM & (PLATFORM_NATIVE|PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA))
++#if (CONFIG_PLATFORM & (PLATFORM_NATIVE|PLATFORM_SDL|PLATFORM_MAEMO|PLATFORM_PANDORA|PLATFORM_ZIPIT_Z2))
+ struct dirinfo dir_get_info(DIR* parent, struct dirent *entry)
+ {
+     (void)parent;
 Index: firmware/drivers/lcd-16bit.c
 ===================================================================
 --- a/firmware/drivers/lcd-16bit.c	(revision 29632)
@@ -647,3 +699,16 @@ Index: firmware/drivers/lcd-16bit.c
              : [w]"=&r"(w), [h]"+&r"(height), [px]"=&r"(px),
                [s]"+&r"(src), [d]"+&r"(dst)
              : [width]"r"(width),
+Index: uisimulator/common/SOURCES
+===================================================================
+--- a/uisimulator/common/SOURCES	(revision 29632)
++++ b/uisimulator/common/SOURCES	(working copy)
+@@ -12,7 +12,7 @@
+ io.c
+ sim_tasks.c
+ /* this is still needed for application since it has some stubs */
+-#if !(CONFIG_PLATFORM & PLATFORM_MAEMO)
++#if !(CONFIG_PLATFORM & (PLATFORM_MAEMO|PLATFORM_ZIPIT_Z2))
+ powermgmt-sim.c
+ #endif
+ stubs.c

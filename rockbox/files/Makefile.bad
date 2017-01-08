@@ -45,17 +45,17 @@ TARGET_LDFLAGS+= \
 	$(INTL_LDLAGS) -lintl
 
 define Build/Configure
-	( cd $(PKG_BUILD_DIR); mkdir zbuild; cd zbuild; \
-	../tools/configure --target=209 --lcdwidth=320 --lcdheight=240 --type=N);
-#	$(call Build/Configure/Default,\
-#		--target=zipit_z2)
+	( cd $(PKG_BUILD_DIR); mkdir zbuild; \
+	echo "cd zbuild; ../tools/configure --target=200 --lcdwidth=320 --lcdheight=240 --type=N" > configure; chmod a+x configure );
+	$(call Build/Configure/Default)
 endef
 
 #CONFIGURE_ARGS+=--target-device=zipit-z2 --enable=decoder-opus
 
 define Build/Compile
-	( cd $(PKG_BUILD_DIR); cd zbuild; make )
+	$(call Build/Compile/Default, -C $(PKG_BUILD_DIR)/zbuild)
 endef
+
 define Package/rockbox/install
 	$(call Build/Install/Default)
 

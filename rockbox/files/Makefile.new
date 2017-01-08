@@ -44,9 +44,10 @@ TARGET_LDFLAGS+= \
 	$(ICONV_LDFLAGS) -liconv \
 	$(INTL_LDLAGS) -lintl
 
+# NOTE:  --target=200 is for generic SDL.  Change to zipit number after patch.
 define Build/Configure
-	( cd $(PKG_BUILD_DIR); mkdir zbuild; cd zbuild; \
-	../tools/configure --target=209 --lcdwidth=320 --lcdheight=240 --type=N);
+	( cd $(PKG_BUILD_DIR); mkdir build-zipit; cd build-zipit; \
+	../tools/configure --target=200 --lcdwidth=320 --lcdheight=240 --type=N);
 #	$(call Build/Configure/Default,\
 #		--target=zipit_z2)
 endef
@@ -54,8 +55,11 @@ endef
 #CONFIGURE_ARGS+=--target-device=zipit-z2 --enable=decoder-opus
 
 define Build/Compile
-	( cd $(PKG_BUILD_DIR); cd zbuild; make )
+	$(call Build/Compile/Default, -C $(PKG_BUILD_DIR)/build-zipit)
+	$(call Build/Compile/Default, -C $(PKG_BUILD_DIR)/build-zipit fullzip)
+#	( cd $(PKG_BUILD_DIR); cd build-zipit; make )
 endef
+
 define Package/rockbox/install
 	$(call Build/Install/Default)
 

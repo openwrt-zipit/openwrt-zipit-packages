@@ -1,0 +1,1212 @@
+Index: apps/plugins/mp3_encoder.c
+===================================================================
+--- apps/plugins/mp3_encoder.c	(revision 29143)
++++ apps/plugins/mp3_encoder.c	(working copy)
+@@ -2499,6 +2499,12 @@
+ #define MP3ENC_DONE BUTTON_PLAY
+ #define MP3ENC_SELECT BUTTON_ENTER
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define MP3ENC_PREV BUTTON_MIDLEFT
++#define MP3ENC_NEXT BUTTON_MIDRIGHT
++#define MP3ENC_DONE BUTTON_BOTTOMMIDDLE
++#define MP3ENC_SELECT BUTTON_CENTER
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/stats.c
+===================================================================
+--- apps/plugins/stats.c	(revision 29143)
++++ apps/plugins/stats.c	(working copy)
+@@ -110,6 +110,9 @@
+ #elif CONFIG_KEYPAD == MPIO_HD300_PAD
+ #define STATS_STOP BUTTON_REC
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define STATS_STOP BUTTON_TOPLEFT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/superdom.c
+===================================================================
+--- apps/plugins/superdom.c	(revision 29143)
++++ apps/plugins/superdom.c	(working copy)
+@@ -182,6 +182,14 @@
+ #define SUPERDOM_RIGHT  BUTTON_FF
+ #define SUPERDOM_CANCEL BUTTON_MENU
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define SUPERDOM_OK     BUTTON_CENTER
++#define SUPERDOM_UP     BUTTON_TOPMIDDLE
++#define SUPERDOM_DOWN   BUTTON_BOTTOMMIDDLE
++#define SUPERDOM_LEFT   BUTTON_MIDLEFT
++#define SUPERDOM_RIGHT  BUTTON_MIDRIGHT
++#define SUPERDOM_CANCEL BUTTON_TOPLEFT
++
+ #endif
+ 
+ #ifdef HAVE_TOUCHSCREEN
+Index: apps/plugins/sliding_puzzle.c
+===================================================================
+--- apps/plugins/sliding_puzzle.c	(revision 29143)
++++ apps/plugins/sliding_puzzle.c	(working copy)
+@@ -245,6 +245,15 @@
+ #define PUZZLE_SHUFFLE BUTTON_ENTER
+ #define PUZZLE_PICTURE BUTTON_PLAY
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define PUZZLE_QUIT    (BUTTON_TOPLEFT | BUTTON_REPEAT)
++#define PUZZLE_LEFT    BUTTON_MIDLEFT
++#define PUZZLE_RIGHT   BUTTON_MIDRIGHT
++#define PUZZLE_UP      BUTTON_TOPMIDDLE
++#define PUZZLE_DOWN    BUTTON_BOTTOMMIDDLE
++#define PUZZLE_SHUFFLE BUTTON_CENTER
++#define PUZZLE_PICTURE BUTTON_TOPRIGHT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/flipit.c
+===================================================================
+--- apps/plugins/flipit.c	(revision 29143)
++++ apps/plugins/flipit.c	(working copy)
+@@ -356,6 +356,18 @@
+ #define FLIPIT_STEP_BY_STEP BUTTON_REC
+ #define FLIPIT_TOGGLE       BUTTON_ENTER
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++
++#define FLIPIT_LEFT         BUTTON_MIDLEFT
++#define FLIPIT_RIGHT        BUTTON_MIDRIGHT
++#define FLIPIT_UP           BUTTON_TOPMIDDLE
++#define FLIPIT_DOWN         BUTTON_BOTTOMMIDDLE
++#define FLIPIT_QUIT         (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define FLIPIT_SHUFFLE      BUTTON_BOTTOMLEFT
++#define FLIPIT_SOLVE        BUTTON_TOPRIGHT
++#define FLIPIT_STEP_BY_STEP BUTTON_BOTTOMRIGHT
++#define FLIPIT_TOGGLE       BUTTON_CENTER
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/chessbox/chessbox_pgn.h
+===================================================================
+--- apps/plugins/chessbox/chessbox_pgn.h	(revision 29143)
++++ apps/plugins/chessbox/chessbox_pgn.h	(working copy)
+@@ -396,6 +396,20 @@
+ #define CB_LEVEL   BUTTON_REC
+ #define CB_MENU    (BUTTON_MENU | BUTTON_REPEAT)
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define CB_SELECT  BUTTON_CENTER
++#define CB_UP      BUTTON_TOPMIDDLE
++#define CB_DOWN    BUTTON_BOTTOMMIDDLE
++#define CB_LEFT    BUTTON_MIDLEFT
++#define CB_RIGHT   BUTTON_MIDRIGHT
++#define CB_PLAY    BUTTON_BOTTOMRIGHT
++#define CB_LEVEL   BUTTON_TOPRIGHT
++#define CB_MENU    (BUTTON_TOPLEFT | BUTTON_REPEAT)
++#define CB_SCROLL_UP     (BUTTON_TOPMIDDLE|BUTTON_REPEAT)
++#define CB_SCROLL_DOWN   (BUTTON_BOTTOMMIDDLE|BUTTON_REPEAT)
++#define CB_SCROLL_LEFT   (BUTTON_MIDLEFT|BUTTON_REPEAT)
++#define CB_SCROLL_RIGHT  (BUTTON_MIDRIGHT|BUTTON_REPEAT)
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/oscilloscope.c
+===================================================================
+--- apps/plugins/oscilloscope.c	(revision 29143)
++++ apps/plugins/oscilloscope.c	(working copy)
+@@ -320,6 +320,17 @@
+ #define OSCILLOSCOPE_VOL_UP       BUTTON_UP
+ #define OSCILLOSCOPE_VOL_DOWN     BUTTON_DOWN
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define OSCILLOSCOPE_QUIT         (BUTTON_TOPLEFT | BUTTON_REPEAT)
++#define OSCILLOSCOPE_DRAWMODE     BUTTON_BOTTOMLEFT
++#define OSCILLOSCOPE_ADVMODE      BUTTON_BOTTOMRIGHT
++#define OSCILLOSCOPE_ORIENTATION  BUTTON_TOPRIGHT
++#define OSCILLOSCOPE_PAUSE        BUTTON_CENTER
++#define OSCILLOSCOPE_SPEED_UP     BUTTON_MIDRIGHT
++#define OSCILLOSCOPE_SPEED_DOWN   BUTTON_MIDLEFT
++#define OSCILLOSCOPE_VOL_UP       BUTTON_TOPMIDDLE
++#define OSCILLOSCOPE_VOL_DOWN     BUTTON_BOTTOMMIDDLE
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/starfield.c
+===================================================================
+--- apps/plugins/starfield.c	(revision 29143)
++++ apps/plugins/starfield.c	(working copy)
+@@ -179,6 +179,14 @@
+ #define STARFIELD_DECREASE_NB_STARS  BUTTON_REW
+ #define STARFIELD_TOGGLE_COLOR       BUTTON_PLAY
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define STARFIELD_QUIT               (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define STARFIELD_INCREASE_ZMOVE     BUTTON_TOPMIDDLE
++#define STARFIELD_DECREASE_ZMOVE     BUTTON_BOTTOMMIDDLE
++#define STARFIELD_INCREASE_NB_STARS  BUTTON_MIDRIGHT
++#define STARFIELD_DECREASE_NB_STARS  BUTTON_MIDLEFT
++#define STARFIELD_TOGGLE_COLOR       BUTTON_CENTER
++
+ #endif
+ 
+ #ifdef HAVE_TOUCHSCREEN
+Index: apps/plugins/snake2.c
+===================================================================
+--- apps/plugins/snake2.c	(revision 29143)
++++ apps/plugins/snake2.c	(working copy)
+@@ -336,6 +336,15 @@
+ #define SNAKE2_PLAYPAUSE BUTTON_PLAY
+ #define SNAKE2_PLAYPAUSE_TEXT "Play"
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define SNAKE2_QUIT (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define SNAKE2_LEFT BUTTON_MIDLEFT
++#define SNAKE2_RIGHT BUTTON_MIDRIGHT
++#define SNAKE2_UP   BUTTON_TOPMIDDLE
++#define SNAKE2_DOWN BUTTON_BOTTOMMIDDLE
++#define SNAKE2_PLAYPAUSE BUTTON_CENTER
++#define SNAKE2_PLAYPAUSE_TEXT "Play"
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/clix.c
+===================================================================
+--- apps/plugins/clix.c	(revision 29143)
++++ apps/plugins/clix.c	(working copy)
+@@ -184,6 +184,16 @@
+ #define CLIX_BUTTON_RIGHT       BUTTON_NEXT
+ #define CLIX_BUTTON_CLICK       BUTTON_OK
+ 
++#elif (CONFIG_KEYPAD == ZIPIT_Z2_PAD)
++#define CLIX_BUTTON_QUIT        BUTTON_TOPLEFT
++#define CLIX_BUTTON_UP          BUTTON_TOPMIDDLE
++#define CLIX_BUTTON_DOWN        BUTTON_BOTTOMMIDDLE
++#define CLIX_BUTTON_SCROLL_FWD  BUTTON_BOTTOMRIGHT
++#define CLIX_BUTTON_SCROLL_BACK BUTTON_BOTTOMLEFT
++#define CLIX_BUTTON_LEFT        BUTTON_MIDLEFT
++#define CLIX_BUTTON_RIGHT       BUTTON_MIDRIGHT
++#define CLIX_BUTTON_CLICK       BUTTON_CENTER
++
+ #else
+ #error "no keymap"
+ #endif
+Index: apps/plugins/midi/midiplay.c
+===================================================================
+--- apps/plugins/midi/midiplay.c	(revision 29143)
++++ apps/plugins/midi/midiplay.c	(working copy)
+@@ -217,6 +217,14 @@
+ #define BTN_DOWN         BUTTON_DOWN
+ #define BTN_PLAY         BUTTON_PLAY
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define BTN_QUIT         BUTTON_TOPLEFT
++#define BTN_RIGHT        BUTTON_MIDRIGHT
++#define BTN_LEFT         BUTTON_MIDLEFT
++#define BTN_UP           BUTTON_TOPMIDDLE
++#define BTN_DOWN         BUTTON_BOTTOMMIDDLE
++#define BTN_PLAY         BUTTON_CENTER
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/snake.c
+===================================================================
+--- apps/plugins/snake.c	(revision 29143)
++++ apps/plugins/snake.c	(working copy)
+@@ -225,6 +225,14 @@
+ #define SNAKE_DOWN BUTTON_DOWN
+ #define SNAKE_PLAYPAUSE BUTTON_PLAY
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define SNAKE_QUIT (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define SNAKE_LEFT BUTTON_MIDLEFT
++#define SNAKE_RIGHT BUTTON_MIDRIGHT
++#define SNAKE_UP   BUTTON_TOPMIDDLE
++#define SNAKE_DOWN BUTTON_BOTTOMMIDDLE
++#define SNAKE_PLAYPAUSE BUTTON_CENTER
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/bounce.c
+===================================================================
+--- apps/plugins/bounce.c	(revision 29143)
++++ apps/plugins/bounce.c	(working copy)
+@@ -228,6 +228,14 @@
+ #define BOUNCE_QUIT (BUTTON_REC | BUTTON_REPEAT)
+ #define BOUNCE_MODE BUTTON_MENU
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define BOUNCE_LEFT BUTTON_MIDLEFT
++#define BOUNCE_RIGHT BUTTON_MIDRIGHT
++#define BOUNCE_UP   BUTTON_TOPMIDDLE
++#define BOUNCE_DOWN BUTTON_BOTTOMMIDDLE
++#define BOUNCE_QUIT (BUTTON_TOPLEFT | BUTTON_REPEAT)
++#define BOUNCE_MODE BUTTON_TOPRIGHT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/cube.c
+===================================================================
+--- apps/plugins/cube.c	(revision 29143)
++++ apps/plugins/cube.c	(working copy)
+@@ -309,6 +309,16 @@
+ #define CUBE_PAUSE         BUTTON_PLAY
+ #define CUBE_HIGHSPEED     BUTTON_ENTER
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define CUBE_QUIT          (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define CUBE_NEXT          BUTTON_MIDRIGHT
++#define CUBE_PREV          BUTTON_MIDLEFT
++#define CUBE_INC           BUTTON_TOPMIDDLE
++#define CUBE_DEC           BUTTON_BOTTOMMIDDLE
++#define CUBE_MODE          BUTTON_TOPRIGHT
++#define CUBE_PAUSE         BUTTON_CENTER
++#define CUBE_HIGHSPEED     BUTTON_BOTTOMRIGHT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/minesweeper.c
+===================================================================
+--- apps/plugins/minesweeper.c	(revision 29143)
++++ apps/plugins/minesweeper.c	(working copy)
+@@ -287,6 +287,26 @@
+ #   define MINESWP_DISCOVER BUTTON_FF
+ #   define MINESWP_INFO     BUTTON_REW
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#   define MINESWP_LEFT     BUTTON_MIDLEFT
++#   define MINESWP_RIGHT    BUTTON_MIDRIGHT
++#   define MINESWP_UP       BUTTON_TOPMIDDLE
++#   define MINESWP_DOWN     BUTTON_BOTTOMMIDDLE
++#   define MINESWP_QUIT     BUTTON_TOPLEFT
++#   define MINESWP_TOGGLE   BUTTON_CENTER
++#   define MINESWP_DISCOVER BUTTON_TOPRIGHT
++#   define MINESWP_INFO     BUTTON_BOTTOMRIGHT
++
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define CUBE_QUIT          (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define CUBE_NEXT          BUTTON_MIDRIGHT
++#define CUBE_PREV          BUTTON_MIDLEFT
++#define CUBE_INC           BUTTON_TOPMIDDLE
++#define CUBE_DEC           BUTTON_BOTTOMMIDDLE
++#define CUBE_MODE          BUTTON_TOPRIGHT
++#define CUBE_PAUSE         BUTTON_CENTER
++#define CUBE_HIGHSPEED     BUTTON_BOTTOMRIGHT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/lib/pluginlib_actions.c
+===================================================================
+--- apps/plugins/lib/pluginlib_actions.c	(revision 29143)
++++ apps/plugins/lib/pluginlib_actions.c	(working copy)
+@@ -209,6 +209,15 @@
+     { PLA_DOWN_REPEAT,       BUTTON_DOWN|BUTTON_REPEAT,         BUTTON_NONE},
+     { PLA_LEFT_REPEAT,       BUTTON_REW|BUTTON_REPEAT,          BUTTON_NONE},
+     { PLA_RIGHT_REPEAT,      BUTTON_FF|BUTTON_REPEAT,           BUTTON_NONE},
++#elif (CONFIG_KEYPAD == ZIPIT_Z2_PAD)
++    { PLA_UP,               BUTTON_TOPMIDDLE,                   BUTTON_NONE},
++    { PLA_DOWN,             BUTTON_BOTTOMMIDDLE,                BUTTON_NONE},
++    { PLA_LEFT,             BUTTON_MIDLEFT,                     BUTTON_NONE},
++    { PLA_RIGHT,            BUTTON_MIDRIGHT,                    BUTTON_NONE},
++    { PLA_UP_REPEAT,        BUTTON_TOPMIDDLE|BUTTON_REPEAT,     BUTTON_NONE},
++    { PLA_DOWN_REPEAT,      BUTTON_BOTTOMMIDDLE|BUTTON_REPEAT,  BUTTON_NONE},
++    { PLA_LEFT_REPEAT,      BUTTON_MIDLEFT|BUTTON_REPEAT,       BUTTON_NONE},
++    { PLA_RIGHT_REPEAT,     BUTTON_MIDRIGHT|BUTTON_REPEAT,      BUTTON_NONE},
+ 
+ #else
+ #   ifndef HAVE_TOUCHSCREEN
+@@ -382,6 +391,12 @@
+     {PLA_SELECT,            BUTTON_ENTER,                       BUTTON_NONE},
+     {PLA_SELECT_REL,        BUTTON_ENTER|BUTTON_REL,            BUTTON_ENTER},
+     {PLA_SELECT_REPEAT,     BUTTON_ENTER|BUTTON_REPEAT,         BUTTON_NONE},
++#elif (CONFIG_KEYPAD == ZIPIT_Z2_PAD)
++    {PLA_CANCEL,            BUTTON_BOTTOMRIGHT,                 BUTTON_NONE},
++    {PLA_EXIT,              BUTTON_TOPLEFT|BUTTON_REPEAT,       BUTTON_NONE},
++    {PLA_SELECT,            BUTTON_CENTER,                      BUTTON_NONE},
++    {PLA_SELECT_REL,        BUTTON_CENTER|BUTTON_REL,           BUTTON_NONE},
++    {PLA_SELECT_REPEAT,     BUTTON_CENTER|BUTTON_REPEAT,        BUTTON_NONE},
+ #else
+ #   ifndef HAVE_TOUCHSCREEN
+ #       error pluginlib_actions: No actions defined
+Index: apps/plugins/snow.c
+===================================================================
+--- apps/plugins/snow.c	(revision 29143)
++++ apps/plugins/snow.c	(working copy)
+@@ -87,6 +87,9 @@
+ #elif CONFIG_KEYPAD == MPIO_HD300_PAD
+ #define SNOW_QUIT (BUTTON_REC|BUTTON_REPEAT)
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define SNOW_QUIT (BUTTON_TOPLEFT|BUTTON_REPEAT)
++
+ #else
+ #define SNOW_QUIT BUTTON_OFF
+ #if (CONFIG_KEYPAD == IRIVER_H100_PAD) || (CONFIG_KEYPAD == IRIVER_H300_PAD)
+Index: apps/plugins/spacerocks.c
+===================================================================
+--- apps/plugins/spacerocks.c	(revision 29143)
++++ apps/plugins/spacerocks.c	(working copy)
+@@ -258,6 +258,16 @@
+ #define AST_RIGHT BUTTON_FF
+ #define AST_FIRE BUTTON_ENTER
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++
++#define AST_PAUSE BUTTON_TOPRIGHT
++#define AST_QUIT (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define AST_THRUST BUTTON_BOTTOMMIDDLE
++#define AST_HYPERSPACE BUTTON_BOTTOMRIGHT
++#define AST_LEFT BUTTON_MIDLEFT
++#define AST_RIGHT BUTTON_MIDRIGHT
++#define AST_FIRE BUTTON_TOPMIDDLE
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/reversi/reversi-gui.h
+===================================================================
+--- apps/plugins/reversi/reversi-gui.h	(revision 29143)
++++ apps/plugins/reversi/reversi-gui.h	(working copy)
+@@ -243,6 +243,15 @@
+ #define REVERSI_BUTTON_MAKE_MOVE BUTTON_ENTER
+ #define REVERSI_BUTTON_MENU BUTTON_MENU
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define REVERSI_BUTTON_QUIT      BUTTON_TOPLEFT
++#define REVERSI_BUTTON_UP        BUTTON_TOPMIDDLE
++#define REVERSI_BUTTON_DOWN      BUTTON_BOTTOMMIDDLE
++#define REVERSI_BUTTON_LEFT      BUTTON_MIDLEFT
++#define REVERSI_BUTTON_RIGHT     BUTTON_MIDRIGHT
++#define REVERSI_BUTTON_MAKE_MOVE BUTTON_CENTER
++#define REVERSI_BUTTON_MENU      BUTTON_TOPRIGHT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/logo.c
+===================================================================
+--- apps/plugins/logo.c	(revision 29143)
++++ apps/plugins/logo.c	(working copy)
+@@ -214,6 +214,13 @@
+ #define LP_DEC_Y BUTTON_DOWN
+ #define LP_INC_Y BUTTON_UP
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define LP_QUIT  (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define LP_DEC_X BUTTON_MIDLEFT
++#define LP_INC_X BUTTON_MIDRIGHT
++#define LP_DEC_Y BUTTON_BOTTOMMIDDLE
++#define LP_INC_Y BUTTON_TOPMIDDLE
++
+ #else
+ #define LP_QUIT BUTTON_OFF
+ #define LP_DEC_X BUTTON_LEFT
+Index: apps/plugins/brickmania.c
+===================================================================
+--- apps/plugins/brickmania.c	(revision 29143)
++++ apps/plugins/brickmania.c	(working copy)
+@@ -267,6 +267,14 @@
+ #define UP BUTTON_UP
+ #define DOWN BUTTON_DOWN
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define QUIT (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define LEFT BUTTON_MIDLEFT
++#define RIGHT BUTTON_MIDRIGHT
++#define SELECT BUTTON_CENTER
++#define UP BUTTON_TOPMIDDLE
++#define DOWN BUTTON_BOTTOMMIDDLE
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/blackjack.c
+===================================================================
+--- apps/plugins/blackjack.c	(revision 29143)
++++ apps/plugins/blackjack.c	(working copy)
+@@ -450,6 +450,21 @@
+ #define BJACK_RIGHT         BUTTON_FF
+ #define BJACK_LEFT          BUTTON_REW
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define BJACK_SELECT_NAME   "FUNC"
++#define BJACK_STAY_NAME     "VOL +"
++#define BJACK_RESUME_NAME   "PLAY"
++#define BJACK_QUIT_NAME     "REC+PLAY"
++#define BJACK_DOUBLE_NAME   "VOL -"
++#define BJACK_SELECT        BUTTON_CENTER
++#define BJACK_QUIT          (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define BJACK_STAY          BUTTON_TOPRIGHT
++#define BJACK_DOUBLEDOWN    BUTTON_BOTTOMRIGHT
++#define BJACK_UP            BUTTON_TOPMIDDLE
++#define BJACK_DOWN          BUTTON_BOTTOMMIDDLE
++#define BJACK_RIGHT         BUTTON_MIDRIGHT
++#define BJACK_LEFT          BUTTON_MIDLEFT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/stopwatch.c
+===================================================================
+--- apps/plugins/stopwatch.c	(revision 29143)
++++ apps/plugins/stopwatch.c	(working copy)
+@@ -247,6 +247,14 @@
+ #define STOPWATCH_SCROLL_UP BUTTON_UP
+ #define STOPWATCH_SCROLL_DOWN BUTTON_DOWN
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define STOPWATCH_QUIT (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define STOPWATCH_START_STOP BUTTON_CENTER
++#define STOPWATCH_RESET_TIMER BUTTON_MIDLEFT
++#define STOPWATCH_LAP_TIMER BUTTON_MIDRIGHT
++#define STOPWATCH_SCROLL_UP BUTTON_TOPMIDDLE
++#define STOPWATCH_SCROLL_DOWN BUTTON_BOTTOMMIDDLE
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/fractals/fractal.h
+===================================================================
+--- apps/plugins/fractals/fractal.h	(revision 29143)
++++ apps/plugins/fractals/fractal.h	(working copy)
+@@ -354,6 +354,18 @@
+ #define FRACTAL_PRECISION_DEC   (BUTTON_PLAY | BUTTON_REW)
+ #define FRACTAL_RESET           (BUTTON_PLAY | BUTTON_REC)
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define FRACTAL_QUIT            BUTTON_TOPLEFT
++#define FRACTAL_UP              BUTTON_TOPMIDDLE
++#define FRACTAL_DOWN            BUTTON_BOTTOMMIDDLE
++#define FRACTAL_LEFT            BUTTON_MIDLEFT
++#define FRACTAL_RIGHT           BUTTON_MIDRIGHT
++#define FRACTAL_ZOOM_IN         BUTTON_BOTTOMLEFT
++#define FRACTAL_ZOOM_OUT        BUTTON_BOTTOMRIGHT
++#define FRACTAL_PRECISION_INC   (BUTTON_CENTER | BUTTON_MIDRIGHT)
++#define FRACTAL_PRECISION_DEC   (BUTTON_CENTER | BUTTON_MIDLEFT)
++#define FRACTAL_RESET           BUTTON_TOPRIGHT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/jewels.c
+===================================================================
+--- apps/plugins/jewels.c	(revision 29143)
++++ apps/plugins/jewels.c	(working copy)
+@@ -303,6 +303,16 @@
+ #define HK_SELECT "ENTER"
+ #define HK_CANCEL "MENU"
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define JEWELS_LEFT   BUTTON_MIDLEFT
++#define JEWELS_RIGHT  BUTTON_MIDRIGHT
++#define JEWELS_UP     BUTTON_TOPMIDDLE
++#define JEWELS_DOWN   BUTTON_BOTTOMMIDDLE
++#define JEWELS_SELECT BUTTON_CENTER
++#define JEWELS_CANCEL BUTTON_TOPLEFT
++#define HK_SELECT "ENTER"
++#define HK_CANCEL "MENU"
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/calculator.c
+===================================================================
+--- apps/plugins/calculator.c	(revision 29143)
++++ apps/plugins/calculator.c	(working copy)
+@@ -408,6 +408,16 @@
+ #define CALCULATOR_CALC  BUTTON_PLAY
+ #define CALCULATOR_CLEAR BUTTON_MENU
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define CALCULATOR_LEFT  BUTTON_MIDLEFT
++#define CALCULATOR_RIGHT BUTTON_MIDRIGHT
++#define CALCULATOR_UP    BUTTON_TOPMIDDLE
++#define CALCULATOR_DOWN  BUTTON_BOTTOMMIDDLE
++#define CALCULATOR_QUIT  (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define CALCULATOR_INPUT BUTTON_CENTER
++#define CALCULATOR_CALC  BUTTON_BOTTOMRIGHT
++#define CALCULATOR_CLEAR BUTTON_TOPRIGHT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/rockpaint.c
+===================================================================
+--- apps/plugins/rockpaint.c	(revision 29143)
++++ apps/plugins/rockpaint.c	(working copy)
+@@ -210,6 +210,17 @@
+ #define ROCKPAINT_LEFT      BUTTON_PREV
+ #define ROCKPAINT_RIGHT     BUTTON_NEXT
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define ROCKPAINT_QUIT      BUTTON_TOPLEFT
++#define ROCKPAINT_DRAW      BUTTON_CENTER
++#define ROCKPAINT_MENU      BUTTON_TOPRIGHT
++#define ROCKPAINT_TOOLBAR   BUTTON_BOTTOMLEFT
++#define ROCKPAINT_TOOLBAR2  BUTTON_BOTTOMRIGHT
++#define ROCKPAINT_UP        BUTTON_TOPMIDDLE
++#define ROCKPAINT_DOWN      BUTTON_BOTTOMMIDDLE
++#define ROCKPAINT_LEFT      BUTTON_MIDLEFT
++#define ROCKPAINT_RIGHT     BUTTON_MIDRIGHT
++
+ #else
+ #error "Please define keys for this keypad"
+ #endif
+Index: apps/plugins/pacbox/pacbox.h
+===================================================================
+--- apps/plugins/pacbox/pacbox.h	(revision 29143)
++++ apps/plugins/pacbox/pacbox.h	(working copy)
+@@ -243,6 +243,17 @@
+ #define PACMAN_COIN     BUTTON_OK
+ #define PACMAN_MENU     BUTTON_MENU
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++
++#define PACMAN_UP       BUTTON_TOPMIDDLE
++#define PACMAN_DOWN     BUTTON_BOTTOMMIDDLE
++#define PACMAN_LEFT     BUTTON_MIDLEFT
++#define PACMAN_RIGHT    BUTTON_MIDRIGHT
++#define PACMAN_1UP      BUTTON_BOTTOMLEFT
++#define PACMAN_2UP      BUTTON_BOTTOMRIGHT
++#define PACMAN_COIN     BUTTON_CENTER
++#define PACMAN_MENU     BUTTON_TOPLEFT
++
+ #else
+ 
+ #error Keymap not defined!
+Index: apps/plugins/fft/fft.c
+===================================================================
+--- apps/plugins/fft/fft.c	(revision 29143)
++++ apps/plugins/fft/fft.c	(working copy)
+@@ -240,6 +240,14 @@
+ #   define FFT_AMP_SCALE    BUTTON_PLAY
+ #   define FFT_QUIT        (BUTTON_REC | BUTTON_REPEAT)
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#   define FFT_PREV_GRAPH   BUTTON_MIDLEFT
++#   define FFT_NEXT_GRAPH   BUTTON_MIDRIGHT
++#   define FFT_ORIENTATION  BUTTON_CENTER
++#   define FFT_WINDOW       BUTTON_BOTTOMRIGHT
++#   define FFT_AMP_SCALE    BUTTON_TOPRIGHT
++#   define FFT_QUIT         BUTTON_TOPLEFT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/xobox.c
+===================================================================
+--- apps/plugins/xobox.c	(revision 29143)
++++ apps/plugins/xobox.c	(working copy)
+@@ -259,6 +259,15 @@
+ #define DOWN  BUTTON_DOWN
+ #define PAUSE BUTTON_PLAY
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++
++#define QUIT  (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define LEFT  BUTTON_MIDLEFT
++#define RIGHT BUTTON_MIDRIGHT
++#define UP    BUTTON_TOPMIDDLE
++#define DOWN  BUTTON_BOTTOMMIDDLE
++#define PAUSE BUTTON_CENTER
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/pong.c
+===================================================================
+--- apps/plugins/pong.c	(revision 29143)
++++ apps/plugins/pong.c	(working copy)
+@@ -236,6 +236,13 @@
+ #define PONG_RIGHT_UP BUTTON_UP
+ #define PONG_RIGHT_DOWN BUTTON_DOWN
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define PONG_QUIT (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define PONG_LEFT_UP BUTTON_MIDRIGHT
++#define PONG_LEFT_DOWN BUTTON_MIDLEFT
++#define PONG_RIGHT_UP BUTTON_TOPMIDDLE
++#define PONG_RIGHT_DOWN BUTTON_BOTTOMMIDDLE
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/text_viewer/tv_button.h
+===================================================================
+--- apps/plugins/text_viewer/tv_button.h	(revision 29143)
++++ apps/plugins/text_viewer/tv_button.h	(working copy)
+@@ -413,6 +413,17 @@
+ #define TV_AUTOSCROLL   BUTTON_ENTER
+ #define TV_BOOKMARK     BUTTON_PLAY
+ 
++/* SDL Application keys */
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define TV_QUIT         BUTTON_TOPLEFT
++#define TV_SCROLL_UP    BUTTON_TOPMIDDLE
++#define TV_SCROLL_DOWN  BUTTON_BOTTOMMIDDLE
++#define TV_SCREEN_LEFT  BUTTON_MIDLEFT
++#define TV_SCREEN_RIGHT BUTTON_MIDRIGHT
++#define TV_MENU         BUTTON_TOPRIGHT
++#define TV_AUTOSCROLL   BUTTON_CENTER
++#define TV_BOOKMARK     BUTTON_BOTTOMRIGHT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/pegbox.c
+===================================================================
+--- apps/plugins/pegbox.c	(revision 29143)
++++ apps/plugins/pegbox.c	(working copy)
+@@ -472,6 +472,24 @@
+ #define LVL_DOWN_TEXT "FF"
+ #define SELECT_TEXT "FUNC"
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define PEGBOX_QUIT     (BUTTON_TOPLEFT | BUTTON_REPEAT)
++#define PEGBOX_RESTART  BUTTON_TOPRIGHT
++#define PEGBOX_LVL_UP   BUTTON_BOTTOMRIGHT
++#define PEGBOX_LVL_DOWN BUTTON_BOTTOMLEFT
++#define PEGBOX_UP       BUTTON_TOPMIDDLE
++#define PEGBOX_DOWN     BUTTON_BOTTOMMIDDLE
++#define PEGBOX_RIGHT    BUTTON_MIDRIGHT
++#define PEGBOX_LEFT     BUTTON_MIDLEFT
++#define PEGBOX_SELECT   BUTTON_CENTER
++
++#define SAVE_TEXT "PLAY + FUNC"
++#define QUIT_TEXT "HOME"
++#define RESTART_TEXT "END"
++#define LVL_UP_TEXT ">"
++#define LVL_DOWN_TEXT "<"
++#define SELECT_TEXT "ENTER"
++
+ #else
+ #error Unsupported keymap!
+ #endif
+Index: apps/plugins/sudoku/sudoku.h
+===================================================================
+--- apps/plugins/sudoku/sudoku.h	(revision 29143)
++++ apps/plugins/sudoku/sudoku.h	(working copy)
+@@ -309,6 +309,16 @@
+ #define SUDOKU_BUTTON_TOGGLEBACK BUTTON_DOWN
+ #define SUDOKU_BUTTON_POSSIBLE   BUTTON_PLAY
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define SUDOKU_BUTTON_QUIT       BUTTON_TOPLEFT
++#define SUDOKU_BUTTON_MENU       BUTTON_TOPRIGHT
++#define SUDOKU_BUTTON_LEFT       BUTTON_MIDLEFT
++#define SUDOKU_BUTTON_RIGHT      BUTTON_MIDRIGHT
++#define SUDOKU_BUTTON_CHANGEDIR  BUTTON_BOTTOMMIDDLE
++#define SUDOKU_BUTTON_TOGGLE     BUTTON_BOTTOMRIGHT
++#define SUDOKU_BUTTON_TOGGLEBACK BUTTON_BOTTOMLEFT
++#define SUDOKU_BUTTON_POSSIBLE   BUTTON_CENTER
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/zxbox/zxbox_keyb.c
+===================================================================
+--- apps/plugins/zxbox/zxbox_keyb.c	(revision 29143)
++++ apps/plugins/zxbox/zxbox_keyb.c	(working copy)
+@@ -220,6 +220,15 @@
+ #define KBD_UP     BUTTON_UP
+ #define KBD_DOWN   BUTTON_DOWN
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++
++#define KBD_SELECT BUTTON_CENTER
++#define KBD_ABORT  BUTTON_TOPLEFT
++#define KBD_LEFT   BUTTON_MIDLEFT
++#define KBD_RIGHT  BUTTON_MIDRIGHT
++#define KBD_UP     BUTTON_TOPMIDDLE
++#define KBD_DOWN   BUTTON_BOTTOMMIDDLE
++
+ #endif
+ 
+ #ifdef HAVE_TOUCHSCREEN
+Index: apps/plugins/zxbox/keymaps.h
+===================================================================
+--- apps/plugins/zxbox/keymaps.h	(revision 29143)
++++ apps/plugins/zxbox/keymaps.h	(working copy)
+@@ -216,6 +216,15 @@
+ #define ZX_LEFT         BUTTON_REW
+ #define ZX_RIGHT        BUTTON_FF
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++
++#define ZX_MENU         BUTTON_TOPLEFT
++#define ZX_UP           BUTTON_TOPMIDDLE
++#define ZX_DOWN         BUTTON_BOTTOMMIDDLE
++#define ZX_SELECT       BUTTON_CENTER
++#define ZX_LEFT         BUTTON_MIDLEFT
++#define ZX_RIGHT        BUTTON_MIDRIGHT
++
+ #else
+ #error Keymap not defined!
+ 
+Index: apps/plugins/rockblox1d.c
+===================================================================
+--- apps/plugins/rockblox1d.c	(revision 29143)
++++ apps/plugins/rockblox1d.c	(working copy)
+@@ -124,6 +124,10 @@
+ #define ONEDROCKBLOX_DOWN              BUTTON_DOWN
+ #define ONEDROCKBLOX_QUIT              (BUTTON_REC | BUTTON_REPEAT)
+ 
++#elif (CONFIG_KEYPAD == ZIPIT_Z2_PAD)
++#define ONEDROCKBLOX_DOWN              BUTTON_BOTTOMMIDDLE
++#define ONEDROCKBLOX_QUIT              (BUTTON_TOPLEFT|BUTTON_REPEAT)
++
+ #elif defined(HAVE_TOUCHSCREEN)
+ 
+ #define ONEDROCKBLOX_DOWN              BUTTON_BOTTOMMIDDLE
+Index: apps/plugins/fireworks.c
+===================================================================
+--- apps/plugins/fireworks.c	(revision 29143)
++++ apps/plugins/fireworks.c	(working copy)
+@@ -126,6 +126,10 @@
+ #define BTN_MENU BUTTON_MENU
+ #define BTN_FIRE BUTTON_PLAY
+ 
++#elif (CONFIG_KEYPAD == ZIPIT_Z2_PAD)
++#define BTN_MENU BUTTON_TOPLEFT
++#define BTN_FIRE BUTTON_CENTER
++
+ #elif defined(HAVE_TOUCHSCREEN)
+     /* This is a touchscreen target */
+ #else
+Index: apps/plugins/rockblox.c
+===================================================================
+--- apps/plugins/rockblox.c	(revision 29143)
++++ apps/plugins/rockblox.c	(working copy)
+@@ -359,6 +359,16 @@
+ #define ROCKBLOX_DROP          BUTTON_PLAY
+ #define ROCKBLOX_RESTART       BUTTON_REC
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define ROCKBLOX_OFF           (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define ROCKBLOX_ROTATE_CCW    BUTTON_BOTTOMRIGHT
++#define ROCKBLOX_ROTATE_CW     BUTTON_BOTTOMLEFT
++#define ROCKBLOX_DOWN          BUTTON_BOTTOMMIDDLE
++#define ROCKBLOX_LEFT          BUTTON_MIDLEFT
++#define ROCKBLOX_RIGHT         BUTTON_MIDRIGHT
++#define ROCKBLOX_DROP          BUTTON_CENTER
++#define ROCKBLOX_RESTART       BUTTON_TOPRIGHT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/mpegplayer/mpegplayer.c
+===================================================================
+--- apps/plugins/mpegplayer/mpegplayer.c	(revision 29143)
++++ apps/plugins/mpegplayer/mpegplayer.c	(working copy)
+@@ -345,6 +345,15 @@
+ #define MPEG_RW         BUTTON_REW
+ #define MPEG_FF         BUTTON_FF
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define MPEG_MENU       BUTTON_TOPLEFT
++#define MPEG_STOP       BUTTON_BOTTOMRIGHT
++#define MPEG_PAUSE      BUTTON_CENTER
++#define MPEG_VOLDOWN    BUTTON_BOTTOMMIDDLE
++#define MPEG_VOLUP      BUTTON_TOPMIDDLE
++#define MPEG_RW         BUTTON_MIDLEFT
++#define MPEG_FF         BUTTON_MIDRIGHT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/mpegplayer/mpeg_settings.c
+===================================================================
+--- apps/plugins/mpegplayer/mpeg_settings.c	(revision 29143)
++++ apps/plugins/mpegplayer/mpeg_settings.c	(working copy)
+@@ -232,6 +232,16 @@
+ #define MPEG_START_TIME_DOWN        BUTTON_DOWN
+ #define MPEG_START_TIME_EXIT        BUTTON_REC
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define MPEG_START_TIME_SELECT      BUTTON_CENTER
++#define MPEG_START_TIME_LEFT        BUTTON_MIDLEFT
++#define MPEG_START_TIME_RIGHT       BUTTON_MIDRIGHT
++#define MPEG_START_TIME_UP          BUTTON_TOPMIDDLE
++#define MPEG_START_TIME_DOWN        BUTTON_BOTTOMMIDDLE
++#define MPEG_START_TIME_LEFT2       BUTTON_BOTTOMLEFT
++#define MPEG_START_TIME_RIGHT2      BUTTON_BOTTOMRIGHT
++#define MPEG_START_TIME_EXIT        BUTTON_TOPLEFT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/solitaire.c
+===================================================================
+--- apps/plugins/solitaire.c	(revision 29143)
++++ apps/plugins/solitaire.c	(working copy)
+@@ -503,10 +503,28 @@
+ #   define SOL_REM2STACK    (BUTTON_PLAY | BUTTON_REPEAT)
+ #   define HK_MOVE         "FF"
+ #   define HK_DRAW         "ENTER + PLAY"
+-#   define HK_REM2CUR      "EMNU.."
++#   define HK_REM2CUR      "MENU.."
+ #   define HK_CUR2STACK    "PLAY"
+ #   define HK_REM2STACK    "PLAY...."
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#   define SOL_QUIT          (BUTTON_TOPLEFT | BUTTON_REPEAT)
++#   define SOL_UP            BUTTON_TOPMIDDLE
++#   define SOL_DOWN          BUTTON_BOTTOMMIDDLE
++#   define SOL_LEFT          BUTTON_MIDLEFT
++#   define SOL_RIGHT         BUTTON_MIDRIGHT
++#   define SOL_MOVE_PRE      BUTTON_CENTER
++#   define SOL_MOVE          (BUTTON_CENTER | BUTTON_REL)
++#   define SOL_DRAW          BUTTON_TOPRIGHT
++#   define SOL_REM2CUR       BUTTON_BOTTOMLEFT
++#   define SOL_CUR2STACK     BUTTON_BOTTOMRIGHT
++#   define SOL_REM2STACK     (BUTTON_BOTTOMRIGHT | BUTTON_REPEAT)
++#   define HK_MOVE           "ENTER"
++#   define HK_DRAW           "END"
++#   define HK_REM2CUR        "PGDN"
++#   define HK_CUR2STACK      "PGUP"
++#   define HK_REM2STACK      "PGUP..."
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/goban/goban.h
+===================================================================
+--- apps/plugins/goban/goban.h	(revision 29143)
++++ apps/plugins/goban/goban.h	(working copy)
+@@ -341,6 +341,16 @@
+ #define  GBN_BUTTON_PLAY               BUTTON_ENTER
+ #define  GBN_BUTTON_MENU               BUTTON_MENU
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define  GBN_BUTTON_UP                 BUTTON_TOPMIDDLE
++#define  GBN_BUTTON_DOWN               BUTTON_BOTTOMMIDDLE
++#define  GBN_BUTTON_LEFT               BUTTON_MIDLEFT
++#define  GBN_BUTTON_RIGHT              BUTTON_MIDRIGHT
++#define  GBN_BUTTON_RETREAT            BUTTON_BOTTOMLEFT
++#define  GBN_BUTTON_ADVANCE            BUTTON_BOTTOMRIGHT
++#define  GBN_BUTTON_PLAY               BUTTON_CENTER
++#define  GBN_BUTTON_MENU               BUTTON_TOPRIGHT
++
+ #else
+ #error Unsupported keypad
+ #endif
+Index: apps/plugins/calendar.c
+===================================================================
+--- apps/plugins/calendar.c	(revision 29143)
++++ apps/plugins/calendar.c	(working copy)
+@@ -288,6 +288,16 @@
+ #define CALENDAR_NEXT_MONTH BUTTON_PLAY
+ #define CALENDAR_PREV_MONTH BUTTON_MENU
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define CALENDAR_QUIT       (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define CALENDAR_SELECT     BUTTON_CENTER
++#define CALENDAR_NEXT_WEEK  BUTTON_MIDRIGHT
++#define CALENDAR_PREV_WEEK  BUTTON_MIDLEFT
++#define CALENDAR_NEXT_DAY   BUTTON_TOPMIDDLE
++#define CALENDAR_PREV_DAY   BUTTON_BOTTOMMIDDLE
++#define CALENDAR_NEXT_MONTH BUTTON_BOTTOMRIGHT
++#define CALENDAR_PREV_MONTH BUTTON_BOTTOMLEFT
++
+ #else
+ #error "No keypad setting."
+ #endif
+Index: apps/plugins/star.c
+===================================================================
+--- apps/plugins/star.c	(revision 29143)
++++ apps/plugins/star.c	(working copy)
+@@ -446,6 +446,24 @@
+ #define STAR_LEVEL_DOWN_NAME "REC"
+ #define STAR_LEVEL_REPEAT_NAME "MENU LONG"
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++
++#define STAR_QUIT           (BUTTON_TOPLEFT | BUTTON_REPEAT)
++#define STAR_LEFT           BUTTON_MIDLEFT
++#define STAR_RIGHT          BUTTON_MIDRIGHT
++#define STAR_UP             BUTTON_TOPMIDDLE
++#define STAR_DOWN           BUTTON_BOTTOMMIDDLE
++#define STAR_TOGGLE_CONTROL_PRE BUTTON_TOPRIGHT
++#define STAR_TOGGLE_CONTROL (BUTTON_TOPRIGHT | BUTTON_REL)
++#define STAR_LEVEL_UP       BUTTON_BOTTOMRIGHT
++#define STAR_LEVEL_DOWN     BUTTON_BOTTOMLEFT
++#define STAR_LEVEL_REPEAT   BUTTON_CENTER
++#define STAR_TOGGLE_CONTROL_NAME "MENU"
++#define STAR_QUIT_NAME      "HOME LONG"
++#define STAR_LEVEL_UP_NAME  "PGUP"
++#define STAR_LEVEL_DOWN_NAME "PGDN"
++#define STAR_LEVEL_REPEAT_NAME "ENTER"
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/doom/i_video.c
+===================================================================
+--- apps/plugins/doom/i_video.c	(revision 29143)
++++ apps/plugins/doom/i_video.c	(working copy)
+@@ -401,7 +401,18 @@
+ #define DOOMBUTTON_ESC     BUTTON_REC
+ #define DOOMBUTTON_ENTER   BUTTON_PLAY
+ #define DOOMBUTTON_WEAPON  (BUTTON_PLAY|BUTTON_REPEAT)
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define DOOMBUTTON_UP      BUTTON_TOPMIDDLE
++#define DOOMBUTTON_DOWN    BUTTON_BOTTOMMIDDLE
++#define DOOMBUTTON_LEFT    BUTTON_MIDLEFT
++#define DOOMBUTTON_RIGHT   BUTTON_MIDRIGHT
++#define DOOMBUTTON_SHOOT   BUTTON_BOTTOMRIGHT
++#define DOOMBUTTON_OPEN    BUTTON_TOPRIGHT
++#define DOOMBUTTON_ESC     BUTTON_TOPLEFT
++#define DOOMBUTTON_ENTER   BUTTON_CENTER
++#define DOOMBUTTON_WEAPON  BUTTON_BOTTOMLEFT
+ 
++
+ #else
+ #error Keymap not defined!
+ #endif
+Index: apps/plugins/imageviewer/imageviewer_button.h
+===================================================================
+--- apps/plugins/imageviewer/imageviewer_button.h	(revision 29143)
++++ apps/plugins/imageviewer/imageviewer_button.h	(working copy)
+@@ -352,6 +352,18 @@
+ #define IMGVIEW_MENU        (BUTTON_ENTER | BUTTON_REPEAT)
+ #define IMGVIEW_QUIT        BUTTON_REC
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define IMGVIEW_ZOOM_IN     BUTTON_TOPRIGHT
++#define IMGVIEW_ZOOM_OUT    BUTTON_TOPLEFT
++#define IMGVIEW_UP          BUTTON_TOPMIDDLE
++#define IMGVIEW_DOWN        BUTTON_BOTTOMMIDDLE
++#define IMGVIEW_LEFT        BUTTON_MIDLEFT
++#define IMGVIEW_RIGHT       BUTTON_MIDRIGHT
++#define IMGVIEW_NEXT        BUTTON_BOTTOMRIGHT
++#define IMGVIEW_PREVIOUS    BUTTON_BOTTOMLEFT
++#define IMGVIEW_MENU        (BUTTON_CENTER|BUTTON_REL)
++#define IMGVIEW_QUIT        (BUTTON_TOPLEFT | BUTTON_REPEAT)
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/vu_meter.c
+===================================================================
+--- apps/plugins/vu_meter.c	(revision 29143)
++++ apps/plugins/vu_meter.c	(working copy)
+@@ -316,6 +316,17 @@
+ #define LABEL_MENU "MENU"
+ #define LABEL_VOLUME "UP/DOWN"
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define VUMETER_QUIT (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define VUMETER_HELP BUTTON_CENTER
++#define VUMETER_MENU BUTTON_TOPRIGHT
++#define VUMETER_UP BUTTON_TOPMIDDLE
++#define VUMETER_DOWN BUTTON_BOTTOMMIDDLE
++#define LABEL_HELP "ENTER"
++#define LABEL_QUIT "HOME..."
++#define LABEL_MENU "MENU"
++#define LABEL_VOLUME "UP/DOWN"
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/rockboy/rockboy.c
+===================================================================
+--- apps/plugins/rockboy/rockboy.c	(revision 29143)
++++ apps/plugins/rockboy/rockboy.c	(working copy)
+@@ -318,6 +318,17 @@
+         options.SELECT = (BUTTON_ENTER | BUTTON_REPEAT);
+         options.MENU   = (BUTTON_MENU | BUTTON_REPEAT);
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++        options.LEFT    = BUTTON_MIDLEFT;
++        options.RIGHT   = BUTTON_MIDRIGHT;
++        options.UP      = BUTTON_TOPMIDDLE;
++        options.DOWN    = BUTTON_BOTTOMMIDDLE;
++        options.START   = BUTTON_TOPRIGHT;
++        options.SELECT  = BUTTON_CENTER;
++        options.A       = BUTTON_BOTTOMLEFT;
++        options.B       = BUTTON_BOTTOMRIGHT;
++        options.MENU    = BUTTON_TOPLEFT;
++
+ #else
+ #error No Keymap Defined!
+ #endif
+Index: apps/plugins/sokoban.c
+===================================================================
+--- apps/plugins/sokoban.c	(revision 29143)
++++ apps/plugins/sokoban.c	(working copy)
+@@ -491,6 +491,21 @@
+ #define BUTTON_SAVE          (BUTTON_PLAY|BUTTON_ENTER)
+ #define BUTTON_SAVE_NAME "PLAY+ENTER"
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define SOKOBAN_LEFT         BUTTON_MIDLEFT
++#define SOKOBAN_RIGHT        BUTTON_MIDRIGHT
++#define SOKOBAN_UP           BUTTON_TOPMIDDLE
++#define SOKOBAN_DOWN         BUTTON_BOTTOMMIDDLE
++#define SOKOBAN_MENU         BUTTON_TOPLEFT
++#define SOKOBAN_UNDO         (BUTTON_CENTER | BUTTON_MIDLEFT)
++#define SOKOBAN_REDO         (BUTTON_CENTER | BUTTON_MIDRIGHT)
++#define SOKOBAN_LEVEL_DOWN   (BUTTON_CENTER | BUTTON_BOTTOMMIDDLE)
++#define SOKOBAN_LEVEL_REPEAT BUTTON_TOPRIGHT
++#define SOKOBAN_LEVEL_UP     (BUTTON_CENTER | BUTTON_TOPMIDDLE)
++#define SOKOBAN_PAUSE        BUTTON_CENTER
++#define BUTTON_SAVE          BUTTON_BOTTOMLEFT
++#define BUTTON_SAVE_NAME "END"
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/chopper.c
+===================================================================
+--- apps/plugins/chopper.c	(revision 29143)
++++ apps/plugins/chopper.c	(working copy)
+@@ -173,6 +173,11 @@
+ #define ACTION BUTTON_ENTER
+ #define ACTIONTEXT "ENTER"
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define QUIT BUTTON_TOPLEFT
++#define ACTION BUTTON_CENTER
++#define ACTIONTEXT "ENTER"
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/matrix.c
+===================================================================
+--- apps/plugins/matrix.c	(revision 29143)
++++ apps/plugins/matrix.c	(working copy)
+@@ -169,6 +169,12 @@
+ #define MATRIX_SLEEP_LESS BUTTON_DOWN
+ #define MATRIX_PAUSE BUTTON_PLAY
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define MATRIX_EXIT (BUTTON_TOPLEFT | BUTTON_REPEAT)
++#define MATRIX_SLEEP_MORE BUTTON_MIDRIGHT
++#define MATRIX_SLEEP_LESS BUTTON_MIDLEFT
++#define MATRIX_PAUSE BUTTON_CENTER
++
+ #else
+ #error Unsupported keypad
+ #endif
+Index: apps/plugins/chip8.c
+===================================================================
+--- apps/plugins/chip8.c	(revision 29143)
++++ apps/plugins/chip8.c	(working copy)
+@@ -1167,6 +1167,15 @@
+ #define CHIP8_KEY6 BUTTON_DOWN
+ #define CHIP8_KEY8 BUTTON_UP
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++
++#define CHIP8_OFF  (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define CHIP8_KEY2 BUTTON_MIDLEFT
++#define CHIP8_KEY4 BUTTON_MIDRIGHT
++#define CHIP8_KEY5 BUTTON_CENTER
++#define CHIP8_KEY6 BUTTON_BOTTOMMIDDLE
++#define CHIP8_KEY8 BUTTON_TOPMIDDLE
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/test_codec.c
+===================================================================
+--- apps/plugins/test_codec.c	(revision 29143)
++++ apps/plugins/test_codec.c	(working copy)
+@@ -39,6 +39,8 @@
+ #define TESTCODEC_EXITBUTTON (BUTTON_REC | BUTTON_PLAY)
+ #elif CONFIG_KEYPAD == MPIO_HD300_PAD
+ #define TESTCODEC_EXITBUTTON (BUTTON_REC | BUTTON_REPEAT)
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define TESTCODEC_EXITBUTTON BUTTON_TOPLEFT
+ #elif defined(HAVE_TOUCHSCREEN)
+ #define TESTCODEC_EXITBUTTON BUTTON_TOPLEFT
+ #else
+Index: apps/plugins/chessclock.c
+===================================================================
+--- apps/plugins/chessclock.c	(revision 29143)
++++ apps/plugins/chessclock.c	(working copy)
+@@ -306,6 +306,16 @@
+ #define CHC_SETTINGS_OK BUTTON_ENTER
+ #define CHC_SETTINGS_CANCEL BUTTON_MENU
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define CHC_QUIT             (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define CHC_STARTSTOP        BUTTON_CENTER
++#define CHC_RESET            BUTTON_BOTTOMLEFT
++#define CHC_MENU             BUTTON_TOPRIGHT
++#define CHC_SETTINGS_INC     BUTTON_TOPMIDDLE
++#define CHC_SETTINGS_DEC     BUTTON_BOTTOMMIDDLE
++#define CHC_SETTINGS_OK      BUTTON_MIDRIGHT
++#define CHC_SETTINGS_CANCEL  BUTTON_MIDLEFT
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/mosaique.c
+===================================================================
+--- apps/plugins/mosaique.c	(revision 29143)
++++ apps/plugins/mosaique.c	(working copy)
+@@ -183,6 +183,11 @@
+ #define MOSAIQUE_SPEED BUTTON_ENTER
+ #define MOSAIQUE_RESTART BUTTON_PLAY
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define MOSAIQUE_QUIT (BUTTON_TOPLEFT|BUTTON_REPEAT)
++#define MOSAIQUE_SPEED BUTTON_CENTER
++#define MOSAIQUE_RESTART BUTTON_BOTTOMMIDDLE
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/wormlet.c
+===================================================================
+--- apps/plugins/wormlet.c	(revision 29143)
++++ apps/plugins/wormlet.c	(working copy)
+@@ -300,6 +300,16 @@
+ #define BTN_QUIT BUTTON_REC
+ #define BTN_STOPRESET (BUTTON_MENU | BUTTON_REPEAT)
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++
++#define BTN_DIR_UP BUTTON_TOPMIDDLE
++#define BTN_DIR_DOWN BUTTON_BOTTOMMIDDLE
++#define BTN_DIR_LEFT BUTTON_MIDLEFT
++#define BTN_DIR_RIGHT BUTTON_MIDRIGHT
++#define BTN_STARTPAUSE BUTTON_CENTER
++#define BTN_QUIT BUTTON_TOPLEFT
++#define BTN_STOPRESET (BUTTON_TOPRIGHT | BUTTON_REPEAT)
++
+ #else
+ #error No keymap defined!
+ #endif
+Index: apps/plugins/invadrox.c
+===================================================================
+--- apps/plugins/invadrox.c	(revision 29143)
++++ apps/plugins/invadrox.c	(working copy)
+@@ -220,6 +220,13 @@
+ #define RIGHT BUTTON_ENTER
+ #define FIRE  BUTTON_PLAY
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++
++#define QUIT  BUTTON_TOPLEFT
++#define LEFT  BUTTON_BOTTOMLEFT
++#define RIGHT BUTTON_BOTTOMRIGHT
++#define FIRE  BUTTON_CENTER
++
+ #else
+     #error INVADROX: Unsupported keypad
+ #endif
