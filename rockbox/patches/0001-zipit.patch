@@ -20,7 +20,7 @@ Index: tools/configure
 +    target_id=98
 +    modelname="zipitz2"
 +    app_type="sdl-app"
-+    target="-DZIPIT_Z2"
++    target="ZIPIT_Z2"
 +    #app_set_paths
 +    sharedir="/usr/local/share/rockbox"
 +    bindir="/usr/local/bin"

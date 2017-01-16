@@ -46,7 +46,15 @@ TARGET_LDFLAGS+= \
 
 define Build/Configure
 	( cd $(PKG_BUILD_DIR); mkdir zbuild; cd zbuild; \
-	../tools/configure --target=209 --lcdwidth=320 --lcdheight=240 --type=N);
+		CC="$(TARGET_CROSS)gcc" \
+		CPP="$(TARGET_CROSS)cpp" \
+		AR="$(TARGET_CROSS)ar cqs" \
+		LD="$(TARGET_CROSS)g++" \
+		AS="$(TARGET_CROSS)as" \
+		OC="$(TARGET_CROSS)objcopy" \
+		RANLIB="$(TARGET_CROSS)ranlib" \
+		SHARED_LDFLAG="$(TARGET_LDFLAGS) $(EXTRA_LDFLAGS)" \
+		../tools/configure --target=209 --lcdwidth=320 --lcdheight=240 --type=N --compiler-prefix=$(TARGET_CROSS));
 #	$(call Build/Configure/Default,\
 #		--target=zipit_z2)
 endef
@@ -56,6 +64,7 @@ endef
 define Build/Compile
 	( cd $(PKG_BUILD_DIR); cd zbuild; make )
 endef
+
 define Package/rockbox/install
 	$(call Build/Install/Default)
 
