@@ -233,7 +233,7 @@ Index: firmware/export/config/zipit_z2.h
 ===================================================================
 --- a/firmware/export/config/zipit_z2.h	(revision 0)
 +++ b/firmware/export/config/zipit_z2.h	(revision 0)
-@@ -0,0 +1,107 @@
+@@ -0,0 +1,112 @@
 +/*
 + * This config file is for the SDL application
 + */
@@ -341,6 +341,11 @@ Index: firmware/export/config/zipit_z2.h
 +#define HAVE_HOTKEY
 +
 +#define BOOTDIR "/.rockbox"
++
++/* No special storage */
++#define CONFIG_STORAGE STORAGE_HOSTFS
++#define HAVE_STORAGE_FLUSH
++
 Index: firmware/SOURCES
 ===================================================================
 --- a/firmware/SOURCES	(revision 29632)
