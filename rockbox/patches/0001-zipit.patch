@@ -20,12 +20,12 @@ Index: tools/configure
 + winbuild=""
 + GCCOPTS=`echo $CCOPTS | sed -e s/-ffreestanding// -e s/-nostdlib// -e s/-Wundef//`
 +
-+ GCCOPTS="$GCCOPTS -fno-builtin -g"
++ GCCOPTS="$GCCOPTS $TARGET_CFLAGS -fno-builtin -g"
 + # Some linux setups like to warn about unused results. They are correct,
 + # but cleaning this up is a lot of work.
 + GCCOPTS="$GCCOPTS -Wno-unused-result"
 + GCCOPTIMIZE=''
-+ LDOPTS="$LDOPTS -lm" # button-sdl.c uses sqrt()
++ LDOPTS="$LDOPTS $TARGET_LDFLAGS $EXTRA_LDFLAGS -lm" # button-sdl.c uses sqrt()
 + sigaltstack=""
 + fibers=""
 + endian="" # endianess of the dap doesnt matter here
@@ -738,3 +738,16 @@ Index: firmware/drivers/lcd-16bit.c
              : [w]"=&r"(w), [h]"+&r"(height), [px]"=&r"(px),
                [s]"+&r"(src), [d]"+&r"(dst)
              : [width]"r"(width),
+Index: firmware/include/rbendian.h
+===================================================================
+--- a/firmware/include/rbendian.h	(revision 29632)
++++ b/firmware/include/rbendian.h	(working copy)
+@@ -83,7 +83,7 @@
+   #define __swap16_os(x)    __swap16(x)
+   #define __swap32_os(x)    __swap32(x)
+   #define __swap64_os(x)    __swap64(x)
+-#elif defined (__MINGW32__) || (CONFIG_PLATFORM & PLATFORM_MAEMO)
++#elif defined (__MINGW32__) || (CONFIG_PLATFORM & PLATFORM_MAEMO) || (CONFIG_PLATFORM & PLATFORM_ZIPIT_Z2)
+   /* kinda hacky but works */
+   #define __swap16_os(x)    SWAP16_CONST(x)
+   #define __swap32_os(x)    SWAP32_CONST(x)
