@@ -44,24 +44,37 @@ TARGET_LDFLAGS+= \
 	$(ICONV_LDFLAGS) -liconv \
 	$(INTL_LDLAGS) -lintl
 
+# I think this is the way to go, but I need to define zipitcc settings in ../tools/configure
+# or maybe pass TARGET_CC etc to configure (instead of CC, CPP.. as seen below)
 define Build/Configure
 	( cd $(PKG_BUILD_DIR); mkdir zbuild; cd zbuild; \
-		CC="$(TARGET_CROSS)gcc" \
-		CPP="$(TARGET_CROSS)cpp" \
-		AR="$(TARGET_CROSS)ar cqs" \
-		LD="$(TARGET_CROSS)g++" \
-		AS="$(TARGET_CROSS)as" \
-		OC="$(TARGET_CROSS)objcopy" \
-		RANLIB="$(TARGET_CROSS)ranlib" \
-		SHARED_LDFLAG="$(TARGET_LDFLAGS) $(EXTRA_LDFLAGS)" \
-		../tools/configure --target=209 --lcdwidth=320 --lcdheight=240 --type=N --compiler-prefix=$(TARGET_CROSS));
-#	$(call Build/Configure/Default,\
-#		--target=zipit_z2)
+	CROSS_COMPILE="$(TARGET_CROSS)" \
+	../tools/configure --target=209 --lcdwidth=320 --lcdheight=240 --type=N )
 endef
+
+#define Build/Configure
+#	( cd $(PKG_BUILD_DIR); mkdir zbuild; cd zbuild; \
+#		CC="$(TARGET_CROSS)gcc" \
+#		CPP="$(TARGET_CROSS)cpp" \
+#		AR="$(TARGET_CROSS)ar cqs" \
+#		LD="$(TARGET_CROSS)g++" \
+#		AS="$(TARGET_CROSS)as" \
+#		OC="$(TARGET_CROSS)objcopy" \
+#		RANLIB="$(TARGET_CROSS)ranlib" \
+#		SHARED_LDFLAG="$(TARGET_LDFLAGS) $(EXTRA_LDFLAGS)" \
+#		../tools/configure --target=209 --lcdwidth=320 --lcdheight=240 --type=N --compiler-prefix=$(TARGET_CROSS));
+##	$(call Build/Configure/Default,\
+##		--target=zipit_z2)
+#endef
 
 #CONFIGURE_ARGS+=--target-device=zipit-z2 --enable=decoder-opus
 
+#define Build/Compile
+#endef
+
+# Lets start with just the tools.
 define Build/Compile
+#	( cd $(PKG_BUILD_DIR); cd zbuild; $(MAKE) tools ) # tools only
 	( cd $(PKG_BUILD_DIR); cd zbuild; make )
 endef
 

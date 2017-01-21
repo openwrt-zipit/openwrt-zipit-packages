@@ -2,7 +2,97 @@ Index: tools/configure
 ===================================================================
 --- a/tools/configure	(revision 29632)
 +++ b/tools/configure	(working copy)
-@@ -1437,7 +1437,7 @@
+@@ -652,6 +652,89 @@
+  GCCOPTS="$GCCOPTS -ffast-math -fsingle-precision-constant"
+ }
+ 
++zipitcc () {
++
++ # default tool setup for native building
++ prefixtools "$CROSS_COMPILE"
++ ARG_ARM_THUMB=0 # can't use thumb in native builds
++
++ # unset arch if already set shcc() and friends
++ arch=
++ arch_version=
++
++ app_type=$1
++ winbuild=""
++ GCCOPTS=`echo $CCOPTS | sed -e s/-ffreestanding// -e s/-nostdlib// -e s/-Wundef//`
++
++ GCCOPTS="$GCCOPTS -fno-builtin -g"
++ # Some linux setups like to warn about unused results. They are correct,
++ # but cleaning this up is a lot of work.
++ GCCOPTS="$GCCOPTS -Wno-unused-result"
++ GCCOPTIMIZE=''
++ LDOPTS="$LDOPTS -lm" # button-sdl.c uses sqrt()
++ sigaltstack=""
++ fibers=""
++ endian="" # endianess of the dap doesnt matter here
++
++ # default output binary name, don't override app_get_platform()
++ if [ "$app_type" != "sdl-app" ]; then
++    output="rockboxui"
++ fi
++
++ # default share option, override below if needed
++ SHARED_LDFLAG="-shared"
++ SHARED_CFLAGS="-fPIC -fvisibility=hidden"
++
++ sigaltstack=`check_sigaltstack`
++ LDOPTS="$LDOPTS -ldl"
++
++ sdl=`findsdl $winbuild`
++
++ if [ -n `echo $app_type | grep "sdl"` ]; then
++    if [ -z "$sdl" ]; then
++        echo "configure didn't find sdl-config, which indicates that you"
++        echo "don't have SDL (properly) installed. Please correct and"
++        echo "re-run configure!"
++        exit 2
++    else
++        # generic sdl-config checker
++        GCCOPTS="$GCCOPTS `$sdl --cflags`"
++        if sdl-config --static-libs > /dev/null 2>&1 ; then
++            LDOPTS="$LDOPTS `$sdl --static-libs`"
++        else
++            echo "Your sdl-config does not know about static libs, falling back to shared library"
++            LDOPTS="$LDOPTS `$sdl --libs`"
++        fi
++    fi
++ fi
++
++ GCCOPTS="$GCCOPTS -I\$(SIMDIR)"
++ endian="little"
++ echo "WARNING: Zipit Z2.  Assuming $endian endian!"
++
++ thread_support=
++ if [ -z "$ARG_THREAD_SUPPORT" ] || [ "$ARG_THREAD_SUPPORT" = "0" ]; then
++   if [ "$sigaltstack" = "0" ]; then
++     thread_support="HAVE_SIGALTSTACK_THREADS"
++     LDOPTS="$LDOPTS -lpthread" # pthread needed
++     echo "Selected sigaltstack threads"
++   elif [ "$fibers" = "0" ]; then
++     thread_support="HAVE_WIN32_FIBER_THREADS"
++     echo "Selected Win32 Fiber threads"
++   fi
++ fi
++
++ if [ -n `echo $app_type | grep "sdl"` ] && [ -z "$thread_support" ] \
++    && [ "$ARG_THREAD_SUPPORT" != "0" ]; then
++   thread_support="HAVE_SDL_THREADS"
++   if [ "$ARG_THREAD_SUPPORT" = "1" ]; then
++     echo "Selected SDL threads"
++   else
++     echo "WARNING: Falling back to SDL threads"
++   fi
++ fi
++}
++
+ ypr0cc () {
+ 
+  GCCOPTS=`echo $CCOPTS | sed -e s/-ffreestanding// -e s/-nostdlib//`
+@@ -1437,7 +1520,7 @@
   206) Android MIPS        ==IHIFI==              ==iBasso==
   207) Android x86         230) 760               232) DX50
   208) Samsung YP-R1       231) 960               233) DX90
@@ -11,7 +101,7 @@ Index: tools/configure
  
  EOF
  
-@@ -3890,6 +3890,37 @@
+@@ -3890,6 +3973,38 @@
      t_model="dx90"
      ;;
  
@@ -29,6 +119,7 @@ Index: tools/configure
 +    memory=8
 +    uname=`uname`
 +    #simcc "sdl-app" #Should be zipitcc so I can decide if -DIZ2S
++    zipitcc "sdl-app"
 +    #extradefines="$extradefines -DIZ2S" #Remove this when zipitcc works.
 +    tool="cp "
 +    boottool="cp "
@@ -49,7 +140,7 @@ Index: tools/configure
     *)
      echo "Please select a supported target platform!"
      exit 7
-@@ -4427,6 +4457,10 @@
+@@ -4427,6 +4542,10 @@
      # Pandora needs the SDL port, too
      TARGET_INC="$TARGET_INC -I\$(FIRMDIR)/target/hosted/sdl/app"
      TARGET_INC="$TARGET_INC -I\$(FIRMDIR)/target/hosted/sdl"
