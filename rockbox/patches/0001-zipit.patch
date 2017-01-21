@@ -556,7 +556,7 @@ Index: firmware/target/hosted/zipit/powermgmt-zipit-z2.c
 +        *level = battery_percent;
 +}
 +
-+unsigned int battery_voltage(void)
++int battery_voltage(void)
 +{
 +    battery_status_update();
 +    return battery_millivolts;
