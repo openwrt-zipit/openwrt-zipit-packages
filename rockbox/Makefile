@@ -115,7 +115,7 @@ define Package/rockbox/install
 	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/docs
 		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/docs/* $(1)/usr/local/share/rockbox/docs/
 	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/eqs
-		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/eqs/* $(1)/usr/local/share/rockbox/eqs/
+		$(INSTALL_BIN) $(FILES_DIR)/eqs/* $(1)/usr/local/share/rockbox/eqs/
 	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/fonts
 		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/fonts/* $(1)/usr/local/share/rockbox/fonts/
 	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/icons
