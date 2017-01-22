@@ -84,7 +84,7 @@ define Package/rockbox/install
 
 	$(INSTALL_DIR) $(1)/usr/local/bin/
 		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/rockbox.bin $(1)/usr/local/bin/
-		$(INSTALL_BIN) $(FILES_DIR)/rockbox.sh $(1)/usr/local/share/rockbox/rockbox
+		$(INSTALL_BIN) $(FILES_DIR)/rockbox.sh $(1)/usr/local/bin/rockbox
 
 	$(INSTALL_DIR) $(1)/usr/local/lib/rockbox/codecs
 		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/lib/rockbox/codecs/* $(1)/usr/local/lib/rockbox/codecs
