@@ -79,13 +79,56 @@ define Build/Compile
 endef
 
 define Package/rockbox/install
-	$(call Build/Install/Default)
+#	$(call Build/Install/Default)
+	( cd $(PKG_BUILD_DIR); cd zbuild; make install )
 
-	$(INSTALL_DIR) $(1)/usr/bin/
-		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/rockbox.bin $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/usr/local/bin/
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/rockbox.bin $(1)/usr/local/bin/
 
-	$(INSTALL_DIR) $(1)/usr/share/rockbox
-		$(INSTALL_BIN) $(FILES_DIR)/rockbox.sh $(1)/usr/share/rockbox
+	$(INSTALL_DIR) $(1)/usr/local/lib/rockbox/codecs
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/lib/rockbox/codecs/* $(1)/usr/local/lib/rockbox/codecs
+
+	$(INSTALL_DIR) $(1)/usr/local/lib/rockbox/rocks/apps
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/lib/rockbox/rocks/apps/* $(1)/usr/local/lib/rockbox/rocks/apps/
+	$(INSTALL_DIR) $(1)/usr/local/lib/rockbox/rocks/demos
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/lib/rockbox/rocks/demos/* $(1)/usr/local/lib/rockbox/rocks/demos/
+	$(INSTALL_DIR) $(1)/usr/local/lib/rockbox/rocks/games
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/lib/rockbox/rocks/games/* $(1)/usr/local/lib/rockbox/rocks/games/
+	$(INSTALL_DIR) $(1)/usr/local/lib/rockbox/rocks/viewers
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/lib/rockbox/rocks/viewers/*.rock $(1)/usr/local/lib/rockbox/rocks/viewers/
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/lib/rockbox/rocks/viewers/*.ovl $(1)/usr/local/lib/rockbox/rocks/viewers/
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/lib/rockbox/rocks/viewers/*.config $(1)/usr/local/lib/rockbox/rocks/viewers/
+	$(INSTALL_DIR) $(1)/usr/local/lib/rockbox/rocks/viewers/lua
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/lib/rockbox/rocks/viewers/lua/* $(1)/usr/local/lib/rockbox/rocks/viewers/lua/
+
+	$(INSTALL_DIR) $(1)/usr/local/share/rockbox
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/*.config $(1)/usr/local/share/rockbox/
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/*.txt $(1)/usr/local/share/rockbox/
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/*.ignore $(1)/usr/local/share/rockbox/
+		$(INSTALL_BIN) $(FILES_DIR)/rockbox.sh $(1)/usr/local/share/rockbox/
+
+	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/backdrops
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/backdrops/* $(1)/usr/local/share/rockbox/backdrops/
+	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/codepages
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/codepages/* $(1)/usr/local/share/rockbox/codepages/
+	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/docs
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/docs/* $(1)/usr/local/share/rockbox/docs/
+	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/eqs
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/eqs/* $(1)/usr/local/share/rockbox/eqs/
+	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/fonts
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/fonts/* $(1)/usr/local/share/rockbox/fonts/
+	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/icons
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/icons/* $(1)/usr/local/share/rockbox/icons/
+	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/langs
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/langs/* $(1)/usr/local/share/rockbox/langs/
+	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/themes
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/themes/* $(1)/usr/local/share/rockbox/themes/
+	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/wps
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/wps/*.* $(1)/usr/local/share/rockbox/wps/
+	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/wps/cabbiev2
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/wps/cabbiev2/* $(1)/usr/local/share/rockbox/wps/cabbiev2/
+	$(INSTALL_DIR) $(1)/usr/local/share/rockbox/wps/classic_statusbar
+		$(INSTALL_BIN) $(PKG_INSTALL_DIR)/share/rockbox/wps/classic_statusbar/* $(1)/usr/local/share/rockbox/wps/classic_statusbar/
 
 endef
 
