@@ -15,25 +15,6 @@ Index: apps/plugins/mp3_encoder.c
  #else
  #error No keymap defined!
  #endif
-Index: apps/plugins/superdom.c
-===================================================================
---- a/apps/plugins/superdom.c	(revision 29143)
-+++ b/apps/plugins/superdom.c	(working copy)
-@@ -182,6 +182,14 @@
- #define SUPERDOM_RIGHT  BUTTON_FF
- #define SUPERDOM_CANCEL BUTTON_MENU
- 
-+#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
-+#define SUPERDOM_OK     BUTTON_CENTER
-+#define SUPERDOM_UP     BUTTON_TOPMIDDLE
-+#define SUPERDOM_DOWN   BUTTON_BOTTOMMIDDLE
-+#define SUPERDOM_LEFT   BUTTON_MIDLEFT
-+#define SUPERDOM_RIGHT  BUTTON_MIDRIGHT
-+#define SUPERDOM_CANCEL BUTTON_TOPLEFT
-+
- #endif
- 
- #ifdef HAVE_TOUCHSCREEN
 Index: apps/plugins/sliding_puzzle.c
 ===================================================================
 --- a/apps/plugins/sliding_puzzle.c	(revision 29143)
@@ -1043,4 +1024,23 @@ Index: apps/plugins/invadrox.c
 +
  #else
      #error INVADROX: Unsupported keypad
+ #endif
+Index: apps/plugins/xworld/keymaps.h
+===================================================================
+--- a/apps/plugins/xworld/keymaps.h	(revision 29143)
++++ b/apps/plugins/xworld/keymaps.h	(working copy)
+@@ -178,6 +178,14 @@
+ #define BTN_FIRE       BUTTON_BOTTOMLEFT
+ #define BTN_PAUSE      BUTTON_TOPLEFT
+ 
++#elif CONFIG_KEYPAD == ZIPIT_Z2_PAD
++#define BTN_UP      BUTTON_TOPMIDDLE
++#define BTN_DOWN    BUTTON_BOTTOMMIDDLE
++#define BTN_LEFT    BUTTON_MIDLEFT
++#define BTN_RIGHT   BUTTON_MIDRIGHT
++#define BTN_FIRE   BUTTON_BOTTOMRIGHT
++#define BTN_PAUSE   BUTTON_CENTER
++
+ #else
+ #error Unsupported keypad
  #endif
