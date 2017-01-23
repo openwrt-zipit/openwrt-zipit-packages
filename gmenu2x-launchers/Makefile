@@ -457,3 +457,21 @@ define Package/gmenu2x-mplayer/install
 endef
 
 $(eval $(call BuildPackage,gmenu2x-mplayer))
+
+define Package/gmenu2x-rockbox
+	CATEGORY:=GMenu2X
+	TITLE:=rockbox launcher for gmenu2x
+	DEPENDS:=+gmenu2x +rockbox
+	VARIANT:=gmenu2x-rockbox
+endef
+
+define Package/gmenu2x-rockbox/install
+	$(INSTALL_DIR) \
+	$(1)/usr/share/gmenu2x/ \
+
+	$(CP) \
+		./files/rockbox/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-rockbox))

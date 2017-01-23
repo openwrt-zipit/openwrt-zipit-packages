@@ -1,0 +1,4 @@
+title=rockbox
+icon=skin:icons/rockbox.png
+exec=/usr/bin/rockbox
+clock=312
