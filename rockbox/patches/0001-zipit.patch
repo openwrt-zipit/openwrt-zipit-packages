@@ -112,9 +112,9 @@ Index: tools/configure
 +    app_type="sdl-app"
 +    target="ZIPIT_Z2"
 +    #app_set_paths
-+    sharedir="/usr/local/share/rockbox"
-+    bindir="/usr/local/bin"
-+    libdir="/usr/local/lib"
++    sharedir="/usr/share/rockbox"
++    bindir="/usr/bin"
++    libdir="/usr/lib"
 +    app_set_lcd_size 320 240
 +    memory=8
 +    uname=`uname`
