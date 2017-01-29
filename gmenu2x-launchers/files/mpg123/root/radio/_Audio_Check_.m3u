@@ -1,3 +1,3 @@
 #EXTM3U
 #EXTINF:-1,Beep Beep
-/root/radio/alarm.mp3
+/usr/share/sounds/alarm.mp3
