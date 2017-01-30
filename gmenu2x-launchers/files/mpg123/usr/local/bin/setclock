@@ -1,0 +1,64 @@
+#!/bin/sh
+#
+# Simple clock set UI
+#
+
+alarm=YYYYMMDDhhmm
+
+# ANSI colors (darK,Red,Green,Yellow,
+#  Blue,Magenta,Cyan,White,Normal)
+K="\033[1;30m"
+R="\033[1;31m"
+G="\033[1;32m"
+Y="\033[1;33m"
+B="\033[1;34m"
+M="\033[1;35m"
+C="\033[1;36m"
+W="\033[1;37m"
+N="\033[0m"
+
+ESC=`echo -e "\033"`
+
+cleanup () {
+echo -e "\033[0;00m"
+loadfont < /etc/consolefont.psf
+clear
+}
+
+giveup () {
+ret=$?
+cleanup
+#exit $ret
+# propagating C-c kills gmenu2x wrapper sh
+exit 0 
+# Wrapper may need: trap - INT TERM; ...
+}
+
+# Get LED state, then trap signals 
+trap giveup INT TERM
+
+# Make sure we can display latin chars for the cute little ö
+echo "$(printf "\033")%G"
+echo "$(printf "\033")%@"
+
+# Set alarm time.
+clear
+loadfont < /usr/share/consolefonts/ter-132b.psf
+echo -e "\033[2;0H      `date +"%H:%M %p"`"
+echo -e "\033[4;0H     `date +"%F"`"
+echo -e -n "\033[7;0H Set: "$R"$alarm"$B
+echo -e -n "\033[12D"
+read time
+case "$time" in
+  ????????????) alarm=$time ; date -s "$alarm" ;;
+  *) ;;
+esac
+echo $N
+
+cleanup
+echo date -s "\"$time\""
+echo ""
+echo "$(date)"
+echo ""
+
+exit 0
