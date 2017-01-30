@@ -1,0 +1,12 @@
+--- respeqt-r3.orig/respeqt.pro	2017-01-12 12:39:59.248425239 -0600
++++ respeqt-r3/respeqt.pro	2017-01-14 12:00:55.395860673 -0600
+@@ -17,7 +17,8 @@
+ QT += core gui network widgets printsupport
+ CONFIG += mobility
+ MOBILITY = bearer
+-INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
++#INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
++INCLUDEPATH += $(STAGING_DIR)/usr/include
+ SOURCES += main.cpp \
+     mainwindow.cpp \
+     sioworker.cpp \
