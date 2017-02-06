@@ -1,0 +1,6 @@
+title=sio2zipit
+icon=skin:icons/atari.png
+exec=/usr/bin/sio2zipit
+selectordir=/root/
+selectorbrowser=true
+selectorfilter=.atr

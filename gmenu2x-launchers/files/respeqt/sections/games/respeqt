@@ -1,0 +1,4 @@
+title=RespeQt
+icon=skin:icons/respeqt.png
+exec=/usr/bin/respeqt
+clock=312
