@@ -27,18 +27,25 @@ define Package/respeqt
   CATEGORY:=Emulators
   TITLE:=Atari SIO Peripheral Emulator
   URL:=https://github.com/jzatarski/RespeQt
-  DEPENDS:=+qt5base-core +qt5base-gui +qt5base-network +qt5base-printSupport \
-	+qt5base-plugin-platforms-linuxfb +qt5base-plugin-platforms-minimal \
-	+qt5base-widgets +libstdcpp +zlib 
+  DEPENDS:=+libstdcpp +zlib +qt5base-network +qt5base-plugin-input-evdevmouse \
+	+qt5base-core +qt5base-plugin-platforms-linuxfb +qt5base-plugin-input-evdevkeyboard \
+	+qt5base-printSupport +qt5base-widgets
 endef
 
 define Package/respeqt/description
 	Atari SIO Peripheral emulation via serial port. Emulates floppy, cassette and rs232.
 endef
 
+define Build/Configure
+	$(call Build/Configure/Default,respeqt)
+endef
+
 define Package/respeqt/install
 	$(INSTALL_DIR) $(1)/usr/bin
-		$(INSTALL_BIN) $(PKG_BUILD_DIR)/RespeQt $(1)/usr/bin/respeqt
+		$(INSTALL_BIN) $(PKG_BUILD_DIR)/RespeQt $(1)/usr/bin/respeqt.bin
+		$(INSTALL_BIN) ./files/respeqt.sh $(1)/usr/bin/respeqt
+	$(INSTALL_DIR) $(1)/root
+		$(INSTALL_DATA) ./files/respeqt.respeqt $(1)/root/.respeqt.respeqt
 endef
 
 $(eval $(call BuildPackage,respeqt))

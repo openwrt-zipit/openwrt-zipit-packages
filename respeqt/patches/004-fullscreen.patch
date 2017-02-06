@@ -1,0 +1,11 @@
+--- RespeQt.orig/main.cpp	2017-02-05 13:48:44.639475818 -0600
++++ RespeQt/main.cpp	2017-02-05 17:01:08.991242919 -0600
+@@ -26,7 +26,7 @@
+     QApplication a(argc, argv);
+ //    QTextCodec::setCodecForTr(QTextCodec::codecForName("utf8"));
+     MainWindow w;
+-    w.show();
++    w.showFullScreen();
+     ret = a.exec();
+ #ifdef Q_OS_WIN
+     timeEndPeriod(1);
