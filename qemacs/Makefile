@@ -6,7 +6,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=qemacs
 PKG_VERSION:=3.2
-PKG_REV:=9e4887f57e292ab8a194db38773e8a03f41dde47
+PKG_REV:=6c6311756c0e752362b24203bb4c993ae06d62fb
 PKG_RELEASE:=1
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=git://github.com/deeice/Qemacs.git
