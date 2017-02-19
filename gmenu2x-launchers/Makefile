@@ -432,6 +432,8 @@ define Package/gmenu2x-mpg123/install
 	$(INSTALL_DIR) $(1)/usr/share/consolefonts/
 	$(CP) ./files/mpg123/usr/share/consolefonts/* \
 		$(1)/usr/share/consolefonts/
+
+	$(INSTALL_DIR) $(1)/etc
 	$(LN) -s /usr/share/consolefonts/5x8iz2s.psf $(1)/etc/consolefont.psf
 endef
 
@@ -472,3 +474,42 @@ define Package/gmenu2x-rockbox/install
 endef
 
 $(eval $(call BuildPackage,gmenu2x-rockbox))
+
+define Package/gmenu2x-respeqt
+	CATEGORY:=GMenu2X
+	TITLE:=RespeQt launcher for gmenu2x
+	DEPENDS:=+gmenu2x +respeqt
+	VARIANT:=gmenu2x-respeqt
+endef
+
+define Package/gmenu2x-respeqt/install
+	$(INSTALL_DIR) \
+	$(1)/usr/share/gmenu2x/ \
+
+	$(CP) \
+		./files/respeqt/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-respeqt))
+
+define Package/gmenu2x-sio2zipit
+	CATEGORY:=GMenu2X
+	TITLE:=sio2bsd launcher for gmenu2x
+	DEPENDS:=+gmenu2x +sio2bsd
+	VARIANT:=gmenu2x-sio2zipit
+endef
+
+define Package/gmenu2x-sio2zipit/install
+	$(INSTALL_DIR) $(1)/usr/share/gmenu2x/
+	$(CP) \
+		./files/sio2zipit/gmenu2x/* \
+		$(1)/usr/share/gmenu2x/
+
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(CP) \
+		./files/sio2zipit/sio2zipit \
+		$(1)/usr/bin/sio2zipit
+endef
+
+$(eval $(call BuildPackage,gmenu2x-sio2zipit))

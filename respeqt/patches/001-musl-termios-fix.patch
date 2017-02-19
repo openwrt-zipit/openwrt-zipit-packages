@@ -1,0 +1,21 @@
+--- respeqt-r3.orig/serialport-unix.cpp	2017-01-12 12:39:59.248425239 -0600
++++ respeqt-r3/serialport-unix.cpp	2017-01-12 13:01:45.072451557 -0600
+@@ -22,6 +22,7 @@
+ #include <errno.h>
+ #include <sys/types.h>
+ #include <unistd.h>
++/* musl uses sys/ioctl.h and termios.h
+ #ifdef Q_OS_UNIX
+     #ifdef Q_OS_LINUX
+         #include <stropts.h>
+@@ -35,6 +36,10 @@
+         #define IOSSIOSPEED    _IOW('T', 2, speed_t)
+     #endif
+ #endif
++*/
++#include <termios.h>
++#include <sys/ioctl.h>
++#include <linux/serial.h>
+ 
+ AbstractSerialPortBackend::AbstractSerialPortBackend(QObject *parent)
+     : QObject(parent)
