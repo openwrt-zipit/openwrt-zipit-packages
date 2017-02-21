@@ -1,6 +1,6 @@
 --- orig.sz81-2.1.7/sdl_input.c	2017-02-20 15:55:46.472574116 -0600
-+++ sz81-2.1.7/sdl_input.c	2017-02-20 19:01:45.052799010 -0600
-@@ -820,11 +820,38 @@
++++ sz81-2.1.7/sdl_input.c	2017-02-20 19:20:13.020821341 -0600
+@@ -820,12 +820,39 @@
  		while (SDL_PollEvent(&event)) {
  			/* Get something we're interested in */
  			device = id = mod_id = state = UNDEFINED;
@@ -10,7 +10,8 @@
  				case SDL_KEYDOWN:
  					device = DEVICE_KEYBOARD;
  					id = event.key.keysym.sym;
-+					if (modstate & (KMOD_LCTRL | KMOD_RCTRL)) {
+ 					state = event.key.state;
++					if (modstate & (KMOD_LCTRL | KMOD_RCTRL) && (state == SDL_PRESSED)) {
 +						if (id == SDLK_q)
 +							id = SDLK_F1;
 +						if (id == SDLK_w)
@@ -36,6 +37,6 @@
 +						if (id == SDLK_END)
 +							id = SDLK_F12;
 +					}
- 					state = event.key.state;
  					break;
  				case SDL_MOUSEMOTION:
+ 					/* Added in 2.1.7: if a hotspot has the draggable property set
