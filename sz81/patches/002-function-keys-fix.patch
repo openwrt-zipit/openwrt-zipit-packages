@@ -1,0 +1,41 @@
+--- orig.sz81-2.1.7/sdl_input.c	2017-02-20 15:55:46.472574116 -0600
++++ sz81-2.1.7/sdl_input.c	2017-02-20 19:01:45.052799010 -0600
+@@ -820,11 +820,38 @@
+ 		while (SDL_PollEvent(&event)) {
+ 			/* Get something we're interested in */
+ 			device = id = mod_id = state = UNDEFINED;
++			modstate = SDL_GetModState();
+ 			switch (event.type) {
+ 				case SDL_KEYUP:
+ 				case SDL_KEYDOWN:
+ 					device = DEVICE_KEYBOARD;
+ 					id = event.key.keysym.sym;
++					if (modstate & (KMOD_LCTRL | KMOD_RCTRL)) {
++						if (id == SDLK_q)
++							id = SDLK_F1;
++						if (id == SDLK_w)
++							id = SDLK_F2;
++						if (id == SDLK_e)
++							id = SDLK_F3;
++						if (id == SDLK_r)
++							id = SDLK_F4;
++						if (id == SDLK_t)
++							id = SDLK_F5;
++						if (id == SDLK_y)
++							id = SDLK_F6;
++						if (id == SDLK_u)
++							id = SDLK_F7;
++						if (id == SDLK_i)
++							id = SDLK_F8;
++						if (id == SDLK_o)
++							id = SDLK_F9;
++						if (id == SDLK_p)
++							id = SDLK_F10;
++						if (id == SDLK_HOME)
++							id = SDLK_F11;
++						if (id == SDLK_END)
++							id = SDLK_F12;
++					}
+ 					state = event.key.state;
+ 					break;
+ 				case SDL_MOUSEMOTION:
