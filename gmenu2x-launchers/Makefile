@@ -513,3 +513,20 @@ define Package/gmenu2x-sio2zipit/install
 endef
 
 $(eval $(call BuildPackage,gmenu2x-sio2zipit))
+
+define Package/gmenu2x-sz81
+    CATEGORY:=GMenu2X
+    TITLE:=sz81 launcher for gmenu2x
+    DEPENDS:=+gmenu2x +sz81
+    VARIANT:=gmenu2x-sz81
+endef
+
+define Package/gmenu2x-sz81/install
+	$(INSTALL_DIR) $(1)/usr/share/gmenu2x/
+
+	$(CP) \
+		./files/sz81/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-sz81))

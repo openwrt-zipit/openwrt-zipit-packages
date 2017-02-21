@@ -1,0 +1,31 @@
+--- orig.sz81-2.1.7/Makefile	2017-02-20 15:55:46.472574116 -0600
++++ sz81-2.1.7/Makefile	2017-02-20 15:58:07.252576954 -0600
+@@ -1,9 +1,9 @@
+ # Comment/uncomment these to choose an installation destination
+ # System wide installation
+-#PREFIX?=/usr/local
+-#BINDIR?=$(PREFIX)/bin
+-#DOCDIR?=$(PREFIX)/share/doc/$(TARGET)
+-#PACKAGE_DATA_DIR?=$(PREFIX)/share/$(TARGET)
++PREFIX?=/usr
++BINDIR?=$(PREFIX)/bin
++DOCDIR?=$(PREFIX)/share/doc/$(TARGET)
++PACKAGE_DATA_DIR?=$(PREFIX)/share/$(TARGET)
+ 
+ # Local installation within your home folder
+ #PREFIX?=$(HOME)/Games/$(TARGET)
+@@ -12,10 +12,10 @@
+ #PACKAGE_DATA_DIR?=$(PREFIX)/data
+ 
+ # Run from current folder i.e. no installation
+-PREFIX?=.
+-BINDIR?=$(PREFIX)
+-DOCDIR?=$(PREFIX)
+-PACKAGE_DATA_DIR?=$(PREFIX)/data
++#PREFIX?=.
++#BINDIR?=$(PREFIX)
++#DOCDIR?=$(PREFIX)
++#PACKAGE_DATA_DIR?=$(PREFIX)/data
+ 
+ # For sz81 OSS_SOUND_SUPPORT is now synonymous with SDL_SOUND_SUPPORT.
+ # Comment this out if you don't want sound support.
