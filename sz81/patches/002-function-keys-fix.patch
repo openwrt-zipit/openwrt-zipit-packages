@@ -1,42 +1,176 @@
 --- orig.sz81-2.1.7/sdl_input.c	2017-02-20 15:55:46.472574116 -0600
-+++ sz81-2.1.7/sdl_input.c	2017-02-20 19:20:13.020821341 -0600
-@@ -820,12 +820,39 @@
- 		while (SDL_PollEvent(&event)) {
- 			/* Get something we're interested in */
++++ sz81-2.1.7/sdl_input.c	2017-02-21 21:24:42.250713215 -0600
+@@ -78,6 +78,10 @@
+ /* This is used by the joystick configurator to store control ids */
+ int runopts_joy_cfg_id[12];
+ 
++/* These hold alt modifier states for Zipit Z2 */
++int alt_id = UNDEFINED;
++int alt_state = UNDEFINED;
++
+ char *keysyms[] = {
+ 	"SDLK_UNKNOWN", "SDLK_FIRST", "SDLK_BACKSPACE", "SDLK_TAB", "SDLK_CLEAR", 
+ 	"SDLK_RETURN", "SDLK_PAUSE", "SDLK_ESCAPE", "SDLK_SPACE", "SDLK_EXCLAIM", 
+@@ -750,6 +754,77 @@
+ 
+ }
+ 
++/* Translate numbers and symbols with alt modifier on Zipit Z2 */
++int get_zipit_altkey(int check_id){
++	switch (check_id) {
++		/* q thru p */
++		case SDLK_q:
++			check_id = SDLK_1; break;
++		case SDLK_w:
++			check_id = SDLK_2; break;
++		case SDLK_e:
++			check_id = SDLK_3; break;
++		case SDLK_r:
++			check_id = SDLK_4; break;
++		case SDLK_t:
++			check_id = SDLK_5; break;
++		case SDLK_y:
++			check_id = SDLK_6; break;
++		case SDLK_u:
++			check_id = SDLK_7; break;
++		case SDLK_i:
++			check_id = SDLK_8; break;
++		case SDLK_o:
++			check_id = SDLK_9; break;
++		case SDLK_p:
++			check_id = SDLK_0; break;
++		/* a thru backspace */
++		case SDLK_a:
++			check_id = SDLK_DOLLAR; break;
++		case SDLK_s:
++			check_id = SDLK_HASH; break;
++		case SDLK_d:
++			check_id = SDLK_AMPERSAND; break;
++		case SDLK_f:
++			check_id = SDLK_AT; break;
++		case SDLK_g:
++			check_id = SDLK_QUOTEDBL; break;
++		case SDLK_h:
++			check_id = SDLK_QUOTE; break;
++		case SDLK_j:
++			check_id = SDLK_LEFTBRACKET; break;
++		case SDLK_k:
++			check_id = SDLK_RIGHTBRACKET; break;
++		case SDLK_l:
++			check_id = SDLK_MINUS; break;
++		case SDLK_BACKSPACE:
++			check_id = SDLK_DELETE; break;
++		/* z thru semicolon */
++		case SDLK_z:
++			check_id = SDLK_EXCLAIM; break;
++		case SDLK_x:
++			check_id = SDLK_SLASH; break;
++		case SDLK_c:
++			check_id = SDLK_PLUS; break;
++		case SDLK_v:
++			check_id = SDLK_ASTERISK; break;
++		case SDLK_b:
++			check_id = SDLK_EQUALS; break;
++		case SDLK_n:
++			check_id = SDLK_UNDERSCORE; break;
++		case SDLK_m:
++			check_id = SDLK_QUESTION; break;
++		case SDLK_SEMICOLON:
++			check_id = SDLK_COLON; break;
++		/* comma and period */
++		case SDLK_COMMA:
++			check_id = SDLK_LESS; break;
++		case SDLK_PERIOD:
++			check_id = SDLK_GREATER; break;
++	}
++	return check_id;
++}
++
+ /***************************************************************************
+  * Keyboard Update                                                         *
+  ***************************************************************************/
+@@ -822,10 +897,60 @@
  			device = id = mod_id = state = UNDEFINED;
-+			modstate = SDL_GetModState();
  			switch (event.type) {
  				case SDL_KEYUP:
++					device = DEVICE_KEYBOARD;
++					id = event.key.keysym.sym;
++					state = event.key.state;
++					/* Zipit Z2: Check if we were translating alt modifier
++					 * and do key release */
++					if ( alt_state == SDL_PRESSED && alt_id == id ) {
++						alt_state = UNDEFINED;
++						alt_id = UNDEFINED;
++						id = get_zipit_altkey(id);
++						state = SDL_RELEASED;
++						break;
++					}
  				case SDL_KEYDOWN:
  					device = DEVICE_KEYBOARD;
  					id = event.key.keysym.sym;
  					state = event.key.state;
-+					if (modstate & (KMOD_LCTRL | KMOD_RCTRL) && (state == SDL_PRESSED)) {
-+						if (id == SDLK_q)
-+							id = SDLK_F1;
-+						if (id == SDLK_w)
-+							id = SDLK_F2;
-+						if (id == SDLK_e)
-+							id = SDLK_F3;
-+						if (id == SDLK_r)
-+							id = SDLK_F4;
-+						if (id == SDLK_t)
-+							id = SDLK_F5;
-+						if (id == SDLK_y)
-+							id = SDLK_F6;
-+						if (id == SDLK_u)
-+							id = SDLK_F7;
-+						if (id == SDLK_i)
-+							id = SDLK_F8;
-+						if (id == SDLK_o)
-+							id = SDLK_F9;
-+						if (id == SDLK_p)
-+							id = SDLK_F10;
-+						if (id == SDLK_HOME)
-+							id = SDLK_F11;
-+						if (id == SDLK_END)
-+							id = SDLK_F12;
++					modstate = SDL_GetModState();
++					/* Zipit Z2: Use CTRL for function keys */
++					if (modstate & (KMOD_CTRL) && (state == SDL_PRESSED)) {
++						switch (id) {
++							case SDLK_q: /* Toggle the virtual keyboard */
++								id = SDLK_F1; break;
++							case SDLK_w: /* Toggle runtime options */
++								id = SDLK_F2; break;
++							case SDLK_e: /* Toggle the load file dialog */
++								id = SDLK_F3; break;
++							case SDLK_r: /* Toggle save state dialog in save mode */
++								id = SDLK_F4; break;
++							case SDLK_t: /* Toggle save state dialog in load mode */
++								id = SDLK_F5; break;
++							case SDLK_y: /* Not used */
++								id = SDLK_F6; break;
++							case SDLK_u: /* Not used */
++								id = SDLK_F7; break;
++							case SDLK_i: /* Toggle invert screen */
++								id = SDLK_F8; break;
++							case SDLK_o: /* Simulate a control remapper press */
++								id = SDLK_F9; break;
++							case SDLK_p: /* Exit the emulator */
++								id = SDLK_F10;  break;
++							case SDLK_HOME: /* Toggle fullscreen on supported platforms */
++								id = SDLK_F11; break;
++							case SDLK_END: /* Reset the emulator */
++								id = SDLK_F12; break;
++							case SDLK_ESCAPE: /* CTRL-ESC is easy to remember for quit :) */
++								id = SDLK_F10; break;
++						}
++					}
++					/* Zipit Z2: translate alt modifier keys */
++					if (modstate & KMOD_ALT && state == SDL_PRESSED) {
++						alt_state = SDL_PRESSED;
++						alt_id = id;
++						id = get_zipit_altkey(id);
 +					}
  					break;
  				case SDL_MOUSEMOTION:
  					/* Added in 2.1.7: if a hotspot has the draggable property set
+@@ -1079,14 +1204,15 @@
+ 				if (device == DEVICE_KEYBOARD) {
+ 					found = FALSE;
+ 					modstate = SDL_GetModState();
+-					if (id == SDLK_r && (modstate & (KMOD_ALT | KMOD_MODE))) {
+-						/* Cycle screen resolutions on supported platforms */
+-						if (state == SDL_PRESSED) {
+-							cycle_resolutions();
+-							sdl_video_setmode();
+-						}
+-						found = TRUE;
+-					}
++/* We don't change resolution on the Zipit
++ *					if (id == SDLK_r && (modstate & (KMOD_ALT | KMOD_MODE))) {
++ *						// Cycle screen resolutions on supported platforms
++ *						if (state == SDL_PRESSED) {
++ *							cycle_resolutions();
++ *							sdl_video_setmode();
++ *						}
++ *						found = TRUE;
++ *					}*/
+ 					if (found) device = UNDEFINED;	/* Ignore id and mod_id */
+ 				}
+ 
