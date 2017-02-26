@@ -1,0 +1,156 @@
+--- orig.fuse-1.3.3/ui/sdl/sdlui.c	2017-02-26 11:20:26.826689192 -0600
++++ fuse-1.3.3/ui/sdl/sdlui.c	2017-02-26 14:24:03.562911227 -0600
+@@ -38,6 +38,13 @@
+ #include "ui/scaler/scaler.h"
+ #include "menu.h"
+ 
++/* These hold modifier states for Zipit Z2 */
++#define UNDEFINED -1
++int alt_id = UNDEFINED;
++int alt_state = UNDEFINED;
++int ctrl_id = UNDEFINED;
++int ctrl_state = UNDEFINED;
++
+ static void
+ atexit_proc( void )
+ { 
+@@ -71,6 +78,111 @@
+   return 0;
+ }
+ 
++/* Translate modifier keys for Zipit Z2 */
++int
++translate_z2_key( int id, int mod_id ){
++  if (mod_id & KMOD_CTRL){
++	switch (id) {
++	  case SDLK_q: /* Main Menu */
++		  id = SDLK_F1; break;
++	  case SDLK_w: /* Save snapshot */
++		  id = SDLK_F2; break;
++	  case SDLK_e: /* Open file */
++		  id = SDLK_F3; break;
++	  case SDLK_r: /* General Options */
++		  id = SDLK_F4; break;
++	  case SDLK_t: /* Reset Emulator */
++		  id = SDLK_F5; break;
++	  case SDLK_y: /* Write Tape */
++		  id = SDLK_F6; break;
++	  case SDLK_u: /* Open Tape */
++		  id = SDLK_F7; break;
++	  case SDLK_i: /* Not used? */
++		  id = SDLK_F8; break;
++	  case SDLK_o: /* Select Emulated Machine */
++		  id = SDLK_F9; break;
++	  case SDLK_p: /* Exit the emulator */
++		  id = SDLK_F10;  break;
++	  case SDLK_HOME: /* Not used? */
++		  id = SDLK_F11; break;
++	  case SDLK_END: /* Not used? */
++		  id = SDLK_F12; break;
++	  case SDLK_ESCAPE: /* CTRL-ESC is easy to remember for quit :) */
++		  id = SDLK_F10; break;
++	}
++	//printf("Z2 CTRL Key: %i\n", id);		
++  } else if (mod_id & KMOD_ALT){
++	switch (id) {
++		/* q thru p */
++		case SDLK_q:
++			id = SDLK_1; break;
++		case SDLK_w:
++			id = SDLK_2; break;
++		case SDLK_e:
++			id = SDLK_3; break;
++		case SDLK_r:
++			id = SDLK_4; break;
++		case SDLK_t:
++			id = SDLK_5; break;
++		case SDLK_y:
++			id = SDLK_6; break;
++		case SDLK_u:
++			id = SDLK_7; break;
++		case SDLK_i:
++			id = SDLK_8; break;
++		case SDLK_o:
++			id = SDLK_9; break;
++		case SDLK_p:
++			id = SDLK_0; break;
++		/* a thru backspace */
++		case SDLK_a:
++			id = SDLK_DOLLAR; break;
++		case SDLK_s:
++			id = SDLK_HASH; break;
++		case SDLK_d:
++			id = SDLK_AMPERSAND; break;
++		case SDLK_f:
++			id = SDLK_AT; break;
++		case SDLK_g:
++			id = SDLK_QUOTEDBL; break;
++		case SDLK_h:
++			id = SDLK_QUOTE; break;
++		case SDLK_j:
++			id = SDLK_LEFTBRACKET; break;
++		case SDLK_k:
++			id = SDLK_RIGHTBRACKET; break;
++		case SDLK_l:
++			id = SDLK_MINUS; break;
++		case SDLK_BACKSPACE:
++			id = SDLK_DELETE; break;
++		/* z thru semicolon */
++		case SDLK_z:
++			id = SDLK_EXCLAIM; break;
++		case SDLK_x:
++			id = SDLK_SLASH; break;
++		case SDLK_c:
++			id = SDLK_PLUS; break;
++		case SDLK_v:
++			id = SDLK_ASTERISK; break;
++		case SDLK_b:
++			id = SDLK_EQUALS; break;
++		case SDLK_n:
++			id = SDLK_UNDERSCORE; break;
++		case SDLK_m:
++			id = SDLK_QUESTION; break;
++		case SDLK_SEMICOLON:
++			id = SDLK_COLON; break;
++		/* comma and period */
++		case SDLK_COMMA:
++			id = SDLK_LESS; break;
++		case SDLK_PERIOD:
++			id = SDLK_GREATER; break;
++	}
++	//printf("Z2 ALT Key: %i\n", id);		
++  }
++  return id;
++}
++
+ int 
+ ui_event( void )
+ {
+@@ -79,9 +191,27 @@
+   while ( SDL_PollEvent( &event ) ) {
+     switch ( event.type ) {
+     case SDL_KEYDOWN:
++	  if ( (event.key.keysym.mod & KMOD_CTRL) && (event.key.state == SDL_PRESSED) ) {
++		ctrl_id = event.key.keysym.sym;
++		ctrl_state = SDL_PRESSED;
++		event.key.keysym.sym = translate_z2_key( event.key.keysym.sym, event.key.keysym.mod );
++	  } else if ( (event.key.keysym.mod & KMOD_ALT) && (event.key.state == SDL_PRESSED) ){
++		alt_id = event.key.keysym.sym;
++		alt_state = SDL_PRESSED;
++		event.key.keysym.sym = translate_z2_key( event.key.keysym.sym, event.key.keysym.mod );
++	  }
+       sdlkeyboard_keypress( &(event.key) );
+       break;
+     case SDL_KEYUP:
++	  if ( ctrl_state == SDL_PRESSED && ctrl_id == event.key.keysym.sym ) {
++		  ctrl_state = UNDEFINED;
++		  ctrl_id = UNDEFINED;
++		  event.key.keysym.sym = translate_z2_key( event.key.keysym.sym, KMOD_CTRL );
++	  } else if ( alt_state == SDL_PRESSED && alt_id == event.key.keysym.sym ) {
++		  alt_state = UNDEFINED;
++		  alt_id = UNDEFINED;
++		  event.key.keysym.sym = translate_z2_key( event.key.keysym.sym, KMOD_ALT );
++	  }
+       sdlkeyboard_keyrelease( &(event.key) );
+       break;
+ 
