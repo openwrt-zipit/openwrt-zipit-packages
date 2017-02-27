@@ -1,6 +1,6 @@
 --- orig.fuse-1.3.3/ui/sdl/sdlui.c	2017-02-26 11:20:26.826689192 -0600
-+++ fuse-1.3.3/ui/sdl/sdlui.c	2017-02-26 14:24:03.562911227 -0600
-@@ -38,6 +38,13 @@
++++ fuse-1.3.3/ui/sdl/sdlui.c	2017-02-26 18:58:07.003242634 -0600
+@@ -38,6 +38,15 @@
  #include "ui/scaler/scaler.h"
  #include "menu.h"
  
@@ -10,18 +10,20 @@
 +int alt_state = UNDEFINED;
 +int ctrl_id = UNDEFINED;
 +int ctrl_state = UNDEFINED;
++int ctrl_alt_id = UNDEFINED;
++int ctrl_alt_state = UNDEFINED;
 +
  static void
  atexit_proc( void )
  { 
-@@ -71,6 +78,111 @@
+@@ -71,6 +80,117 @@
    return 0;
  }
  
 +/* Translate modifier keys for Zipit Z2 */
 +int
 +translate_z2_key( int id, int mod_id ){
-+  if (mod_id & KMOD_CTRL){
++  if (mod_id == 576){
 +	switch (id) {
 +	  case SDLK_q: /* Main Menu */
 +		  id = SDLK_F1; break;
@@ -50,7 +52,13 @@
 +	  case SDLK_ESCAPE: /* CTRL-ESC is easy to remember for quit :) */
 +		  id = SDLK_F10; break;
 +	}
-+	//printf("Z2 CTRL Key: %i\n", id);		
++	//printf("Z2 CTRL-ALT Key: %i\n", id);
++  } else if (mod_id & KMOD_CTRL){
++	switch (id) {
++	  case SDLK_ESCAPE: /* CTRL-ESC is easy to remember for quit :) */
++		  id = SDLK_F10; break;
++	}
++	//printf("Z2 CTRL Key: %i\n", id);
 +  } else if (mod_id & KMOD_ALT){
 +	switch (id) {
 +		/* q thru p */
@@ -126,11 +134,16 @@
  int 
  ui_event( void )
  {
-@@ -79,9 +191,27 @@
+@@ -79,9 +199,36 @@
    while ( SDL_PollEvent( &event ) ) {
      switch ( event.type ) {
      case SDL_KEYDOWN:
-+	  if ( (event.key.keysym.mod & KMOD_CTRL) && (event.key.state == SDL_PRESSED) ) {
++	  //printf("mod: %i\n", event.key.keysym.mod);
++	  if ( (event.key.keysym.mod == 576) && (event.key.state == SDL_PRESSED) ) {
++		ctrl_alt_id = event.key.keysym.sym;
++		ctrl_alt_state = SDL_PRESSED;
++		event.key.keysym.sym = translate_z2_key( event.key.keysym.sym, event.key.keysym.mod );
++	  } else if ( (event.key.keysym.mod & KMOD_CTRL) && (event.key.state == SDL_PRESSED) ){
 +		ctrl_id = event.key.keysym.sym;
 +		ctrl_state = SDL_PRESSED;
 +		event.key.keysym.sym = translate_z2_key( event.key.keysym.sym, event.key.keysym.mod );
@@ -142,7 +155,11 @@
        sdlkeyboard_keypress( &(event.key) );
        break;
      case SDL_KEYUP:
-+	  if ( ctrl_state == SDL_PRESSED && ctrl_id == event.key.keysym.sym ) {
++	  if ( ctrl_alt_state == SDL_PRESSED && ctrl_alt_id == event.key.keysym.sym ) {
++		  ctrl_alt_state = UNDEFINED;
++		  ctrl_alt_id = UNDEFINED;
++		  event.key.keysym.sym = translate_z2_key( event.key.keysym.sym, 576 );
++	  } else if ( ctrl_state == SDL_PRESSED && ctrl_id == event.key.keysym.sym ) {
 +		  ctrl_state = UNDEFINED;
 +		  ctrl_id = UNDEFINED;
 +		  event.key.keysym.sym = translate_z2_key( event.key.keysym.sym, KMOD_CTRL );
@@ -154,3 +171,16 @@
        sdlkeyboard_keyrelease( &(event.key) );
        break;
  
+--- orig.fuse-1.3.3/ui/sdl/keysyms.c	2017-02-26 11:20:26.826689192 -0600
++++ fuse-1.3.3/ui/sdl/keysyms.c	2017-02-26 17:11:13.671113378 -0600
+@@ -129,8 +129,8 @@
+   { SDLK_RSHIFT,       INPUT_KEY_Shift_R      },
+   { SDLK_LCTRL,        INPUT_KEY_Control_L    },
+   { SDLK_RCTRL,        INPUT_KEY_Control_R    },
+-  { SDLK_LALT,         INPUT_KEY_Alt_L        },
+-  { SDLK_RALT,         INPUT_KEY_Alt_R        },
++/*  { SDLK_LALT,         INPUT_KEY_Alt_L        },
++  { SDLK_RALT,         INPUT_KEY_Alt_R        },*/
+   { SDLK_LMETA,        INPUT_KEY_Meta_L       },
+   { SDLK_RMETA,        INPUT_KEY_Meta_R       },
+   { SDLK_LSUPER,       INPUT_KEY_Super_L      },
