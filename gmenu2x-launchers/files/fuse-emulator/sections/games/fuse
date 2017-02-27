@@ -1,0 +1,4 @@
+title=FUSE
+icon=skin:icons/fuse.png
+exec=/usr/share/gmenu2x/scripts/fuse.sh
+clock=416

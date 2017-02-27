@@ -530,3 +530,20 @@ define Package/gmenu2x-sz81/install
 endef
 
 $(eval $(call BuildPackage,gmenu2x-sz81))
+
+define Package/gmenu2x-fuse-emulator
+    CATEGORY:=GMenu2X
+    TITLE:=fuse-emulator launcher for gmenu2x
+    DEPENDS:=+gmenu2x +fuse-emulator +termfix
+    VARIANT:=gmenu2x-fuse-emulator
+endef
+
+define Package/gmenu2x-fuse-emulator/install
+	$(INSTALL_DIR) $(1)/usr/share/gmenu2x/
+
+	$(CP) \
+		./files/fuse-emulator/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-fuse-emulator))
