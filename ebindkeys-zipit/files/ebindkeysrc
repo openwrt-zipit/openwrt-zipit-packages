@@ -51,6 +51,13 @@ event
 
 event
 {
+	# CTRL-Prev: Turns on/off LCD Backlight Timer
+	action = "LCD_TIMER_TOGGLE"
+	keys = {0x1d,0x68}
+}
+
+event
+{
 	#Home:
 	action = "/usr/share/gmenu2x/scripts/onHome"
 	keys = {0x66} 

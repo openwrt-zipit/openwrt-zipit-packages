@@ -35,13 +35,8 @@ define Package/ebindkeys-zipit/description
 	ebindkeys-zipit lets you bind a key or key-combo to a command, now with keymouse and bldaemon
 endef
 
-#define Build/Compile
-#	$(TARGET_CC) -s -Os -o $(PKG_BUILD_DIR)/sendtty $(PKG_BUILD_DIR)/sendtty.c
-#endef
-
 define Package/ebindkeys-zipit/install
-	$(CP) ./files/sendtty.c $(PKG_BUILD_DIR)/
-		$(TARGET_CC) -s -Os -o $(PKG_BUILD_DIR)/sendtty $(PKG_BUILD_DIR)/sendtty.c
+	$(TARGET_CC) -s -Os -o $(PKG_BUILD_DIR)/sendtty ./files/sendtty.c
 	$(INSTALL_DIR) $(1)/usr/local/bin
 		$(INSTALL_BIN) ./files/onStop $(1)/usr/local/bin/onStop
 		$(INSTALL_BIN) ./files/onPlay $(1)/usr/local/bin/onPlay
