@@ -33,8 +33,8 @@ CONFIGURE_ARGS+= \
 	--with-ncursesw \
 
 define Package/dialog/install
-	$(INSTALL_DIR) $(1)/opt/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/dialog $(1)/opt/bin
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/dialog $(1)/usr/bin
 endef
 
 $(eval $(call BuildPackage,dialog))
