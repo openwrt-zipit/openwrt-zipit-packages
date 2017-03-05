@@ -8,6 +8,8 @@ export SDL_NOMOUSE=1
 export SDL_VIDEO_FBCON_ROTATION=CCW
 export SDL_AUDIODRIVER=alsa
 
+export LANG=C
+
 # Set TERM var if regular shell
 if [ -z "${TMUX+1}" ] && [ -z "${SSH_CLIENT+1}" ]; then
 	export TERM=linux
