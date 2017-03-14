@@ -30,8 +30,9 @@ endef
 
 define Build/Compile
 	( cd $(PKG_BUILD_DIR)/ && \
-	$(TARGET_CC) *.c -o ziptuner
-	$(TARGET_CROSS)strip $(PKG_BUILD_DIR)/ziptuner
+		CFLAGS="$(TARGET_CFLAGS)" \
+		$(TARGET_CC) *.c -o ziptuner -lcurl && \
+		$(TARGET_CROSS)strip $(PKG_BUILD_DIR)/ziptuner )
 endef
 
 define Package/ziptuner/install
