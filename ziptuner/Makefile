@@ -28,17 +28,9 @@ define Package/ziptuner
   DEPENDS:=+libcurl
 endef
 
-define Build/Prepare
-	$(CP) $(FILES_DIR)/ziptuner.c $(PKG_BUILD_DIR)
-endef
-
-define Build/Configure
-
-endef
-
 define Build/Compile
 	( cd $(PKG_BUILD_DIR)/ && \
-	$(TARGET_CC) *.c -o ziptuner -L$(PKG_BUILD_DIR) $(TARGET_LDFLAGS)
+	$(TARGET_CC) *.c -o ziptuner
 	$(TARGET_CROSS)strip $(PKG_BUILD_DIR)/ziptuner
 endef
 
