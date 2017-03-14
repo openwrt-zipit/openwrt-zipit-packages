@@ -9,15 +9,15 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ziptuner
 PKG_VERSION:=1
-PKG_REV:=1cfe50bdca803d226cdcbcb0ba8a72027b181d0d
+PKG_REV:=043a4ac832f582cc13de650573f431482c44a506
 PKG_RELEASE:=1
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.gz
 PKG_SOURCE_URL:=git://github.com/deeice/ziptuner.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_REV)
 PKG_SOURCE_VERSION:=$(PKG_REV)
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_REV)
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -25,7 +25,7 @@ define Package/ziptuner
   SECTION:=multimedia
   CATEGORY:=Multimedia
   TITLE:=Zippy Internet Radio Tuner
-  DEPENDS:=+libcurl
+  DEPENDS:=+libcurl +dialog
 endef
 
 define Build/Compile
@@ -37,8 +37,11 @@ endef
 
 define Package/ziptuner/install
 	$(INSTALL_DIR) $(1)/usr/bin 
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/ziptuner $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/ziptuner $(1)/usr/bin/ziptuner.bin
+	$(INSTALL_BIN) ./files/ziptuner.sh $(1)/usr/bin/ziptuner
+
+	$(INSTALL_DIR) $(1)/usr/share/ziptuner
+	$(INSTALL_DATA) ./files/dialogrc.soho $(1)/usr/share/ziptuner/
 endef
 
 $(eval $(call BuildPackage,ziptuner))
-
