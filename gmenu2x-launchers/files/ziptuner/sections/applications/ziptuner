@@ -1,0 +1,3 @@
+title=tuner
+icon=skin:icons/tuner.png
+exec=/usr/bin/ziptuner
