@@ -15,7 +15,8 @@ fi
 # Look for console progs.  If so, send a space to the right tty.
 key=" "
 task="-e mpg123 -e mplayer"
-pid=$(echo "$ps" |grep $task |grep -v grep)
+# limit ps to cols 1-6 to match only progname, not args
+pid=$(echo "$ps" | sed -e 's/^/ /' -e 's/ \{1,\}/ /g' |cut -d " " -f-6 |grep $task)
 #echo task $task cmd is ${pid} >/tmp/play.txt
 if [ ! -z "${pid}" ] ; then
   pid=$(echo ${pid} | sed 's/^[ \t]+//g' | cut -d " " -f 1)
