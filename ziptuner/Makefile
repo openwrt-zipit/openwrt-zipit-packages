@@ -31,7 +31,7 @@ endef
 define Build/Compile
 	( cd $(PKG_BUILD_DIR)/ && \
 		CFLAGS="$(TARGET_CFLAGS)" \
-		$(TARGET_CC) *.c -o ziptuner -lcurl && \
+		$(TARGET_CC) -Os *.c -o ziptuner -lcurl && \
 		$(TARGET_CROSS)strip $(PKG_BUILD_DIR)/ziptuner )
 endef
 
@@ -45,7 +45,7 @@ define Package/ziptuner/install
 	$(INSTALL_DATA) ./files/onPlay $(1)/usr/share/ziptuner/
 
 	$(INSTALL_DIR) $(1)/usr/local/bin 
-	$(INSTALL_DATA) ./files/mpg123tty4 $(1)/usr/local/bin/
+	$(INSTALL_DATA) ./files/mplayertty4 $(1)/usr/local/bin/
 endef
 
 $(eval $(call BuildPackage,ziptuner))
