@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ziptuner
 PKG_VERSION:=1
-PKG_REV:=043a4ac832f582cc13de650573f431482c44a506
+PKG_REV:=993bd10bb42ec2be3a0838e92a728f5cbc4e855b
 PKG_RELEASE:=1
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.gz
 PKG_SOURCE_URL:=git://github.com/deeice/ziptuner.git
@@ -42,6 +42,10 @@ define Package/ziptuner/install
 
 	$(INSTALL_DIR) $(1)/usr/share/ziptuner
 	$(INSTALL_DATA) ./files/dialogrc.soho $(1)/usr/share/ziptuner/
+	$(INSTALL_DATA) ./files/onPlay $(1)/usr/share/ziptuner/
+
+	$(INSTALL_DIR) $(1)/usr/local/bin 
+	$(INSTALL_DATA) ./files/mpg123tty4 $(1)/usr/local/bin/
 endef
 
 $(eval $(call BuildPackage,ziptuner))
