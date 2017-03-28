@@ -1,0 +1,4 @@
+title=Sleeptimer
+icon=skin:icons/sleep.png
+exec=/usr/local/bin/sleeptimer
+newTerm=false

@@ -1,0 +1,68 @@
+#!/bin/sh
+# Set sleep timer to stop music.
+
+## Add the following to /usr/share/gmenu2x/scripts/launch
+## at the end of app.stop case to allow stopping the sleep
+## timer from gmenu2x app list (tab/Zipit button, then
+## bkspc to kill the app)
+
+# for app in /tmp/apps/*; do
+# 	cat "$app" | grep -q "$pid"
+# 	if [ $? -eq 0 ]; then
+# 		rm "$app"
+# 		if [ -e "/tmp/vt/$(basename $app)" ]; then
+# 			rm "/tmp/vt/$(basename $app)"
+# 		fi
+# 		exit 0
+# 	fi
+# done
+
+pidfile="/tmp/apps/sleeptimer"
+
+# If we got an arg, assume its minutes til stop.
+if [ $# -ne 0 ] ; then
+	echo "$$" > "$pidfile"
+	minutes="$1"
+	sleep $(( minutes * 60  ))
+	onStop
+	rm "$pidfile"
+	exit 0
+fi
+
+export LANG=C
+if [ -e "/usr/share/ziptuner/dialogrc.soho" ]; then
+	export DIALOGRC=/usr/share/ziptuner/dialogrc.soho
+fi
+DIALOGSIZE="15 45"
+dialog --title "Radio Sleep/Shutoff Timer" --menu "How long before the music stops?" $DIALOGSIZE 8 Stop "Current Sleep Timer" User "defined wait" 5 minutes 10 minutes 20 minutes 30 minutes 45 minutes 60 minutes 90 minutes 2 hours 3 hours 4 hours 2>/tmp/sleeptimer
+
+var=`cat /tmp/sleeptimer`
+rm /tmp/sleeptimer
+
+if [ "$var" = "Stop" ]; then
+	if [ -e "$pidfile" ]; then
+		kill `cat "$pidfile"`
+		rm "$pidfile"
+		dialog --title "Radio Sleep/Shutoff Timer" --infobox "Sleep timer stopped" $DIALOGSIZE
+	else
+		dialog --title "Radio Sleep/Shutoff Timer" --infobox "Sleep timer not running" $DIALOGSIZE
+	fi
+	sleep 3
+	exit 0
+elif [ "$var" = "User" ] 2>/dev/null; then
+	dialog --title "Radio Sleep/Shutoff Timer" --inputbox "How many minutes before the music stops?" $DIALOGSIZE 2>/tmp/sleeptimer
+	var=`cat /tmp/sleeptimer`
+	rm /tmp/sleeptimer
+elif [ "$var" -lt 5 ] 2>/dev/null; then
+	var=$(( var * 60  )) # Convert hours to minutes
+fi
+if [ "$var" -eq "$var" ] 2>/dev/null; then
+	deallocvt
+	# Sleep, then run onStop
+	openvt -- sleeptimer $var
+	dialog --title "Radio Sleep/Shutoff Timer" --infobox "Timer set for $var minutes" $DIALOGSIZE
+else
+	# Not a number or user cancelled
+	dialog --title "Radio Sleep/Shutoff Timer" --infobox "Invalid time or cancelled" $DIALOGSIZE
+fi
+sleep 3
