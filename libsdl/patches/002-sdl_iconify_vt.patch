@@ -20,9 +20,9 @@
  extern void FB_PumpEvents(_THIS);
 +extern void FB_IconifyWindow(_THIS);
 \ No newline at end of file
---- ./src/video/fbcon/SDL_fbvideo.c	2009-10-12 16:07:15.000000000 -0700
-+++ ./src/video/fbcon/SDL_fbvideo.c	2013-01-04 15:17:32.843441000 -0800
-@@ -264,7 +264,7 @@ static SDL_VideoDevice *FB_CreateDevice(
+--- SDL-1.2.14/src/video/fbcon/SDL_fbvideo.c	2017-04-09 15:16:22.688038068 -0500
++++ SDL-1.2.14/src/video/fbcon/SDL_fbvideo.c	2017-04-09 15:17:32.100039467 -0500
+@@ -264,7 +264,7 @@
  	this->FreeHWSurface = FB_FreeHWSurface;
  	this->SetCaption = NULL;
  	this->SetIcon = NULL;
@@ -31,3 +31,14 @@
  	this->GrabInput = NULL;
  	this->GetWMInfo = NULL;
  	this->InitOSKeymap = FB_InitOSKeymap;
+@@ -1495,6 +1495,10 @@
+ 
+ static void FB_DirectUpdate(_THIS, int numrects, SDL_Rect *rects)
+ {
++	if ( switched_away ) {
++		return -2; /* no hardware access */
++	}
++
+ 	int width = cache_vinfo.xres;
+ 	int height = cache_vinfo.yres;
+ 	int bytes_per_pixel = (cache_vinfo.bits_per_pixel + 7) / 8;
