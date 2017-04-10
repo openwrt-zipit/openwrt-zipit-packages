@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gmenu2x-zipit
-#:=2016mar
-PKG_VERSION:=313284bc1a6644601f1cb972ee534d9b44f29aac
+PKG_VERSION:=2017apr
+PKG_SOURCE_VERSION:=30625d90e9ed03908e43e09f72d27bd80d965722
 PKG_REV:=testing
 PKG_RELEASE:=3
 PKG_INSTALL:=1
@@ -48,7 +48,8 @@ define Package/gmenu2x
   CATEGORY:=GMenu2X
   TITLE:=GMenu2x frontend/launcher app
   URL:=http://projects.qi-hardware.com/index.php/p/gmenu2x/
-  DEPENDS:=+libsdl +libpng +libsdl-ttf +libstdcpp +libsdl-gfx +i2c-tools
+  DEPENDS:=+libsdl +libpng +libsdl-ttf +libstdcpp +libsdl-gfx \
+	+i2c-tools +termfix
 endef
 
 define Build/Configure
