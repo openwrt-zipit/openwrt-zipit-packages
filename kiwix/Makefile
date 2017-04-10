@@ -59,7 +59,7 @@ define Package/kiwix/install
 		$(1)/usr/bin/kiwix
 endef
 
-define Package/kiwix/preinst
+define Package/kiwix/postinst
 #!/bin/sh
 freespace=$$(df -k / | tail -n 1 | awk '{print $$4}')
 if [ $$freespace -gt 65536 ]; then
