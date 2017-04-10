@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ziptuner
 PKG_VERSION:=1
-PKG_REV:=993bd10bb42ec2be3a0838e92a728f5cbc4e855b
+PKG_REV:=6cdf87bf2bacbf074b4bf7d151fa2edab71ae62b
 PKG_RELEASE:=1
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.gz
 PKG_SOURCE_URL:=git://github.com/deeice/ziptuner.git
