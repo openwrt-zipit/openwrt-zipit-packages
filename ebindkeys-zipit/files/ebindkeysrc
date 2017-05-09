@@ -30,6 +30,8 @@ dimscrb = 3		# screen brightness on Battery
 dimkeyb = 1		# keyboard brightness on Battery
 
 # Timeout is = seconds * 100; 5 seconds = 500, 60 seconds = 6000
+lcdtimeouta = 30000     # screen off timeout on AC
+keytimeouta = 2000      # keyboard off timeout on AC
 lcdtimeout = 6000       # screen off timeout on Battery
 keytimeout = 500        # keyboard off timeout on Battery
 

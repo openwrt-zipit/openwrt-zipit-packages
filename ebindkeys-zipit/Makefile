@@ -8,14 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ebindkeys-zipit
-#PKG_VERSION:=2016.06.02
-PKG_VERSION:=ca038a8dee499ea830c2f2d1f09e4ce836165015
-PKG_RELEASE:=2
-PKG_REV:=bldaemon
+PKG_VERSION:=2017.05.07
+PKG_REV:=8cf3fe52add0f6557169fa9092638ade71dea901
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_REV).tar.gz
-#PKG_SOURCE_URL:=git://github.com/mozzwald/ebindkeys-zipit.git
-PKG_SOURCE_URL:=git://github.com/deeice/ebindkeys-zipit.git
+PKG_SOURCE_URL:=git://github.com/mozzwald/ebindkeys-zipit.git
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=$(PKG_REV)
