@@ -6,6 +6,12 @@ dev = "/dev/input/event0"
 # Power Button input device
 pwrdev = "/dev/input/event1"
 
+# Mouse button keycodes. See input-event-codes.h for a complete list of keycodes
+# https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h
+lmousebttn = 200      # Left button (play)
+mmousebttn = 28       # Middle button (enter)
+rmousebttn = 166      # Right button (stop)
+
 # Command to run when power button is pressed
 pwrcmd = "/usr/sbin/suspend"
 
