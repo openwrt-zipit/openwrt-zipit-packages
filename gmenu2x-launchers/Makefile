@@ -564,3 +564,20 @@ define Package/gmenu2x-ziptuner/install
 endef
 
 $(eval $(call BuildPackage,gmenu2x-ziptuner))
+
+define Package/gmenu2x-sdlvnc
+    CATEGORY:=GMenu2X
+    TITLE:=sdlvnc launcher for gmenu2x
+    DEPENDS:=+gmenu2x +sdlvnc
+    VARIANT:=gmenu2x-sdlvnc
+endef
+
+define Package/gmenu2x-sdlvnc/install
+	$(INSTALL_DIR) $(1)/usr/share/gmenu2x/
+
+	$(CP) \
+		./files/sdlvnc/* \
+		$(1)/usr/share/gmenu2x/
+endef
+
+$(eval $(call BuildPackage,gmenu2x-sdlvnc))

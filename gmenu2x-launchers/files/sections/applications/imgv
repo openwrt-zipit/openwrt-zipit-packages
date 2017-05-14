@@ -1,7 +1,0 @@
-title=imgv
-icon=skin:/icons/imgv.png
-exec=/usr/bin/imgv
-clock=312
-selectordir=/
-selectorbrowser=true
-selectorfilter=.png,.jpg,.jpeg,.bmp

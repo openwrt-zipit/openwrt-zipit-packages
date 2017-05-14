@@ -1,0 +1,4 @@
+title=sdlvnc
+icon=skin:icons/vnc.png
+exec=/usr/bin/sdlvnc
+params=-mb
