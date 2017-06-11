@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sdlvnc
 PKG_VERSION:=1
-PKG_REV:=7046f5c514a9adfe38f570d864f0e42da12fb7ac
+PKG_REV:=e0794c973a3c23673156138efb27de77ad5ab005
 PKG_RELEASE:=1
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.gz
 PKG_SOURCE_URL:=git://github.com/deeice/sdlvnc.git
