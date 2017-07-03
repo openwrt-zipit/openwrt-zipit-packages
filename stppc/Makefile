@@ -48,8 +48,8 @@ define Package/stppc
   TITLE:=stppc
   SECTION:=games
   CATEGORY:=Games
-  URL:=http://www.chiark.greenend.org.uk/~sgtatham/halibut/
-  DEPENDS:=+libsdl +libsdl-image +libsdl-ttf +libsdl-gfx +libsdl-mixer +libstdcpp
+  URL:=http://www.chiark.greenend.org.uk/~sgtatham/puzzles/
+  DEPENDS:=+libsdl +libsdl-image +libsdl-ttf +libsdl-gfx +libsdl-mixer
 endef
 
 define Package/stppc/description
