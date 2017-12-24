@@ -5,11 +5,12 @@ ps="$(ps)"
 # Look for SDL progs.  If so, send SCANCODE for escape to tty0.
 task="-e gmu -e rockbox"
 pid=$(echo "$ps" |grep $task |grep -v grep)
-if [ ! -z "${pid}" ] ; then
-  key=$(echo -ne "\001") # Send scancode for escape to SDL prog.
+if [ ! -z "${pid}" ] ; then 
+  # Send "raw" scancodes for esc (press & release) and shift-esc to SDL prog.
+  key=$(echo -ne "\001\201\052\001\201\252")
   #echo task rockbox_gmu cmd is ${pid} >/tmp/stop.txt
   #echo sendtty $tty _"$key"_ >>/tmp/stop.txt
-  /usr/local/bin/sendtty /dev/tty0 "$key"
+  ./sendtty /dev/tty0 "$key" raw
   deallocvt
   exit 0
 fi
