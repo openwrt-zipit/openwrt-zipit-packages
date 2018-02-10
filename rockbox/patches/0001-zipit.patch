@@ -233,7 +233,7 @@ Index: firmware/export/config/zipit_z2.h
 ===================================================================
 --- a/firmware/export/config/zipit_z2.h	(revision 0)
 +++ b/firmware/export/config/zipit_z2.h	(revision 0)
-@@ -0,0 +1,112 @@
+@@ -0,0 +1,128 @@
 +/*
 + * This config file is for the SDL application
 + */
@@ -324,6 +324,22 @@ Index: firmware/export/config/zipit_z2.h
 +#define CURRENT_BACKLIGHT  30 /* TBD */ 
 +#define CURRENT_RECORD     0  /* no recording yet */ 
 +
++/* define this if the target has volume keys which can be used in the lists */
++/*
++#define HAVE_VOLUME_IN_LIST
++*/
++
++/* define this if the host platform can change volume outside of rockbox */
++/* 
++#define PLATFORM_HAS_VOLUME_CHANGE
++*/
++
++/*
++#define HAVE_HEADPHONE_DETECTION
++*/
++
++#define CONFIG_BATTERY_MEASURE PERCENTAGE_MEASURE
++
 +/* Define this to the CPU frequency */
 +/*
 +#define CPU_FREQ 48000000
@@ -362,7 +378,7 @@ Index: firmware/target/hosted/zipit/powermgmt-zipit-z2.c
 ===================================================================
 --- a/firmware/target/hosted/zipit/powermgmt-zipit-z2.c	(revision 0)
 +++ b/firmware/target/hosted/zipit/powermgmt-zipit-z2.c	(revision 0)
-@@ -0,0 +1,241 @@
+@@ -0,0 +1,188 @@
 +/***************************************************************************
 + *             __________               __   ___.
 + *   Open      \______   \ ____   ____ |  | _\_ |__   _______  ___
@@ -545,65 +561,12 @@ Index: firmware/target/hosted/zipit/powermgmt-zipit-z2.c
 +
 +}
 +
-+void battery_read_info(int *voltage, int *level)
-+{
-+    battery_status_update();
-+
-+    if (voltage)
-+        *voltage = battery_millivolts;
-+
-+    if (level)
-+        *level = battery_percent;
-+}
-+
-+int battery_voltage(void)
-+{
-+    battery_status_update();
-+    return battery_millivolts;
-+}
-+
-+int battery_level(void)
++int _battery_level(void)
 +{
 +    battery_status_update();
 +    return battery_percent;
 +}
 +
-+int battery_time(void)
-+{
-+    battery_status_update();
-+    return powermgmt_est_runningtime_min;
-+}
-+
-+bool battery_level_safe(void)
-+{
-+    return battery_level() >= 10;
-+}
-+
-+void set_battery_capacity(int capacity)
-+{
-+  (void)capacity;
-+}
-+
-+#if BATTERY_TYPES_COUNT > 1
-+void set_battery_type(int type)
-+{
-+    (void)type;
-+}
-+#endif
-+
-+#ifdef HAVE_ACCESSORY_SUPPLY
-+void accessory_supply_set(bool enable)
-+{
-+    (void)enable;
-+}
-+#endif
-+
-+#ifdef HAVE_LINEOUT_POWEROFF
-+void lineout_set(bool enable)
-+{
-+    (void)enable;
-+}
-+#endif
 Index: firmware/target/hosted/sdl/app/button-application.c
 ===================================================================
 --- a/firmware/target/hosted/sdl/app/button-application.c	(revision 29632)
