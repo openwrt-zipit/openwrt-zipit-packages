@@ -1044,3 +1044,15 @@ Index: apps/plugins/xworld/keymaps.h
  #else
  #error Unsupported keypad
  #endif
+Index: apps/plugins/SOURCES
+===================================================================
+--- a/apps/plugins/SOURCES	(revision 29143)
++++ b/apps/plugins/SOURCES	(working copy)
+@@ -1,6 +1,6 @@
+ /* plugins common to all models */
+ #if !defined(SIMULATOR) && (CONFIG_BATTERY_MEASURE != 0)
+-battery_bench.c
++#battery_bench.c
+ #endif
+ chessclock.c
+ credits.c
