@@ -1,0 +1,250 @@
+ src/gui/Makefile.am      |   2 +-
+ src/gui/sdl_downscaler.h |  40 ++++++++++++++++++
+ src/gui/sdlmain.cpp      | 106 ++++++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 146 insertions(+), 2 deletions(-)
+ create mode 100644 src/gui/sdl_downscaler.h
+
+diff --git a/src/gui/Makefile.am b/src/gui/Makefile.am
+index 3fed5e6..fca5a55 100644
+--- a/src/gui/Makefile.am
++++ b/src/gui/Makefile.am
+@@ -7,5 +7,5 @@ libgui_a_SOURCES = sdlmain.cpp sdl_mapper.cpp dosbox_logo.h \
+ 	render_templates_sai.h render_templates_hq.h \
+ 	render_templates_hq2x.h render_templates_hq3x.h \
+ 	midi.cpp midi_win32.h midi_oss.h midi_coreaudio.h midi_alsa.h \
+-	midi_coremidi.h sdl_gui.cpp dosbox_splash.h
++	midi_coremidi.h sdl_gui.cpp dosbox_splash.h sdl_downscaler.h
+ 
+diff --git a/src/gui/sdl_downscaler.h b/src/gui/sdl_downscaler.h
+new file mode 100644
+index 0000000..e7be232
+--- /dev/null
++++ b/src/gui/sdl_downscaler.h
+@@ -0,0 +1,40 @@
++
++
++#define COLORMIX32(A,B,C,D) ((((A) >> 2) & 0x3F3F3F3F) + (((B) >> 2) & 0x3F3F3F3F) + (((C) >> 2) & 0x3F3F3F3F) + (((D) >> 2) & 0x3F3F3F3F))
++#define COLORMIX16(A,B,C,D) ((((A) >> 2) & 0x39E7) + (((B) >> 2) & 0x39E7) + (((C) >> 2) & 0x39E7) + (((D) >> 2) & 0x39E7))
++
++#define DEFINE_GFX_DOWNSCALE(SX,SY,DX,DY,BPP) \
++void GFX_Downscale_##SX##x##SY##_to_##DX##x##DY##_##BPP(SDL_Surface *src, SDL_Surface *dst)	\
++{																				\
++	Bit##BPP##u *Dest = (Bit##BPP##u *)dst->pixels;								\
++	Bit##BPP##u *Src  = (Bit##BPP##u *)src->pixels;								\
++	\
++	int x,y;																	\
++	Dest += (DY-SY/2)/2*DX;														\
++	for(y = SY/2; y--;) {														\
++		for(x = SX/2; x--;) {													\
++			__builtin_prefetch(Dest + 4, 1);									\
++			__builtin_prefetch(Src + 4, 0);										\
++			*Dest++ = COLORMIX##BPP(Src[0], Src[1], Src[SX], Src[SX+1]);		\
++			Src += 2;															\
++		}																		\
++		Src += SX;																\
++	}																			\
++}
++
++DEFINE_GFX_DOWNSCALE(640, 400, 320, 240, 16)
++DEFINE_GFX_DOWNSCALE(640, 480, 320, 240, 16)
++DEFINE_GFX_DOWNSCALE(640, 400, 320, 240, 32)
++DEFINE_GFX_DOWNSCALE(640, 480, 320, 240, 32)
++
++void (* GFX_PDownscale)(SDL_Surface *, SDL_Surface *) = NULL;
++
++#define GFX_PDOWNSCALE(A,B) \
++{\
++	if(GFX_PDownscale) {	\
++		if(SDL_MUSTLOCK(B)) SDL_LockSurface(B); \
++		GFX_PDownscale(A, B);	\
++		if(SDL_MUSTLOCK(B)) SDL_UnlockSurface(B); \
++	}	\
++}
++	
+diff --git a/src/gui/sdlmain.cpp b/src/gui/sdlmain.cpp
+index fd4c10f..d6ad6ea 100644
+--- a/src/gui/sdlmain.cpp
++++ b/src/gui/sdlmain.cpp
+@@ -49,6 +49,7 @@
+ #include "cpu.h"
+ #include "cross.h"
+ #include "control.h"
++#include "sdl_downscaler.h"
+ 
+ #define MAPPERFILE "mapper-" VERSION ".map"
+ //#define DISABLE_JOYSTICK
+@@ -133,6 +134,7 @@ struct private_hwdata {
+ 
+ enum SCREEN_TYPES	{
+ 	SCREEN_SURFACE,
++	SCREEN_SURFACE_DINGUX,
+ 	SCREEN_SURFACE_DDRAW,
+ 	SCREEN_OVERLAY,
+ 	SCREEN_OPENGL
+@@ -349,6 +351,16 @@ Bitu GFX_GetBestMode(Bitu flags) {
+ 		}
+ 		flags |= GFX_CAN_RANDOM;
+ 		break;
++	case SCREEN_SURFACE_DINGUX:
++		switch (sdl.desktop.bpp) {
++		case 0:
++		case 8:
++		case 16: flags = GFX_CAN_16; break;
++		case 24:
++		case 32: flags = GFX_CAN_32; break;
++		}
++		flags |= GFX_SCALING; // this allows SDL_HWSURFACE
++		break;
+ #if (HAVE_DDRAW_H) && defined(WIN32)
+ 	case SCREEN_SURFACE_DDRAW:
+ 		if (!(flags&(GFX_CAN_15|GFX_CAN_16|GFX_CAN_32))) goto check_surface;
+@@ -555,6 +567,52 @@ Bitu GFX_SetSize(Bitu width,Bitu height,Bitu flags,double scalex,double scaley,G
+ 			}
+ 		}
+ 		break;
++	case SCREEN_SURFACE_DINGUX:
++		if (flags & GFX_CAN_16) bpp = 16;
++		if (flags & GFX_CAN_32) bpp = 32;
++		sdl.desktop.type = SCREEN_SURFACE_DINGUX;
++
++		sdl.surface=SDL_SetVideoMode(sdl.desktop.full.width,
++									sdl.desktop.full.height,
++									sdl.desktop.bpp,
++									(flags & GFX_CAN_RANDOM) ? SDL_SWSURFACE : SDL_HWSURFACE);
++
++		GFX_PDownscale = NULL;
++		if(width <= sdl.desktop.full.width && height <= sdl.desktop.full.height) {
++			sdl.clip.w=width;
++			sdl.clip.h=height;
++			sdl.clip.x=(Sint16)((sdl.desktop.full.width-width)/2);
++			sdl.clip.y=(Sint16)((sdl.desktop.full.height-height)/2);
++		} else {
++			sdl.clip.w=0; sdl.clip.h=0; sdl.clip.x=0; sdl.clip.y=0;
++			sdl.blit.surface=SDL_CreateRGBSurface(SDL_SWSURFACE,width,height,bpp,0,0,0,0);
++
++			if(width == 640 && height == 400)
++				GFX_PDownscale = (bpp == 16 ? &GFX_Downscale_640x400_to_320x240_16 : &GFX_Downscale_640x400_to_320x240_32);
++			else if(width == 640 && height == 480)
++				GFX_PDownscale = (bpp == 16 ? &GFX_Downscale_640x480_to_320x240_16 : &GFX_Downscale_640x480_to_320x240_32);
++		}
++
++		printf("Mode: %ix%ix%i, Surface %ix%ix%i\n",
++					sdl.desktop.full.width,
++					sdl.desktop.full.height,
++					sdl.desktop.bpp,
++					width,height,bpp);
++
++		if (sdl.surface == NULL) E_Exit("Could not set windowed video mode %ix%i-%i: %s",width,height,bpp,SDL_GetError());
++		if (sdl.surface) {
++			switch (sdl.surface->format->BitsPerPixel) {
++			case 16:
++				retFlags = GFX_CAN_16;
++                break;
++			case 32:
++				retFlags = GFX_CAN_32;
++                break;
++			}
++		}
++
++		retFlags |= GFX_SCALING;
++		break;
+ #if (HAVE_DDRAW_H) && defined(WIN32)
+ 	case SCREEN_SURFACE_DDRAW:
+ 		if (flags & GFX_CAN_15) bpp=15;
+@@ -835,6 +893,19 @@ bool GFX_StartUpdate(Bit8u * & pixels,Bitu & pitch) {
+ 		}
+ 		sdl.updating=true;
+ 		return true;
++	case SCREEN_SURFACE_DINGUX:
++		if (sdl.blit.surface) {
++			pixels=(Bit8u *)sdl.blit.surface->pixels;
++			pitch=sdl.blit.surface->pitch;
++		} else {
++			if (SDL_MUSTLOCK(sdl.surface)) SDL_LockSurface(sdl.surface);
++			pixels=(Bit8u *)sdl.surface->pixels;
++			pixels+=sdl.clip.y*sdl.surface->pitch;
++			pixels+=sdl.clip.x*sdl.surface->format->BytesPerPixel;
++			pitch=sdl.surface->pitch;
++		}
++		sdl.updating=true;
++		return true;
+ #if (HAVE_DDRAW_H) && defined(WIN32)
+ 	case SCREEN_SURFACE_DDRAW:
+ 		if (SDL_LockSurface(sdl.blit.surface)) {
+@@ -908,6 +979,18 @@ void GFX_EndUpdate( const Bit16u *changedLines ) {
+ 				SDL_UpdateRects( sdl.surface, rectCount, sdl.updateRects );
+ 		}
+ 		break;
++	case SCREEN_SURFACE_DINGUX:
++		if (sdl.blit.surface) {
++			if(GFX_PDownscale) {
++				GFX_PDOWNSCALE(sdl.blit.surface, sdl.surface);
++			} else {
++				SDL_BlitSurface( sdl.blit.surface, 0, sdl.surface, &sdl.clip );
++			} 
++		} else {
++			if(SDL_MUSTLOCK(sdl.surface)) SDL_UnlockSurface(sdl.surface);
++		}
++		SDL_Flip(sdl.surface);
++		break;
+ #if (HAVE_DDRAW_H) && defined(WIN32)
+ 	case SCREEN_SURFACE_DDRAW:
+ 		SDL_UnlockSurface(sdl.blit.surface);
+@@ -987,6 +1070,7 @@ void GFX_SetPalette(Bitu start,Bitu count,GFX_PalEntry * entries) {
+ Bitu GFX_GetRGB(Bit8u red,Bit8u green,Bit8u blue) {
+ 	switch (sdl.desktop.type) {
+ 	case SCREEN_SURFACE:
++	case SCREEN_SURFACE_DINGUX:
+ 	case SCREEN_SURFACE_DDRAW:
+ 		return SDL_MapRGB(sdl.surface->format,red,green,blue);
+ 	case SCREEN_OVERLAY:
+@@ -1204,6 +1288,8 @@ static void GUI_StartUp(Section * sec) {
+ 
+ 	if (output == "surface") {
+ 		sdl.desktop.want_type=SCREEN_SURFACE;
++	} else if (output == "surface_dingux") {
++		sdl.desktop.want_type=SCREEN_SURFACE_DINGUX;
+ #if (HAVE_DDRAW_H) && defined(WIN32)
+ 	} else if (output == "ddraw") {
+ 		sdl.desktop.want_type=SCREEN_SURFACE_DDRAW;
+@@ -1256,6 +1342,9 @@ static void GUI_StartUp(Section * sec) {
+ 	} /* OPENGL is requested end */
+ 
+ #endif	//OPENGL
++
++	// avoid splash for surface_dingux as it uses big screen
++	if(sdl.desktop.want_type != SCREEN_SURFACE_DINGUX) {
+ 	/* Initialize screen for first time */
+ 	sdl.surface=SDL_SetVideoMode(640,400,0,0);
+ 	if (sdl.surface == NULL) E_Exit("Could not initialize video: %s",SDL_GetError());
+@@ -1337,6 +1426,21 @@ static void GUI_StartUp(Section * sec) {
+ 		delete [] tmpbufp;
+ 
+ 	}
++	} else { // sdl.desktop.want_type != SCREEN_SURFACE_DINGUX
++		// test which modes are available and fill sdl.desktop data
++		sdl.desktop.bpp = SDL_VideoModeOK(320,240,16,SDL_FULLSCREEN|SDL_HWSURFACE); // let SDL choose bpp
++		if(!sdl.desktop.full.fixed) { // i.e. fullresolution=original
++			sdl.desktop.fullscreen = true;
++			sdl.desktop.full.fixed = true;
++			sdl.desktop.full.width = 320;
++			sdl.desktop.full.height = 240;
++		}
++		#ifndef WIN32 // for testing on win
++		sdl.mouse.autoenable = false;
++		sdl.mouse.autolock = true;
++		GFX_CaptureMouse();
++		#endif
++	}
+ 
+ 	/* Get some Event handlers */
+ 	MAPPER_AddHandler(KillSwitch,MK_f9,MMOD1,"shutdown","ShutDown");
+@@ -1601,7 +1705,7 @@ void Config_Add_SDL() {
+ 	                  "  (output=surface does not!)");
+ 
+ 	const char* outputs[] = {
+-		"surface", "overlay",
++		"surface", "overlay", "surface_dingux",
+ #if C_OPENGL
+ 		"opengl", "openglnb",
+ #endif
