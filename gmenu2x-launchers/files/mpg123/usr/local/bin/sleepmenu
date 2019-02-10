@@ -34,7 +34,7 @@ get_key() # Skips Space and NL, but works in ash without stty.
   read -rsn1 _KEY
   case "${_KEY}" in
      "${E}") _K=""; read -n1 -t1 _K; _KEY="${E}${_K}"; 
-	[ -n "_K" ] && { _K=""; read -n1 -t1 _K; _KEY="${_KEY}${_K}"; }
+	[ -n "$_K" ] && { _K=""; read -n1 -t1 _K; _KEY="${_KEY}${_K}"; }
   ;; "") _KEY=" "
   ;;
   esac
