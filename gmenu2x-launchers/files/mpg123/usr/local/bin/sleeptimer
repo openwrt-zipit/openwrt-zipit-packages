@@ -29,6 +29,8 @@ if [ $# -ne 0 ] ; then
 	exit 0
 fi
 
+if [ -z "$(which dialog)" ]; then exec ./sleepmenu; fi
+
 export LANG=C
 if [ -e "/usr/share/ziptuner/dialogrc.soho" ]; then
 	export DIALOGRC=/usr/share/ziptuner/dialogrc.soho

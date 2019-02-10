@@ -1,0 +1,231 @@
+# Skip #!/bin/sh - Dash has issues with read options.  Bash, Ash are OK.
+
+# keys
+E=$(printf "\033")
+NL='
+'
+
+# ANSI colors
+N="${E}[0m"
+WB="${E}[1;44;37m"
+BW="${E}[0;47;34m"
+
+# Two charsets.
+G0=$(printf "\017")
+G1=$(printf "\016")
+
+# openwrt zipit only seems to have graphic chars on charset G1
+DRAW="${G1}${E})0"
+TEXT="${G0}${E}(B"
+
+# $I and $J are global widget indices.
+
+px() # printat y x
+{
+  printf "${E}[%d;%dH" ${1:-1} ${2:-1}
+  [ $# -gt 2 ] && {
+    shift 2
+    printf "%s" "$*"
+  }
+}
+
+get_key() # Skips Space and NL, but works in ash without stty.
+{
+  read -rsn1 _KEY
+  case "${_KEY}" in
+     "${E}") _K=""; read -n1 -t1 _K; _KEY="${E}${_K}"; 
+	[ -n "_K" ] && { _K=""; read -n1 -t1 _K; _KEY="${_KEY}${_K}"; }
+  ;; "") _KEY=" "
+  ;;
+  esac
+}
+
+##### Get TUI screen offset  ######
+_K=""
+echo -en "${E}[s${E}[999;999H${E}[6n${E}[u"
+read -sn6 -t1 S
+read -sn1 -t1 _K; S="${S}${_K}"; 
+[ -n "_K" ] && { _K=""; read -sn1 -t1 _K; S="${S}${_K}"; }
+
+S="${S#*[}"
+COL="${S#*;}"
+COL="${COL%*R}"
+ROW="${S%;*}"
+Y=$((($ROW - 19) / 2 + 1))
+X=$((($COL - 45) / 2 + 1))
+
+# Define TUI Widgets (Location, EraseStr, String)
+# (no widget names, types, or lengths needed for simple menu)
+x=$(($X + 1))
+######   Message strings  ######
+S41="$(printf "%-41s")"
+WA1="${E}[$(($Y + 2));${x}H";  WE1="$WA1$S41$WA1"
+WA2="${E}[$(($Y + 3));${x}H";  WE2="$WA2$S41$WA2"
+WA3="${E}[$(($Y + 4));${x}H";  WE3="$WA3$S41$WA3"
+######   Menu Options  ######
+x=$(($X + 2))
+WA4="${E}[$(($Y + 6));${x}H";   WE4="$WA4$S41$WA4";    WS4="5 Minutes"
+WA5="${E}[$(($Y + 7));${x}H";   WE5="$WA5$S41$WA5";    WS5="10 Minutes"
+WA6="${E}[$(($Y + 8));${x}H";   WE6="$WA6$S41$WA6";    WS6="20 Minutes"
+WA7="${E}[$(($Y + 9));${x}H";   WE7="$WA7$S41$WA7";    WS7="30 minutes"
+WA8="${E}[$(($Y + 10));${x}H";  WE8="$WA8$S41$WA8";    WS8="45 minutes"
+WA9="${E}[$(($Y + 11));${x}H";  WE9="$WA9$S41$WA9";    WS9="1 Hour"
+WA10="${E}[$(($Y + 12));${x}H"; WE10="$WA10$S41$WA10"; WS10="2 Hours"
+WA11="${E}[$(($Y + 13));${x}H"; WE11="$WA11$S41$WA11"; WS11="3 Hours"
+WA12="${E}[$(($Y + 14));${x}H"; WE12="$WA12$S41$WA12"; WS12="User defined"
+#######  Buttons  #######
+# Button text lengths must fit in the boxes laid out in DRAW mode.
+y=$(($Y + 17)) 
+WA20="${E}[${y};$(($X + 5))H";  WE20="$WA20     $WA20";  WS20="Sleep"
+WA21="${E}[${y};$(($X + 20))H"; WE21="$WA21    $WA21";   WS21="Stop"
+WA22="${E}[${y};$(($X + 34))H"; WE22="$WA22      $WA22"; WS22="Cancel"
+
+###################
+ShowTUI()
+{
+printf "${E}[2J"
+
+# Must use UPPERCASE for any words in DRAW mode.  Or add labels later.
+px $(($Y + 0))  $X "$WB$DRAW"
+px $(($Y + 1))  $X "lqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk"
+px $(($Y + 2))  $X "x                                           x"
+px $(($Y + 3))  $X "x                                           x"
+px $(($Y + 4))  $X "x                                           x"
+px $(($Y + 5))  $X "tqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu"
+px $(($Y + 6))  $X "x                                           x"
+px $(($Y + 7))  $X "x                                           x"
+px $(($Y + 8))  $X "x                                           x"
+px $(($Y + 9))  $X "x                                           x"
+px $(($Y + 10)) $X "x                                           x"
+px $(($Y + 11)) $X "x                                           x"
+px $(($Y + 12)) $X "x                                           x"
+px $(($Y + 13)) $X "x                                           x"
+px $(($Y + 14)) $X "x                                           x"
+px $(($Y + 15)) $X "tqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu"
+px $(($Y + 16)) $X "x  lqqqqqqqk      lqqqqqqqk     lqqqqqqqqk  x"
+px $(($Y + 17)) $X "x  x       x      x       x     x        x  x"
+px $(($Y + 18)) $X "x  mqqqqqqqj      mqqqqqqqj     mqqqqqqqqj  x"
+px $(($Y + 19)) $X "mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj"
+printf "$TEXT$WB"
+# 
+# Done with DRAW mode.  Now we can use lower case.
+#
+echo "${WE1}         Radio Sleep/Shutoff Timer"
+echo "${WE3}How long before the music stops?"
+
+# Menu options.  Draw the selected text BW reverse text.
+echo "${WE4}${BW}${WS4}${WB}"
+echo "${WE5}${WS5}"
+echo "${WE6}${WS6}"
+echo "${WE7}${WS7}"
+echo "${WE8}${WS8}"
+echo "${WE9}${WS9}"
+echo "${WE10}${WS10}"
+echo "${WE11}${WS11}"
+echo "${WE12}${WS12}"
+
+# Draw selected button text BW reverse text.
+echo "${WE20}${BW}${WS20}${WB}${WE21}${WS21}${WE22}${WS22}"
+}
+
+# Boolean/PushButton handler
+button()
+{
+  eval STR=\$WS$J
+  case $I in 
+    20) echo "STR=\"$STR\"; break" ; return ;;
+    21) echo "break" ; return ;; 
+    22) echo "break" ; return ;; 
+  esac
+}
+
+#######
+ShowTUI
+
+# Initial setup.  Start at 1st menu op and button.
+J=4
+I=20; y=17; x=5
+eval STR=\$WS$I
+
+# Run main dialog box until ESC
+while :
+do
+px $(($Y + $y)) $(($X + $x))
+get_key
+MV=0 # Handle widget traversal (UP,DN,TAB).
+case $_KEY in
+   " ") eval $(button)
+;; ${NL}) eval $(button)
+;; "${E}") STR="Cancel"; break
+;; "${E}[A") MV=$J ; J=$(($J - 1)) #UP
+;; "${E}[B") MV=$J ; J=$(($J + 1)) #DN
+;; "${E}[C") MV=$I ; I=$(($I + 1)) #>>
+;; "${E}[D") MV=$I ; I=$(($I - 1)) #<<
+;;
+esac
+
+# Set x and y if traversing between widgets
+if [ $MV -ne 0 ] ; then
+  # Clear and restore old menu option before moving on.
+  eval WE=\$WE$MV
+  eval STR=\$WS$MV
+  echo "${WB}${WE}${STR}${BW}"
+  if [ $MV -lt 20 ] ; then # Switch Menu Option
+    [ "$J" -lt 4 ] && J=4
+    [ "$J" -gt 12 ] && J=12
+    y=$(($J + 2));  x=2
+    eval STR=\$WS$J
+    px $(($Y + $y)) $(($X + $x)) $STR
+  fi
+  # Always redraw button last
+  [ "$I" -lt 20 ] && I=20
+  [ "$I" -gt 22 ] && I=22
+  if [ "$I" -eq 20 ] ; then y=17; x=5
+  elif [ "$I" -eq 21 ] ; then y=17; x=20
+  elif [ "$I" -eq 22 ] ; then y=17; x=34
+  fi
+  eval STR=\$WS$I
+  px $(($Y + $y)) $(($X + $x)) $STR
+fi
+done
+
+#######
+# Go to top left (1,1), set normal text, fix tty
+px 1 1 $N
+stty sane
+clear
+
+#######
+# Act on selection.
+var=$(IFS=" " ; set -- $STR ; echo $1)
+
+pidfile="/tmp/apps/sleeptimer"
+
+if [ "$var" = "Stop" ]; then
+  if [ -e "$pidfile" ]; then
+    kill `cat "$pidfile"`
+    rm "$pidfile"
+    echo "Sleep timer stopped"
+  else
+    echo "Sleep timer not running"
+  fi
+  sleep 3
+  exit 0
+elif [ "$var" = "User" ] 2>/dev/null; then
+  echo "How many minutes before the music stops?"
+  read var
+elif [ "$var" -lt 5 ] 2>/dev/null; then
+  var=$(( var * 60  )) # Convert hours to minutes
+fi
+if [ "$var" -eq "$var" ] 2>/dev/null; then
+  deallocvt
+  # Sleep, then run onStop
+  openvt -- sleeptimer $var
+  echo "Timer set for $var minutes"
+else
+  # Not a number or user cancelled
+  echo "Invalid time or cancelled"
+fi
+
+sleep 3
+

@@ -404,7 +404,7 @@ $(eval $(call BuildPackage,gmenu2x-sdlquake))
 define Package/gmenu2x-mpg123
 	CATEGORY:=GMenu2X
 	TITLE:=mpg123 launcher for gmenu2x
-	DEPENDS:=+gmenu2x +mpg123 +dialog
+	DEPENDS:=+gmenu2x +mpg123
 	VARIANT:=gmenu2x-mpg123
 endef
 
