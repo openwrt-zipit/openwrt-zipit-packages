@@ -12,7 +12,7 @@ PKG_VERSION:=r$(PKG_REV)
 PKG_RELEASE:=1
 
 PKG_SOURCE=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://fheroes2.svn.sourceforge.net/svnroot/fheroes2/trunk/fheroes2
+PKG_SOURCE_URL:=https://svn.code.sf.net/p/fheroes2/code/trunk/fheroes2
 PKG_SOURCE_PROTO:=svn
 PKG_SOURCE_VERSION=$(PKG_REV)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
@@ -25,7 +25,7 @@ define Package/fheroes2
   CATEGORY:=Games
   TITLE:=Free implementation of Heroes of the Might and Magic II engine
   URL:=http://sourceforge.net/projects/fheroes2/
-  DEPENDS:=+libsdl +libpng +libtheora +libsdl +libsdl-mixer +libsdl-image +libsdl-ttf +libintl-full $(ICONV_DEPENDS) +libstdcpp
+  DEPENDS:=+libsdl +libpng +libtheora +libsdl +libsdl-mixer +libsdl-image +libsdl-ttf +libintl-full $(ICONV_DEPENDS) +libstdcpp $(INTL_DEPENDS)
 endef
 
 define Package/fheroes2/description
