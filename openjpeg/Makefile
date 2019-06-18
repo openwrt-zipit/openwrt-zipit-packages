@@ -12,7 +12,7 @@ PKG_VERSION:=1.3
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)_v1_3.tar.gz
-PKG_SOURCE_URL:=http://openjpeg.googlecode.com/files/
+PKG_SOURCE_URL:=https://master.dl.sourceforge.net/project/openjpeg.mirror/1.3.0/
 PKG_MD5SUM:=f9a3ccfa91ac34b589e9bf7577ce8ff9
 
 include $(INCLUDE_DIR)/package.mk

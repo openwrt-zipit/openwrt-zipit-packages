@@ -13,7 +13,7 @@ PKG_VERSION:=0.9
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-source.tar.gz
-PKG_SOURCE_URL:=http://mupdf.googlecode.com/files/
+PKG_SOURCE_URL:=https://mupdf.com/downloads/archive/
 PKG_MD5SUM:=76640ee16a797a27fe49cc0eaa87ce3a
 
 include $(INCLUDE_DIR)/package.mk
